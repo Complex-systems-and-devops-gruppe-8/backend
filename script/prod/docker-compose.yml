@@ -1,0 +1,7 @@
+services:
+  backend:
+    build:
+      context: ../../rest-client-quickstart
+      dockerfile: src/main/docker/Dockerfile.native-micro
+    ports:
+      - "8080:8080"
