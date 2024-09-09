@@ -14,17 +14,20 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  JAVA_VERSION: '21.0.3'
+  UBUNTU_VERSION: '22.04'
+
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-${{ env.UBUNTU_VERSION }}
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 21
+    - name: Set up JDK
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: ${{ env.JAVA_VERSION }}
         distribution: 'temurin'
         cache: maven
 
@@ -47,14 +50,14 @@ jobs:
   test:
     needs: build
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-${{ env.UBUNTU_VERSION }}
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 21
+    - name: Set up JDK
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: ${{ env.JAVA_VERSION }}
         distribution: 'temurin'
         cache: maven
 
