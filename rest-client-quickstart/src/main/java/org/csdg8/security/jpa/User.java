@@ -1,6 +1,7 @@
 package org.csdg8.security.jpa;
 
-import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
@@ -20,7 +21,7 @@ public class User extends PanacheEntity {
     @Password
     public String password;
     @Roles
-    public Collection<String> role;
+    public Set<String> role;
 
     /**
      * Adds a new user to the database
@@ -29,7 +30,7 @@ public class User extends PanacheEntity {
      * @param password the unencrypted password (it is encrypted with bcrypt)
      * @param role     the user assigned roles
      */
-    public static void add(String username, String password, Collection<String> role) {
+    public static void add(String username, String password, Set<String> role) {
         User user = new User();
         user.username = username;
         user.password = BcryptUtil.bcryptHash(password);

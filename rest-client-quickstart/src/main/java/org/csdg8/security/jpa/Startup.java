@@ -1,6 +1,6 @@
 package org.csdg8.security.jpa;
 
-import java.util.List;
+import java.util.Set;
 
 import io.quarkus.arc.profile.IfBuildProfile;
 import io.quarkus.runtime.StartupEvent;
@@ -15,7 +15,7 @@ public class Startup {
     @IfBuildProfile(allOf = { "dev", "test" })
     public void loadUsers(@Observes StartupEvent evt) {
         User.deleteAll();
-        User.add("admin", "admin", List.of("admin"));
-        User.add("user", "user", List.of("user"));
+        User.add("admin", "admin", Set.of("admin"));
+        User.add("user", "user", Set.of("user"));
     }
 }
