@@ -16,11 +16,10 @@ on:
 
 env:
   JAVA_VERSION: '21.0.3'
-  UBUNTU_VERSION: '22.04'
 
 jobs:
   build:
-    runs-on: ubuntu-${{ env.UBUNTU_VERSION }}
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v4
@@ -50,7 +49,7 @@ jobs:
   test:
     needs: build
 
-    runs-on: ubuntu-${{ env.UBUNTU_VERSION }}
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v4
