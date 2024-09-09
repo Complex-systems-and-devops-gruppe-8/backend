@@ -1,14 +1,15 @@
 package org.csdg8;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
+
+import java.net.URL;
+
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-
-import java.net.URL;
 
 @QuarkusTest
 public class HelloResourceTest {
@@ -20,7 +21,7 @@ public class HelloResourceTest {
     @Test
     public void testHelloEndpoint() {
         given()
-            .when().get(url)
+            .when().get(url + "/all")
             .then()
                 .statusCode(200)
                 .body(is("Hello, World!"));
