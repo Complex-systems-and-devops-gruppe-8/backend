@@ -10,9 +10,13 @@ name: Test CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - "main"
+      - "dev"
   pull_request:
-    branches: [ "main" ]
+    branches: 
+      - "main"
+      - "dev"
 
 env:
   JAVA_VERSION: '21.0.3'
