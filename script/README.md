@@ -55,3 +55,8 @@ There are three groups of scripts.
     The dev script also has a dev-UI. This can be accessed at the `/q/dev-ui/welcome` endpoint.
 
     By default the endpoints are available via `localhost:8080`.
+
+    Order:
+      1. `setup.sh`
+      2. `test.sh` | `dev.sh`
+
