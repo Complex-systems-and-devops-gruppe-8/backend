@@ -37,4 +37,14 @@ public class User extends PanacheEntity {
         user.role = role;
         user.persist();
     }
+
+    /**
+     * Find a user by username
+     * 
+     * @param username the username to search for
+     * @return an Optional User entity
+     */
+    public static Optional<User> findByUsername(String username) {
+        return Optional.ofNullable(find("username", username).firstResult());
+    }
 }
