@@ -34,6 +34,13 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Generate JWT Keys
+      run: |
+        openssl genrsa -out test_private_key.pem 2048
+        openssl rsa -in test_private_key.pem -pubout -out test_public_key.pem
+        echo "SMALLRYE_JWT_SIGN_KEY_LOCATION=$PWD/test_private_key.pem" >> $GITHUB_ENV
+        echo "MP_JWT_VERIFY_PUBLICKEY_LOCATION=$PWD/test_public_key.pem" >> $GITHUB_ENV
+
     - name: Make build script executable
       working-directory: script/test
       run: |
@@ -47,7 +54,10 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: test-artifacts
-        path: rest-client-quickstart/target
+        path: | 
+          rest-client-quickstart/target
+          test_private_key.pem
+          test_public_key.pem
         retention-days: 1
 
   test:
@@ -68,7 +78,11 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: test-artifacts
-        path: rest-client-quickstart/target
+
+    - name: Set JWT key locations
+      run: |
+        echo "SMALLRYE_JWT_SIGN_KEY_LOCATION=$PWD/test_private_key.pem" >> $GITHUB_ENV
+        echo "MP_JWT_VERIFY_PUBLICKEY_LOCATION=$PWD/test_public_key.pem" >> $GITHUB_ENV
 
     - name: Make test script executable
       working-directory: script/test
