@@ -14,7 +14,7 @@ import jakarta.inject.Inject;
 public class AuthService {
 
     @Inject
-    TokenService refreshTokenService;
+    TokenService tokenService;
 
     @Inject
     UserService userService;
@@ -23,9 +23,8 @@ public class AuthService {
     @ConfigProperty(name = "mp.jwt.verify.issuer")
     String issuer;
 
-    
     public String refreshAccessToken(String username, String refreshToken) {
-        if (!refreshTokenService.isValidRefreshToken(username, refreshToken)) {
+        if (!tokenService.isValidRefreshToken(username, refreshToken)) {
             throw new UnauthorizedException("Invalid refresh token");
         }
 

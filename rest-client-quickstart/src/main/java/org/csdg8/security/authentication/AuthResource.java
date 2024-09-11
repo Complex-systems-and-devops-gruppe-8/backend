@@ -32,7 +32,7 @@ public class AuthResource {
     UserService userService;
 
     @Inject
-    TokenService refreshTokenService;
+    TokenService tokenService;
 
     @Inject
     AuthService authService;
@@ -61,7 +61,7 @@ public class AuthResource {
 
         // Refresh Token (long-lived)
         String refreshToken = UUID.randomUUID().toString();
-        this.refreshTokenService.storeRefreshToken(foundUser.username, refreshToken);
+        this.tokenService.storeRefreshToken(foundUser.username, refreshToken);
 
         Map<String, String> response = new HashMap<>();
         response.put("accessToken", accessToken);
