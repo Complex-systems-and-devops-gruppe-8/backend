@@ -118,4 +118,21 @@ public class TokenServiceTest {
         assertTrue(tokenService.isValidRefreshToken(username, refreshToken2),
                 "Second refresh token should be valid");
     }
+
+    @Test
+    public void testMultipleUsersRefreshTokens() {
+        String user1 = "user1";
+        String user2 = "user2";
+        String refreshToken1 = "refreshToken1";
+        String refreshToken2 = "refreshToken2";
+
+        tokenService.storeRefreshToken(user1, refreshToken1);
+        tokenService.storeRefreshToken(user2, refreshToken2);
+
+        assertTrue(tokenService.isValidRefreshToken(user1, refreshToken1), "User1's refresh token should be valid");
+        assertTrue(tokenService.isValidRefreshToken(user2, refreshToken2), "User2's refresh token should be valid");
+
+        assertFalse(tokenService.isValidRefreshToken(user1, refreshToken2), "User1 should not have User2's refresh token");
+        assertFalse(tokenService.isValidRefreshToken(user2, refreshToken1), "User2 should not have User1's refresh token");
+    }
 }
