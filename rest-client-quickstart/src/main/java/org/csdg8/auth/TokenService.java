@@ -21,6 +21,22 @@ public class TokenService {
     private Map<String, String> refreshTokens = new HashMap<>();
 
     public void storeRefreshToken(String username, String refreshToken) {
+        if (username == null) {
+            throw new NullPointerException("Username cannot be null");
+        }
+
+        if (username.isBlank()) {
+            throw new IllegalArgumentException("Username cannot be whitespace or empty");
+        }
+
+        if (refreshToken == null) {
+            throw new NullPointerException("Refresh token cannot be null");
+        }
+
+        if (refreshToken.isBlank()) {
+            throw new IllegalArgumentException("Refresh token cannot be whitespace or empty");
+        }
+
         refreshTokens.put(username, refreshToken);
     }
 

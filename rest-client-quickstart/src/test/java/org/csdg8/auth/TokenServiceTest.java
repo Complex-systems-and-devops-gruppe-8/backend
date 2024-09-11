@@ -2,6 +2,7 @@ package org.csdg8.auth;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
@@ -66,5 +67,37 @@ public class TokenServiceTest {
 
         assertNotNull(accessToken);
         assertFalse(accessToken.isEmpty());
+    }
+
+    @Test
+    public void testStoreRefreshTokenWithEmptyUsername() {
+        String refreshToken = "testRefreshToken";
+        assertThrows(IllegalArgumentException.class, () -> {
+            tokenService.storeRefreshToken("", refreshToken);
+        });
+    }
+
+    @Test
+    public void testStoreRefreshTokenWithNullUsername() {
+        String refreshToken = "testRefreshToken";
+        assertThrows(NullPointerException.class, () -> {
+            tokenService.storeRefreshToken(null, refreshToken);
+        });
+    }
+
+    @Test
+    public void testStoreRefreshTokenWithNullToken() {
+        String username = "testUser";
+        assertThrows(NullPointerException.class, () -> {
+            tokenService.storeRefreshToken(username, null);
+        });
+    }
+
+    @Test
+    public void testStoreRefreshTokenWithEmptyToken() {
+        String username = "testUser";
+        assertThrows(IllegalArgumentException.class, () -> {
+            tokenService.storeRefreshToken(username, "");
+        });
     }
 }
