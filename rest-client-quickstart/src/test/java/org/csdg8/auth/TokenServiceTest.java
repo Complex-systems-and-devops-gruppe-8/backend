@@ -100,4 +100,22 @@ public class TokenServiceTest {
             tokenService.storeRefreshToken(username, "");
         }, "Storing a blank refresh token should throw NullPointerException");
     }
+
+
+    @Test
+    public void testOverwriteRefreshToken() {
+        String username = "testUser";
+        String refreshToken1 = "testRefreshToken1";
+        String refreshToken2 = "testRefreshToken2";
+
+        tokenService.storeRefreshToken(username, refreshToken1);
+        assertTrue(tokenService.isValidRefreshToken(username, refreshToken1),
+                "First refresh token should be valid");
+
+        tokenService.storeRefreshToken(username, refreshToken2);
+        assertFalse(tokenService.isValidRefreshToken(username, refreshToken1),
+                "First refresh token should no longer be valid after overwriting");
+        assertTrue(tokenService.isValidRefreshToken(username, refreshToken2),
+                "Second refresh token should be valid");
+    }
 }
