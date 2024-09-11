@@ -1,4 +1,4 @@
-package org.csdg8.security;
+package org.csdg8.security.authentication;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
