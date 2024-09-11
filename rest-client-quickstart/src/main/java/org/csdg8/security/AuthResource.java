@@ -102,6 +102,11 @@ public class AuthResource {
     }
 
     @POST
+    @Operation(summary = "Register a new user", description = "Registers a new user with a provided username and password. Upon successful registration, the user is assigned a default role of 'user'.")
+    @APIResponse(responseCode = "201", description = "User registered successfully")
+    @APIResponse(responseCode = "400", description = "Invalid username or password format")
+    @APIResponse(responseCode = "409", description = "Username already exists")
+    @APIResponse(responseCode = "500", description = "Server error during registration")
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response register(RegistrationRequest request) {
