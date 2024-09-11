@@ -88,13 +88,20 @@ public class AuthResource {
     public Response refreshToken(RefreshRequest request) {
         String newAccessToken = this.authService.refreshAccessToken(request.username, request.refreshToken);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("accessToken", newAccessToken);
+        RefreshTokenResponse response = new RefreshTokenResponse(newAccessToken);
         return Response.ok(response).build();
     }
 
     public static class RefreshRequest {
         public String username;
         public String refreshToken;
+    }
+
+    public static class RefreshTokenResponse {
+        public String accessToken;
+
+        public RefreshTokenResponse(String accessToken) {
+            this.accessToken = accessToken;
+        }
     }
 }
