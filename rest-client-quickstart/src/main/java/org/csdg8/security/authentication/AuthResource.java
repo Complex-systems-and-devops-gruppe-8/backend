@@ -34,6 +34,9 @@ public class AuthResource {
     @Inject
     RefreshTokenService refreshTokenService;
 
+    @Inject
+    AuthService authService;
+
     @POST
     @Operation(summary = "Authenticate user and generate tokens", description = "Validates user credentials and, if successful, generates an access token and a refresh token. ")
     @APIResponse(responseCode = "200", description = "Successful login, returns a new access and refresh token")
@@ -83,15 +86,7 @@ public class AuthResource {
     @Path("/token/refresh")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response refreshToken(RefreshRequest request) {
-        if (!this.refreshTokenService.isValidRefreshToken(request.username, request.refreshToken)) {
-            throw new UnauthorizedException();
-        }
-
-        String newAccessToken = Jwt.issuer(this.issuer)
-                .upn(request.username)
-                .groups(this.userService.getUserRole(request.username).get())
-                .expiresIn(Duration.ofMinutes(5))
-                .sign();
+        String newAccessToken = this.authService.refreshAccessToken(request.username, request.refreshToken);
 
         Map<String, String> response = new HashMap<>();
         response.put("accessToken", newAccessToken);
