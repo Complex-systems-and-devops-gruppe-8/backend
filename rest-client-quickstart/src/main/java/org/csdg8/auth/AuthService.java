@@ -3,8 +3,8 @@ package org.csdg8.auth;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.csdg8.security.jpa.user.User;
-import org.csdg8.security.jpa.user.UserService;
+import org.csdg8.user.User;
+import org.csdg8.user.UserService;
 
 import io.quarkus.security.UnauthorizedException;
 import jakarta.enterprise.context.ApplicationScoped;

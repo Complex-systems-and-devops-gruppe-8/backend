@@ -2,7 +2,7 @@ package org.csdg8.security.jpa;
 
 import java.util.Set;
 
-import org.csdg8.security.jpa.user.User;
+import org.csdg8.user.User;
 
 import io.quarkus.arc.profile.IfBuildProfile;
 import io.quarkus.runtime.StartupEvent;

@@ -1,4 +1,4 @@
-package org.csdg8.security.jpa.user;
+package org.csdg8.user;
 
 import java.util.Optional;
 import java.util.Set;

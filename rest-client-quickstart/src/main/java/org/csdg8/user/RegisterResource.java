@@ -1,9 +1,8 @@
-package org.csdg8;
+package org.csdg8.user;
 
 import java.util.Set;
 
 import org.csdg8.model.exception.UserAlreadyExistsException;
-import org.csdg8.security.jpa.user.UserService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.jboss.resteasy.reactive.RestResponse;

@@ -8,10 +8,10 @@ import java.net.URL;
 
 import org.apache.http.HttpStatus;
 import org.csdg8.HelloResource;
-import org.csdg8.RegisterResource;
-import org.csdg8.RegisterResource.RegistrationRequest;
 import org.csdg8.auth.AuthResource;
 import org.csdg8.auth.AuthResource.CreateTokenResponse;
+import org.csdg8.user.RegisterResource;
+import org.csdg8.user.RegisterResource.RegistrationRequest;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;

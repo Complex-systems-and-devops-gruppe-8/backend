@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.csdg8.security.jpa.user.User;
+import org.csdg8.user.User;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.smallrye.jwt.build.Jwt;
