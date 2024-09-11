@@ -28,10 +28,6 @@ public class JpaSecurityRealmTest {
     @TestHTTPResource
     URL helloUrl;
 
-    @TestHTTPEndpoint(AuthResource.class)
-    @TestHTTPResource
-    URL authUrl;
-
     @TestHTTPEndpoint(UserResource.class)
     @TestHTTPResource
     URL usersUrl;
