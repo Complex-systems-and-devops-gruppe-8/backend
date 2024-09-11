@@ -1,6 +1,5 @@
 package org.csdg8.auth;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
@@ -14,10 +13,6 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/auth")
 public class AuthResource {
-
-    @Inject
-    @ConfigProperty(name = "mp.jwt.verify.issuer")
-    String issuer;
 
     @Inject
     AuthService authService;
