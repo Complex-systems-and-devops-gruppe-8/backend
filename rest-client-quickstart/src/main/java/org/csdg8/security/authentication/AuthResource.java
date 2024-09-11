@@ -44,23 +44,8 @@ public class AuthResource {
     @Path("/token")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createToken(Credentials credentials) {
-        Optional<User> user = this.userService.validateUser(credentials.username, credentials.password);
-        if (user.isEmpty()) {
-            throw new UnauthorizedException("Invalid credentials");
-        }
-
-        User presentUser = user.get();
-
-        // Access Token (short-lived)
-        String accessToken = Jwt.issuer(this.issuer)
-                .upn(presentUser.username)
-                .groups(presentUser.role)
-                .expiresIn(Duration.ofMinutes(5))
-                .sign();
-
-        // Refresh Token (long-lived)
-        String refreshToken = UUID.randomUUID().toString();
-        this.tokenService.storeRefreshToken(presentUser.username, refreshToken);
+        String accessToken = this.authService.createAccessToken(credentials.username, credentials.password);
+        String refreshToken = this.authService.createRefreshToken(credentials.username, credentials.password);
 
         CreateTokenResponse response = new CreateTokenResponse(accessToken, refreshToken);
         return Response.ok(response).build();
