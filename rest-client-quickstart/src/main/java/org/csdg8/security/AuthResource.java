@@ -9,6 +9,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.csdg8.security.jpa.User;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -31,6 +33,9 @@ public class AuthResource {
     RefreshTokenService refreshTokenService;
 
     @POST
+    @Operation(summary = "Authenticate user and generate tokens", description = "Validates user credentials and, if successful, generates an access token and a refresh token. ")
+    @APIResponse(responseCode = "200", description = "Successful login, returns a new access and refresh token")
+    @APIResponse(responseCode = "401", description = "Invalid credentials")
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(Credentials credentials) {
