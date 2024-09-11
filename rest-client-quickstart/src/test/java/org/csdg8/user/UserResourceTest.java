@@ -1,4 +1,4 @@
-package org.csdg8.security.jpa;
+package org.csdg8.user;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
@@ -6,7 +6,6 @@ import static org.hamcrest.core.Is.is;
 import java.net.URL;
 
 import org.apache.http.HttpStatus;
-import org.csdg8.user.UserResource;
 import org.csdg8.user.UserResource.RegistrationRequest;
 import org.junit.jupiter.api.Test;
 
