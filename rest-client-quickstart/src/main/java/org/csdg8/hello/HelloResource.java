@@ -1,4 +1,4 @@
-package org.csdg8;
+package org.csdg8.hello;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;

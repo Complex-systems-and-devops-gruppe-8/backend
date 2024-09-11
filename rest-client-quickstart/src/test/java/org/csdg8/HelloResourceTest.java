@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 import java.net.URL;
 
+import org.csdg8.hello.HelloResource;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
