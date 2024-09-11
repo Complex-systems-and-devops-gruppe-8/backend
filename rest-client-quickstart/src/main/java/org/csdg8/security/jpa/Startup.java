@@ -13,7 +13,7 @@ public class Startup {
 
     @Transactional
     @IfBuildProfile(allOf = { "dev", "test" })
-    public void loadUsers(@Observes StartupEvent evt) {
+    public void loadTestDevUsers(@Observes StartupEvent evt) {
         User.deleteAll();
         User.add("admin", "admin", Set.of("admin"));
         User.add("user", "user", Set.of("user"));
