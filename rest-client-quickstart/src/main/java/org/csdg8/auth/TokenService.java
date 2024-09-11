@@ -1,4 +1,4 @@
-package org.csdg8.security.authentication;
+package org.csdg8.auth;
 
 import java.time.Duration;
 import java.util.HashMap;

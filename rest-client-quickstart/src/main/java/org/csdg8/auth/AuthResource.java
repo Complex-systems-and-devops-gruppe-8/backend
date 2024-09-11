@@ -1,4 +1,4 @@
-package org.csdg8.security.authentication;
+package org.csdg8.auth;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.openapi.annotations.Operation;

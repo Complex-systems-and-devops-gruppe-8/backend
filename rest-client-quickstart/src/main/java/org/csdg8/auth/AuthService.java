@@ -1,4 +1,4 @@
-package org.csdg8.security.authentication;
+package org.csdg8.auth;
 
 import java.util.Optional;
 import java.util.UUID;
