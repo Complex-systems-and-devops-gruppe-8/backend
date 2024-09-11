@@ -11,6 +11,7 @@ import org.csdg8.HelloResource;
 import org.csdg8.RegisterResource;
 import org.csdg8.RegisterResource.RegistrationRequest;
 import org.csdg8.security.authentication.AuthResource;
+import org.csdg8.security.authentication.AuthResource.CreateTokenResponse;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -162,7 +163,7 @@ public class JpaSecurityRealmTest {
 
     private String obtainToken(String username, String password) {
         Response response = authResource.createToken(new AuthResource.Credentials(username, password));
-        Map<String, String> tokenResponse = response.readEntity(Map.class);
+        CreateTokenResponse tokenResponse = response.readEntity(CreateTokenResponse.class);
         if (response.getStatus() != HttpStatus.SC_OK) {
             throw new RuntimeException(String.format(
                     "Failed to obtain token for user: %s"
@@ -171,6 +172,6 @@ public class JpaSecurityRealmTest {
                     username, password, response.readEntity(String.class)));
         }
 
-        return tokenResponse.get("accessToken");
+        return tokenResponse.accessToken;
     }
 }

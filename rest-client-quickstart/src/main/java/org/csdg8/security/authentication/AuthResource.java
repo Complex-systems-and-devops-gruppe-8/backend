@@ -62,9 +62,7 @@ public class AuthResource {
         String refreshToken = UUID.randomUUID().toString();
         this.tokenService.storeRefreshToken(presentUser.username, refreshToken);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("accessToken", accessToken);
-        response.put("refreshToken", refreshToken);
+        CreateTokenResponse response = new CreateTokenResponse(accessToken, refreshToken);
         return Response.ok(response).build();
     }
 
@@ -75,6 +73,16 @@ public class AuthResource {
         public Credentials(String username, String password) {
             this.username = username;
             this.password = password;
+        }
+    }
+
+    public static class CreateTokenResponse {
+        public String accessToken;
+        public String refreshToken;
+
+        public CreateTokenResponse(String accessToken, String refreshToken) {
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
         }
     }
 
