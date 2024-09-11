@@ -21,7 +21,7 @@ public class HelloResourceTest {
     @Test
     public void testHelloEndpoint() {
         given()
-                .when().get(url + "/all")
+                .when().get(this.url + "/all")
                 .then()
                 .statusCode(200)
                 .body(is("Hello, World!"));

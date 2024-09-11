@@ -46,7 +46,7 @@ public class AuthService {
     }
 
     public String refreshAccessToken(String username, String refreshToken) {
-        if (!tokenService.isValidRefreshToken(username, refreshToken)) {
+        if (!this.tokenService.isValidRefreshToken(username, refreshToken)) {
             throw new UnauthorizedException("Invalid refresh token");
         }
 

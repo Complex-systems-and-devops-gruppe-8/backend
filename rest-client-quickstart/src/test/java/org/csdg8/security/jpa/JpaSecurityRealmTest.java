@@ -41,14 +41,14 @@ public class JpaSecurityRealmTest {
 
     @Test
     void shouldAccessPublicWhenAnonymous() {
-        get(helloUrl + "/all")
+        get(this.helloUrl + "/all")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
     void shouldNotAccessAdminWhenAnonymous() {
-        get(helloUrl + "/admin")
+        get(this.helloUrl + "/admin")
                 .then()
                 .statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
@@ -59,7 +59,7 @@ public class JpaSecurityRealmTest {
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
-                .get(helloUrl + "/admin")
+                .get(this.helloUrl + "/admin")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
@@ -70,7 +70,7 @@ public class JpaSecurityRealmTest {
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
-                .get(helloUrl + "/all")
+                .get(this.helloUrl + "/all")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
@@ -81,7 +81,7 @@ public class JpaSecurityRealmTest {
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
-                .get(helloUrl + "/user")
+                .get(this.helloUrl + "/user")
                 .then()
                 .statusCode(HttpStatus.SC_FORBIDDEN);
     }
@@ -93,7 +93,7 @@ public class JpaSecurityRealmTest {
 
         given().header("Authorization", "Bearer " + userToken)
                 .when()
-                .get(helloUrl + "/user")
+                .get(this.helloUrl + "/user")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body(is("Hello, " + username + "!"));
@@ -107,7 +107,7 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(usersUrl)
+                .post(this.usersUrl)
                 .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .body(is("User registered successfully"));
@@ -121,13 +121,13 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(usersUrl);
+                .post(this.usersUrl);
 
         given()
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(usersUrl)
+                .post(this.usersUrl)
                 .then()
                 .statusCode(409)
                 .body(is("Username already exists"));
@@ -141,7 +141,7 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(usersUrl)
+                .post(this.usersUrl)
                 .then()
                 .statusCode(400);
     }
@@ -154,7 +154,7 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(usersUrl)
+                .post(this.usersUrl)
                 .then()
                 .statusCode(400);
     }

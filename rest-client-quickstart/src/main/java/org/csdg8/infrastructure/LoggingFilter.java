@@ -25,8 +25,8 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
     public void filter(ContainerRequestContext context) {
 
         final String method = context.getMethod();
-        final String path = info.getPath();
-        final String address = request.remoteAddress().toString();
+        final String path = this.info.getPath();
+        final String address = this.request.remoteAddress().toString();
 
         Log.infof("Request %s %s from IP %s", method, path, address);
     }
@@ -35,7 +35,7 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
             throws IOException {
         final String method = requestContext.getMethod();
-        final String path = info.getPath();
+        final String path = this.info.getPath();
         final Integer status = responseContext.getStatus();
         final Object entity = responseContext.getEntity();
 

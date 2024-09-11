@@ -39,7 +39,7 @@ public class UserResource {
             throw new UserAlreadyExistsException();
         }
 
-        userService.addUser(request.username, request.password, Set.of("user"));
+        this.userService.addUser(request.username, request.password, Set.of("user"));
 
         return Response.status(Response.Status.CREATED)
                 .entity("User registered successfully")
