@@ -12,6 +12,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
+import io.quarkus.security.UnauthorizedException;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -43,7 +44,7 @@ public class AuthResource {
 
         Optional<User> user = this.userService.validateUser(credentials.username, credentials.password);
         if (user.isEmpty()) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         User foundUser = user.get();
@@ -83,7 +84,7 @@ public class AuthResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response refreshToken(RefreshRequest request) {
         if (!this.refreshTokenService.isValidRefreshToken(request.username, request.refreshToken)) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid refresh token").build();
+            throw new UnauthorizedException();
         }
 
         String newAccessToken = Jwt.issuer(this.issuer)
