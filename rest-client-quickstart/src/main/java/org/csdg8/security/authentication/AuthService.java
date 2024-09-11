@@ -35,11 +35,7 @@ public class AuthService {
 
         User presentUser = user.get();
 
-        return Jwt.issuer(this.issuer)
-                .upn(presentUser.username)
-                .groups(presentUser.role)
-                .expiresIn(Duration.ofMinutes(5))
-                .sign();
+        return this.tokenService.generateAccessToken(presentUser);
     }
 
     // Refresh Token (long-lived)
