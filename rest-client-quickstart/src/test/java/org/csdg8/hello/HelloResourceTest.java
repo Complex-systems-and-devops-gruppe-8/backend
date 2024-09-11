@@ -19,7 +19,7 @@ public class HelloResourceTest {
     URL url;
 
     @Test
-    public void testHelloEndpoint() {
+    public void shouldReturnHelloWorldWhenAccessingAllEndpoint() {
         given()
                 .when().get(this.url + "/all")
                 .then()
