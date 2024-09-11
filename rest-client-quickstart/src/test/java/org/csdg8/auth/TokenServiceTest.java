@@ -135,4 +135,33 @@ public class TokenServiceTest {
         assertFalse(tokenService.isValidRefreshToken(user1, refreshToken2), "User1 should not have User2's refresh token");
         assertFalse(tokenService.isValidRefreshToken(user2, refreshToken1), "User2 should not have User1's refresh token");
     }
+
+    @Test
+    public void testGenerateAccessTokenWithNullUser() {
+        assertThrows(NullPointerException.class, () -> {
+            tokenService.generateAccessToken(null);
+        }, "Generating access token with null user should throw NullPointerException");
+    }
+
+    @Test
+    public void testGenerateAccessTokenWithEmptyRole() {
+        User user = new User();
+        user.username = "testUser";
+        user.role = Set.of("");
+
+        String accessToken = tokenService.generateAccessToken(user);
+        assertNotNull(accessToken, "Access token should not be null even with empty role");
+        assertFalse(accessToken.isEmpty(), "Access token should not be empty even with empty role");
+    }
+
+    @Test
+    public void testGenerateAccessTokenWithNullRole() {
+        User user = new User();
+        user.username = "testUser";
+        user.role = null;
+
+        assertThrows(NullPointerException.class, () -> {
+            tokenService.generateAccessToken(user);
+        }, "Generating access token with null role should throw NullPointerException");
+    }
 }
