@@ -7,6 +7,7 @@ import org.csdg8.security.jpa.User;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class UserService {
@@ -45,5 +46,10 @@ public class UserService {
         }
 
         return user;
+    }
+
+    @Transactional
+    public void addUser(String username, String password, Set<String> roles) {
+        User.add(username, password, roles);
     }
 }
