@@ -1,15 +1,12 @@
 package org.csdg8.security.authentication;
 
-import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.csdg8.security.jpa.user.User;
 import org.csdg8.security.jpa.user.UserService;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.quarkus.security.UnauthorizedException;
-import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -21,10 +18,6 @@ public class AuthService {
 
     @Inject
     UserService userService;
-
-    @Inject
-    @ConfigProperty(name = "mp.jwt.verify.issuer")
-    String issuer;
 
     // Access Token (short-lived)
     public String createAccessToken(String username, String password) {
@@ -57,10 +50,8 @@ public class AuthService {
             throw new UnauthorizedException("Invalid refresh token");
         }
 
-        return Jwt.issuer(issuer)
-                .upn(username)
-                .groups(userService.getUserRole(username).get())
-                .expiresIn(Duration.ofMinutes(5))
-                .sign();
+        Optional<User> user = this.userService.findByUsername(username);
+
+        return this.tokenService.generateAccessToken(user.get());
     }
 }
