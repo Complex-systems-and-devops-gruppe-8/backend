@@ -14,6 +14,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Path("/auth")
@@ -90,5 +91,58 @@ public class AuthResource {
     public static class RefreshRequest {
         public String username;
         public String refreshToken;
+    }
+
+    @POST
+    @Path("/register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response register(RegistrationRequest request) {
+
+        if (!isValidUsername(request.username) || !isValidPassword(request.password)) {
+            // TODO throw error instead and handle error types with ServerExceptionMappers
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid username or password format")
+                    .build();
+        }
+
+        if (this.userService.findByUsername(request.username).isPresent()) {
+            // TODO throw error instead and handle error types with ServerExceptionMappers
+            return Response.status(Response.Status.CONFLICT)
+                    .entity("Username already exists")
+                    .build();
+        }
+
+        try {
+            userService.addUser(request.username, request.password, Set.of("user"));
+
+            return Response.status(Response.Status.CREATED)
+                    .entity("User registered successfully")
+                    .build();
+        } catch (Exception e) {
+            // TODO throw error instead and handle error types with ServerExceptionMappers
+            return Response.serverError()
+                    .entity("Error occurred during registration")
+                    .build();
+        }
+    }
+
+    public static class RegistrationRequest {
+        public String username;
+        public String password;
+
+        public RegistrationRequest(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+    }
+
+    //TODO username validation logic to more suitable class
+    private boolean isValidUsername(String username) {
+        return username != null && username.matches("^[a-zA-Z0-9_]{3,20}$");
+    }
+
+    //TODO password validation logic to more suitable class
+    private boolean isValidPassword(String password) {
+        return password != null && password.length() >= 8;
     }
 }
