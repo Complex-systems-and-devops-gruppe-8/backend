@@ -32,7 +32,7 @@ public class AuthResource {
     UserService userService;
 
     @Inject
-    RefreshTokenService refreshTokenService;
+    TokenService refreshTokenService;
 
     @Inject
     AuthService authService;

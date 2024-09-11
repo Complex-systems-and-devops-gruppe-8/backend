@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ApplicationScoped
-public class RefreshTokenService {
+public class TokenService {
 
     private Map<String, String> refreshTokens = new HashMap<>();
 

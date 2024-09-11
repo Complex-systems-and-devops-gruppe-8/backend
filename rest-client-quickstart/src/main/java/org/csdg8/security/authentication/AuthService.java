@@ -14,7 +14,7 @@ import jakarta.inject.Inject;
 public class AuthService {
 
     @Inject
-    RefreshTokenService refreshTokenService;
+    TokenService refreshTokenService;
 
     @Inject
     UserService userService;
