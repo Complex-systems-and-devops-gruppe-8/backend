@@ -26,7 +26,7 @@ public class TokenServiceTest {
 
         tokenService.storeRefreshToken(username, refreshToken);
 
-        assertTrue(tokenService.isValidRefreshToken(username, refreshToken));
+        assertTrue(tokenService.isValidRefreshToken(username, refreshToken), "Refresh token should be valid");
     }
 
     @Test
@@ -65,8 +65,8 @@ public class TokenServiceTest {
 
         String accessToken = tokenService.generateAccessToken(user);
 
-        assertNotNull(accessToken);
-        assertFalse(accessToken.isEmpty());
+        assertNotNull(accessToken, "Generated access token should not be null");
+        assertFalse(accessToken.isBlank(), "Generated access token should not be blank or empty");
     }
 
     @Test
@@ -74,7 +74,7 @@ public class TokenServiceTest {
         String refreshToken = "testRefreshToken";
         assertThrows(IllegalArgumentException.class, () -> {
             tokenService.storeRefreshToken("", refreshToken);
-        });
+        }, "Storing a blank username should throw NullPointerException");
     }
 
     @Test
@@ -82,7 +82,7 @@ public class TokenServiceTest {
         String refreshToken = "testRefreshToken";
         assertThrows(NullPointerException.class, () -> {
             tokenService.storeRefreshToken(null, refreshToken);
-        });
+        }, "Storing null username should throw NullPointerException");
     }
 
     @Test
@@ -90,7 +90,7 @@ public class TokenServiceTest {
         String username = "testUser";
         assertThrows(NullPointerException.class, () -> {
             tokenService.storeRefreshToken(username, null);
-        });
+        }, "Storing a null refresh token should throw NullPointerException");
     }
 
     @Test
@@ -98,6 +98,6 @@ public class TokenServiceTest {
         String username = "testUser";
         assertThrows(IllegalArgumentException.class, () -> {
             tokenService.storeRefreshToken(username, "");
-        });
+        }, "Storing a blank refresh token should throw NullPointerException");
     }
 }
