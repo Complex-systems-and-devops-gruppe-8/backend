@@ -2,9 +2,12 @@ package org.csdg8;
 
 import java.util.Set;
 
+import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.csdg8.security.jpa.user.UserService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
@@ -37,9 +40,7 @@ public class RegisterResource {
 
         if (this.userService.findByUsername(request.username).isPresent()) {
             // TODO throw error instead and handle error types with ServerExceptionMappers
-            return Response.status(Response.Status.CONFLICT)
-                    .entity("Username already exists")
-                    .build();
+            throw new UserAlreadyExistsException();
         }
 
         userService.addUser(request.username, request.password, Set.of("user"));
@@ -67,5 +68,10 @@ public class RegisterResource {
     // TODO password validation logic to more suitable class
     private boolean isValidPassword(String password) {
         return password != null && password.length() >= 8;
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<String> mapException(UserAlreadyExistsException x) {
+        return RestResponse.status(Response.Status.CONFLICT, "Username already exists");
     }
 }
