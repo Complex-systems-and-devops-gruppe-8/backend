@@ -26,21 +26,21 @@ public class JpaSecurityRealmTest {
 
     @TestHTTPEndpoint(HelloResource.class)
     @TestHTTPResource
-    URL url;
+    URL helloUrl;
 
     @Inject
     AuthResource authResource;
 
     @Test
     void shouldAccessPublicWhenAnonymous() {
-        get(url + "/all")
+        get(helloUrl + "/all")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
     void shouldNotAccessAdminWhenAnonymous() {
-        get(url + "/admin")
+        get(helloUrl + "/admin")
                 .then()
                 .statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
@@ -51,7 +51,7 @@ public class JpaSecurityRealmTest {
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
-                .get(url + "/admin")
+                .get(helloUrl + "/admin")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
@@ -62,7 +62,7 @@ public class JpaSecurityRealmTest {
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
-                .get(url + "/all")
+                .get(helloUrl + "/all")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
@@ -73,7 +73,7 @@ public class JpaSecurityRealmTest {
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
-                .get(url + "/user")
+                .get(helloUrl + "/user")
                 .then()
                 .statusCode(HttpStatus.SC_FORBIDDEN);
     }
@@ -85,7 +85,7 @@ public class JpaSecurityRealmTest {
 
         given().header("Authorization", "Bearer " + userToken)
                 .when()
-                .get(url + "/user")
+                .get(helloUrl + "/user")
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body(is("Hello, " + username + "!"));
