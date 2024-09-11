@@ -60,7 +60,7 @@ public class AuthResource {
     @Operation(summary = "Refresh access token using a valid refresh token", description = "Validates the provided refresh token and, if valid, generates a new short-lived access token. The refresh token itself remains unchanged and can be used for future token refresh operations. If the refresh token is invalid, the request is rejected with an unauthorized response.")
     @APIResponse(responseCode = "200", description = "Successful token refresh, returns a new access token")
     @APIResponse(responseCode = "401", description = "Invalid refresh token")
-    @RolesAllowed({"user", "admin"})
+    @RolesAllowed({ "user", "admin" })
     @Path("/token/refresh")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response refreshAccessToken(RefreshAccessTokenRequest request) {

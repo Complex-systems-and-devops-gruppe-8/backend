@@ -12,8 +12,6 @@ import org.csdg8.RegisterResource;
 import org.csdg8.RegisterResource.RegistrationRequest;
 import org.csdg8.security.authentication.AuthResource;
 import org.csdg8.security.authentication.AuthResource.CreateTokenResponse;
-
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;

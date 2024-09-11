@@ -22,7 +22,7 @@ public class RegisterResource {
 
     @Inject
     UserService userService;
-    
+
     @POST
     @Operation(summary = "Register a new user", description = "Registers a new user with a provided username and password. Upon successful registration, the user is assigned a default role of 'user'.")
     @APIResponse(responseCode = "201", description = "User registered successfully")

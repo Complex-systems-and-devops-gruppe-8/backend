@@ -40,13 +40,13 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
         final Object entity = responseContext.getEntity();
 
         switch (status) {
-            case Integer s when (s >= 100 && s < 400) -> 
+            case Integer s when (s >= 100 && s < 400) ->
                 log1xx2xx3xxResponse(method, path, status, entity);
-            case Integer s when (s >= 400 && s < 500) -> 
+            case Integer s when (s >= 400 && s < 500) ->
                 log4xxResponse(method, path, status, entity);
-            case Integer s when (s >= 500 && s < 600) -> 
+            case Integer s when (s >= 500 && s < 600) ->
                 log5xxResponse(method, path, status, entity);
-            default -> 
+            default ->
                 logInvalidStatusResponse(method, path, status, entity);
         }
     }

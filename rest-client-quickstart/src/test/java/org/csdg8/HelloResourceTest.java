@@ -14,15 +14,15 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 public class HelloResourceTest {
 
-    @TestHTTPEndpoint(HelloResource.class)  
+    @TestHTTPEndpoint(HelloResource.class)
     @TestHTTPResource
     URL url;
-    
+
     @Test
     public void testHelloEndpoint() {
         given()
-            .when().get(url + "/all")
-            .then()
+                .when().get(url + "/all")
+                .then()
                 .statusCode(200)
                 .body(is("Hello, World!"));
     }
