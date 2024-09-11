@@ -1,9 +1,7 @@
-package org.csdg8.security;
+package org.csdg8.security.jpa;
 
 import java.util.Optional;
 import java.util.Set;
-
-import org.csdg8.security.jpa.User;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;

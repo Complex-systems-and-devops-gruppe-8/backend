@@ -2,7 +2,7 @@ package org.csdg8;
 
 import java.util.Set;
 
-import org.csdg8.security.UserService;
+import org.csdg8.security.jpa.UserService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
