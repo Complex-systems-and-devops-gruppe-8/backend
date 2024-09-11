@@ -32,7 +32,7 @@ public class HelloResourceTest {
         given()
                 .when().get(this.url + "/all")
                 .then()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .body(is("Hello, World!"));
     }
 
