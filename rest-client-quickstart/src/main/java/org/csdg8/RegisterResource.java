@@ -34,12 +34,10 @@ public class RegisterResource {
     public Response register(RegistrationRequest request) {
 
         if (!isValidUsername(request.username) || !isValidPassword(request.password)) {
-            // TODO throw specific error depending on the actual problem.
             throw new BadRequestException("Invalid username or password format");
         }
 
         if (this.userService.findByUsername(request.username).isPresent()) {
-            // TODO throw error instead and handle error types with ServerExceptionMappers
             throw new UserAlreadyExistsException();
         }
 
