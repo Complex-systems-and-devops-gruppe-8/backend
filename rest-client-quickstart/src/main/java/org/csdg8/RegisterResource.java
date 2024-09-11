@@ -42,18 +42,11 @@ public class RegisterResource {
                     .build();
         }
 
-        try {
-            userService.addUser(request.username, request.password, Set.of("user"));
+        userService.addUser(request.username, request.password, Set.of("user"));
 
-            return Response.status(Response.Status.CREATED)
-                    .entity("User registered successfully")
-                    .build();
-        } catch (Exception e) {
-            // TODO throw error instead and handle error types with ServerExceptionMappers
-            return Response.serverError()
-                    .entity("Error occurred during registration")
-                    .build();
-        }
+        return Response.status(Response.Status.CREATED)
+                .entity("User registered successfully")
+                .build();
     }
 
     public static class RegistrationRequest {
