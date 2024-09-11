@@ -45,6 +45,9 @@ public class TokenService {
     }
 
     public void revokeRefreshToken(String username) {
+        if (username == null) {
+            throw new NullPointerException("Username cannot be null");
+        }
         refreshTokens.remove(username);
     }
 

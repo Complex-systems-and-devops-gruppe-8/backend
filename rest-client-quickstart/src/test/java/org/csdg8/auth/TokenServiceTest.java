@@ -164,4 +164,18 @@ public class TokenServiceTest {
             tokenService.generateAccessToken(user);
         }, "Generating access token with null role should throw NullPointerException");
     }
+
+
+    @Test
+    public void testRevokeRefreshTokenWithNullUsername() {
+        assertThrows(NullPointerException.class, () -> {
+            tokenService.revokeRefreshToken(null);
+        }, "Revoking refresh token with null username should throw NullPointerException");
+    }
+
+    @Test
+    public void testRevokeRefreshTokenWithEmptyUsername() {
+        tokenService.revokeRefreshToken("");
+        assertFalse(tokenService.isValidRefreshToken("", "testRefreshToken"), "Refresh token should not be valid for empty username after revoking");
+    }
 }
