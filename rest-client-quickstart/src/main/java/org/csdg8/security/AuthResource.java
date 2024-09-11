@@ -37,7 +37,7 @@ public class AuthResource {
     @Operation(summary = "Authenticate user and generate tokens", description = "Validates user credentials and, if successful, generates an access token and a refresh token. ")
     @APIResponse(responseCode = "200", description = "Successful login, returns a new access and refresh token")
     @APIResponse(responseCode = "401", description = "Invalid credentials")
-    @Path("/login")
+    @Path("/token")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(Credentials credentials) {
 
