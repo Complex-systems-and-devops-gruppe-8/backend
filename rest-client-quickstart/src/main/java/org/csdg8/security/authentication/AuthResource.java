@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.csdg8.security.jpa.User;
-import org.csdg8.security.jpa.UserService;
+import org.csdg8.security.jpa.user.User;
+import org.csdg8.security.jpa.user.UserService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
