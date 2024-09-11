@@ -1,11 +1,10 @@
-package org.csdg8;
+package org.csdg8.hello;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.net.URL;
 
-import org.csdg8.hello.HelloResource;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
