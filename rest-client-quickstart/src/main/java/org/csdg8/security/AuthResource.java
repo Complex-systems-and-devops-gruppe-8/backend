@@ -1,5 +1,17 @@
 package org.csdg8.security;
 
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import org.csdg8.security.jpa.User;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+
 import io.smallrye.jwt.build.Jwt;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -7,17 +19,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.csdg8.security.jpa.User;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
 
 @Path("/auth")
 public class AuthResource {
@@ -149,12 +150,12 @@ public class AuthResource {
         }
     }
 
-    //TODO username validation logic to more suitable class
+    // TODO username validation logic to more suitable class
     private boolean isValidUsername(String username) {
         return username != null && username.matches("^[a-zA-Z0-9_]{3,20}$");
     }
 
-    //TODO password validation logic to more suitable class
+    // TODO password validation logic to more suitable class
     private boolean isValidPassword(String password) {
         return password != null && password.length() >= 8;
     }
