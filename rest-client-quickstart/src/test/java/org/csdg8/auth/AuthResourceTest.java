@@ -65,6 +65,64 @@ public class AuthResourceTest {
     }
 
     @Test
+    public void testRefreshAccessTokenWithValidAdminRefreshToken() {
+        Log.fatal("Starting admin refresh test");
+
+        AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
+        String refreshToken = given()
+            .contentType(ContentType.JSON)
+            .body(credentials)
+            .when()
+            .post(authUrl + "/token")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .path("refreshToken");
+
+        Log.fatal("Refreshtoken1: " + refreshToken);
+
+        AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
+        refreshRequest.username = "admin";
+        refreshRequest.refreshToken = refreshToken;
+
+        given()
+            .contentType(ContentType.JSON)
+            .body(refreshRequest)
+            .when()
+            .post(authUrl + "/token/refresh")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .body("accessToken", notNullValue());
+    }
+
+    @Test
+    public void testRefreshAccessTokenWithValidUserRefreshToken() {
+        AuthResource.Credentials credentials = new AuthResource.Credentials("user", "user");
+        String refreshToken = given()
+            .contentType(ContentType.JSON)
+            .body(credentials)
+            .when()
+            .post(authUrl + "/token")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .path("refreshToken");
+
+        AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
+        refreshRequest.username = "user";
+        refreshRequest.refreshToken = refreshToken;
+
+        given()
+            .contentType(ContentType.JSON)
+            .body(refreshRequest)
+            .when()
+            .post(authUrl + "/token/refresh")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .body("accessToken", notNullValue());
+    }
+
+    @Test
     public void testRefreshAccessTokenWithInvalidRefreshToken() {
         AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
         refreshRequest.username = "admin";
