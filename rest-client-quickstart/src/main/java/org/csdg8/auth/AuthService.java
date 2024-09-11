@@ -3,10 +3,10 @@ package org.csdg8.auth;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.user.User;
 import org.csdg8.user.UserService;
 
-import io.quarkus.security.UnauthorizedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -23,7 +23,7 @@ public class AuthService {
     public String createAccessToken(String username, String password) {
         Optional<User> user = this.userService.validateUser(username, password);
         if (user.isEmpty()) {
-            throw new UnauthorizedException("Invalid credentials");
+            throw new InvalidCredentialsException();
         }
 
         User presentUser = user.get();
@@ -35,7 +35,7 @@ public class AuthService {
     public String createRefreshToken(String username, String password) {
         Optional<User> user = this.userService.validateUser(username, password);
         if (user.isEmpty()) {
-            throw new UnauthorizedException("Invalid credentials");
+            throw new InvalidCredentialsException();
         }
 
         User presentUser = user.get();
@@ -47,7 +47,7 @@ public class AuthService {
 
     public String refreshAccessToken(String username, String refreshToken) {
         if (!this.tokenService.isValidRefreshToken(username, refreshToken)) {
-            throw new UnauthorizedException("Invalid refresh token");
+            throw new InvalidCredentialsException();
         }
 
         Optional<User> user = this.userService.findByUsername(username);

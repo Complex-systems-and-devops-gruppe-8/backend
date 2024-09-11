@@ -3,9 +3,9 @@ package org.csdg8.auth;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.csdg8.model.exception.InvalidCredentialsException;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.security.UnauthorizedException;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 
@@ -38,7 +38,7 @@ public class AuthServiceTest {
         String username = "invalidUser";
         String password = "invalidPassword";
 
-        assertThrows(UnauthorizedException.class, () -> {
+        assertThrows(InvalidCredentialsException.class, () -> {
             authService.createAccessToken(username, password);
         }, "Invalid credentials should throw UnauthorizedException");
     }
@@ -66,7 +66,7 @@ public class AuthServiceTest {
         String username = "invalidUser";
         String password = "invalidPassword";
 
-        assertThrows(UnauthorizedException.class, () -> {
+        assertThrows(InvalidCredentialsException.class, () -> {
             authService.createRefreshToken(username, password);
         }, "Invalid credentials should throw UnauthorizedException");
     }
@@ -100,7 +100,7 @@ public class AuthServiceTest {
         String username = "admin";
         String invalidRefreshToken = "invalidRefreshToken";
 
-        assertThrows(UnauthorizedException.class, () -> {
+        assertThrows(InvalidCredentialsException.class, () -> {
             authService.refreshAccessToken(username, invalidRefreshToken);
         }, "Invalid refresh token should throw UnauthorizedException");
     }
