@@ -66,7 +66,7 @@ public class JpaSecurityRealmTest {
     }
 
     @Test
-    void s11houldAccessAllWhenAdminAuthenticated() {
+    void shouldAccessAllWhenAdminAuthenticated() {
         String adminToken = obtainToken("admin", "admin");
 
         given().header("Authorization", "Bearer " + adminToken)
