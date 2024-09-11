@@ -36,4 +36,14 @@ public class UserService {
 
         return Optional.of(role);
     }
+
+    public Optional<User> findByUsername(String username) {
+        Optional<User> user = User.findByUsername(username);
+
+        if (user.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return user;
+    }
 }
