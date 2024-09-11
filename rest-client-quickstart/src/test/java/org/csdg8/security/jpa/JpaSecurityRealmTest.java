@@ -144,8 +144,7 @@ public class JpaSecurityRealmTest {
                 .when()
                 .post(registerUrl + "/register")
                 .then()
-                .statusCode(400)
-                .body(is("Invalid username or password format"));
+                .statusCode(400);
     }
 
     @Test
@@ -158,8 +157,7 @@ public class JpaSecurityRealmTest {
                 .when()
                 .post(registerUrl + "/register")
                 .then()
-                .statusCode(400)
-                .body(is("Invalid username or password format"));
+                .statusCode(400);
     }
 
     private String obtainToken(String username, String password) {

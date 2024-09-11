@@ -7,6 +7,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -30,10 +31,8 @@ public class RegisterResource {
     public Response register(RegistrationRequest request) {
 
         if (!isValidUsername(request.username) || !isValidPassword(request.password)) {
-            // TODO throw error instead and handle error types with ServerExceptionMappers
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Invalid username or password format")
-                    .build();
+            // TODO throw specific error depending on the actual problem.
+            throw new BadRequestException("Invalid username or password format");
         }
 
         if (this.userService.findByUsername(request.username).isPresent()) {
