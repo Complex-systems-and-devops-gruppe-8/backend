@@ -161,7 +161,7 @@ public class JpaSecurityRealmTest {
     }
 
     private String obtainToken(String username, String password) {
-        Response response = authResource.login(new AuthResource.Credentials(username, password));
+        Response response = authResource.createToken(new AuthResource.Credentials(username, password));
         Map<String, String> tokenResponse = response.readEntity(Map.class);
         if (response.getStatus() != HttpStatus.SC_OK) {
             throw new RuntimeException(String.format(

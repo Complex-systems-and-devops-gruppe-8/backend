@@ -43,25 +43,24 @@ public class AuthResource {
     @APIResponse(responseCode = "401", description = "Invalid credentials")
     @Path("/token")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response login(Credentials credentials) {
-
+    public Response createToken(Credentials credentials) {
         Optional<User> user = this.userService.validateUser(credentials.username, credentials.password);
         if (user.isEmpty()) {
             throw new UnauthorizedException("Invalid credentials");
         }
 
-        User foundUser = user.get();
+        User presentUser = user.get();
 
         // Access Token (short-lived)
         String accessToken = Jwt.issuer(this.issuer)
-                .upn(foundUser.username)
-                .groups(foundUser.role)
+                .upn(presentUser.username)
+                .groups(presentUser.role)
                 .expiresIn(Duration.ofMinutes(5))
                 .sign();
 
         // Refresh Token (long-lived)
         String refreshToken = UUID.randomUUID().toString();
-        this.tokenService.storeRefreshToken(foundUser.username, refreshToken);
+        this.tokenService.storeRefreshToken(presentUser.username, refreshToken);
 
         Map<String, String> response = new HashMap<>();
         response.put("accessToken", accessToken);
