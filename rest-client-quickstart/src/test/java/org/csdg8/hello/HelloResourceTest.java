@@ -28,7 +28,7 @@ public class HelloResourceTest {
     AuthResource authResource;
 
     @Test
-    public void shouldReturnHelloWorldWhenAccessingAllEndpoint() {
+    public void shouldReturnOkAndHelloWorldWhenAccessingAllEndpointAnonymously() {
         given()
                 .when().get(this.url + "/all")
                 .then()
@@ -37,21 +37,14 @@ public class HelloResourceTest {
     }
 
     @Test
-    void shouldAccessPublicWhenAnonymous() {
-        get(this.url + "/all")
-                .then()
-                .statusCode(HttpStatus.SC_OK);
-    }
-
-    @Test
-    void shouldNotAccessAdminWhenAnonymous() {
+    void shouldReturnUnauthorizedWhenAccessingAdminEndpointAnonymously() {
         get(this.url + "/admin")
                 .then()
                 .statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
 
     @Test
-    void shouldAccessAdminWhenAdminAuthenticated() {
+    void shouldReturnOkWhenAccessingAdminEndpointAsAdmin() {
         String adminToken = obtainToken("admin", "admin");
 
         given().header("Authorization", "Bearer " + adminToken)
@@ -62,7 +55,7 @@ public class HelloResourceTest {
     }
 
     @Test
-    void shouldAccessAllWhenAdminAuthenticated() {
+    void shouldReturnOkWhenAccessingAllEndpointAsAdmin() {
         String adminToken = obtainToken("admin", "admin");
 
         given().header("Authorization", "Bearer " + adminToken)
@@ -73,7 +66,7 @@ public class HelloResourceTest {
     }
 
     @Test
-    void shouldNotAccessUserWhenAdminAuthenticated() {
+    void shouldReturnForbiddenWhenAccessingUserEndpointAsAdmin() {
         String adminToken = obtainToken("admin", "admin");
 
         given().header("Authorization", "Bearer " + adminToken)
@@ -84,7 +77,7 @@ public class HelloResourceTest {
     }
 
     @Test
-    void shouldAccessUserAndGetIdentityWhenUserAuthenticated() {
+    void shouldReturnOkAndUserIdentityWhenAccessingUserEndpointAsUser() {
         String username = "user";
         String userToken = obtainToken(username, "user");
 
