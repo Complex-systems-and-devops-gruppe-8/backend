@@ -92,22 +92,22 @@ public class AuthResource {
     @APIResponse(responseCode = "401", description = "Invalid refresh token")
     @Path("/token/refresh")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response refreshToken(RefreshRequest request) {
+    public Response refreshAccessToken(RefreshAccessTokenRequest request) {
         String newAccessToken = this.authService.refreshAccessToken(request.username, request.refreshToken);
 
-        RefreshTokenResponse response = new RefreshTokenResponse(newAccessToken);
+        RefreshAccessTokenResponse response = new RefreshAccessTokenResponse(newAccessToken);
         return Response.ok(response).build();
     }
 
-    public static class RefreshRequest {
+    public static class RefreshAccessTokenRequest {
         public String username;
         public String refreshToken;
     }
 
-    public static class RefreshTokenResponse {
+    public static class RefreshAccessTokenResponse {
         public String accessToken;
 
-        public RefreshTokenResponse(String accessToken) {
+        public RefreshAccessTokenResponse(String accessToken) {
             this.accessToken = accessToken;
         }
     }
