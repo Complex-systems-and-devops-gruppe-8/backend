@@ -8,8 +8,9 @@ import java.net.URL;
 
 import org.apache.http.HttpStatus;
 import org.csdg8.HelloResource;
+import org.csdg8.RegisterResource;
+import org.csdg8.RegisterResource.RegistrationRequest;
 import org.csdg8.security.AuthResource;
-import org.csdg8.security.AuthResource.RegistrationRequest;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,10 @@ public class JpaSecurityRealmTest {
     @TestHTTPEndpoint(AuthResource.class)
     @TestHTTPResource
     URL authUrl;
+
+    @TestHTTPEndpoint(RegisterResource.class)
+    @TestHTTPResource
+    URL registerUrl;
 
     @Inject
     AuthResource authResource;
@@ -103,7 +108,7 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(authUrl + "/register")
+                .post(registerUrl + "/register")
                 .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .body(is("User registered successfully"));
@@ -117,13 +122,13 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(authUrl + "/register");
+                .post(registerUrl + "/register");
 
         given()
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(authUrl + "/register")
+                .post(registerUrl + "/register")
                 .then()
                 .statusCode(409)
                 .body(is("Username already exists"));
@@ -137,7 +142,7 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(authUrl + "/register")
+                .post(registerUrl + "/register")
                 .then()
                 .statusCode(400)
                 .body(is("Invalid username or password format"));
@@ -151,7 +156,7 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(authUrl + "/register")
+                .post(registerUrl + "/register")
                 .then()
                 .statusCode(400)
                 .body(is("Invalid username or password format"));
