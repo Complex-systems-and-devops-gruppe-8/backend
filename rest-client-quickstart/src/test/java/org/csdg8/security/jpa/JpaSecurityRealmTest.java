@@ -10,8 +10,8 @@ import org.apache.http.HttpStatus;
 import org.csdg8.HelloResource;
 import org.csdg8.auth.AuthResource;
 import org.csdg8.auth.AuthResource.CreateTokenResponse;
-import org.csdg8.user.RegisterResource;
-import org.csdg8.user.RegisterResource.RegistrationRequest;
+import org.csdg8.user.UserResource;
+import org.csdg8.user.UserResource.RegistrationRequest;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -32,9 +32,9 @@ public class JpaSecurityRealmTest {
     @TestHTTPResource
     URL authUrl;
 
-    @TestHTTPEndpoint(RegisterResource.class)
+    @TestHTTPEndpoint(UserResource.class)
     @TestHTTPResource
-    URL registerUrl;
+    URL usersUrl;
 
     @Inject
     AuthResource authResource;
@@ -107,7 +107,7 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(registerUrl + "/register")
+                .post(usersUrl)
                 .then()
                 .statusCode(HttpStatus.SC_CREATED)
                 .body(is("User registered successfully"));
@@ -121,13 +121,13 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(registerUrl + "/register");
+                .post(usersUrl);
 
         given()
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(registerUrl + "/register")
+                .post(usersUrl)
                 .then()
                 .statusCode(409)
                 .body(is("Username already exists"));
@@ -141,7 +141,7 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(registerUrl + "/register")
+                .post(usersUrl)
                 .then()
                 .statusCode(400);
     }
@@ -154,7 +154,7 @@ public class JpaSecurityRealmTest {
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
-                .post(registerUrl + "/register")
+                .post(usersUrl)
                 .then()
                 .statusCode(400);
     }

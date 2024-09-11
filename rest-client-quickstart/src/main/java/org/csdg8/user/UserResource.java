@@ -16,8 +16,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/register")
-public class RegisterResource {
+@Path("/users")
+public class UserResource {
 
     @Inject
     UserService userService;
@@ -28,7 +28,6 @@ public class RegisterResource {
     @APIResponse(responseCode = "400", description = "Invalid username or password format")
     @APIResponse(responseCode = "409", description = "Username already exists")
     @APIResponse(responseCode = "500", description = "Server error during registration")
-    @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response register(RegistrationRequest request) {
 
