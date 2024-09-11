@@ -16,7 +16,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 
 @QuarkusTest
-public class JpaSecurityRealmTest {
+public class UserResourceTest {
 
     @TestHTTPEndpoint(UserResource.class)
     @TestHTTPResource
@@ -81,5 +81,4 @@ public class JpaSecurityRealmTest {
                 .then()
                 .statusCode(400);
     }
-
 }
