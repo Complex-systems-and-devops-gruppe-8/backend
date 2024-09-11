@@ -1,4 +1,4 @@
-package org.csdg8.security;
+package org.csdg8.security.authentication;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import org.csdg8.security.RefreshTokenService;
+import org.csdg8.security.UserService;
 import org.csdg8.security.jpa.User;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.openapi.annotations.Operation;

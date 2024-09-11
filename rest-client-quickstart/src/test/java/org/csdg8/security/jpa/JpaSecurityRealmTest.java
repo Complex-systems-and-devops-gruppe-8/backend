@@ -10,7 +10,7 @@ import org.apache.http.HttpStatus;
 import org.csdg8.HelloResource;
 import org.csdg8.RegisterResource;
 import org.csdg8.RegisterResource.RegistrationRequest;
-import org.csdg8.security.AuthResource;
+import org.csdg8.security.authentication.AuthResource;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
