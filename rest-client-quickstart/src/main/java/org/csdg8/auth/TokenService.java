@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.csdg8.user.User;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -72,5 +73,9 @@ public class TokenService {
         } catch (ParseException e) {
             return Optional.empty();
         }
+    }
+
+    public String generateRefreshToken() {
+        return UUID.randomUUID().toString();
     }
 }
