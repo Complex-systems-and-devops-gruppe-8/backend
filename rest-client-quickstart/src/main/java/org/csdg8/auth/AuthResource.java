@@ -62,15 +62,15 @@ public class AuthResource {
     @Path("/token/refresh")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response refreshAccessToken(RefreshAccessTokenRequest request) {
-        String newAccessToken = this.authService.refreshAccessToken(request.username, request.refreshToken);
+        String newAccessToken = this.authService.refreshAccessToken(request.refreshToken, request.accessToken);
 
         RefreshAccessTokenResponse response = new RefreshAccessTokenResponse(newAccessToken);
         return Response.ok(response).build();
     }
 
     public static class RefreshAccessTokenRequest {
-        public String username;
         public String refreshToken;
+        public String accessToken;
     }
 
     public static class RefreshAccessTokenResponse {

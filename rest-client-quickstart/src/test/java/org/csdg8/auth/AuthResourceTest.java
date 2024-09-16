@@ -8,11 +8,12 @@ import java.net.URL;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.logging.Log;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 
 @QuarkusTest
 public class AuthResourceTest {
@@ -66,26 +67,24 @@ public class AuthResourceTest {
 
     @Test
     public void testRefreshAccessTokenWithValidAdminRefreshToken() {
-        Log.fatal("Starting admin refresh test");
-
         AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
-        String refreshToken = given()
+        ExtractableResponse<io.restassured.response.Response> tokens = given()
             .contentType(ContentType.JSON)
             .body(credentials)
             .when()
             .post(authUrl + "/token")
             .then()
             .statusCode(HttpStatus.SC_OK)
-            .extract()
-            .path("refreshToken");
+            .extract();
 
-        Log.fatal("Refreshtoken1: " + refreshToken);
+        String refreshToken = tokens.path("refreshToken");
+        String accessToken = tokens.path("accessToken");
 
         AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
-        refreshRequest.username = "admin";
+        refreshRequest.accessToken = accessToken;
         refreshRequest.refreshToken = refreshToken;
 
-        given()
+        given().header("Authorization", "Bearer " + accessToken)
             .contentType(ContentType.JSON)
             .body(refreshRequest)
             .when()
@@ -98,21 +97,23 @@ public class AuthResourceTest {
     @Test
     public void testRefreshAccessTokenWithValidUserRefreshToken() {
         AuthResource.Credentials credentials = new AuthResource.Credentials("user", "user");
-        String refreshToken = given()
+        ExtractableResponse<Response> tokens = given()
             .contentType(ContentType.JSON)
             .body(credentials)
             .when()
             .post(authUrl + "/token")
             .then()
             .statusCode(HttpStatus.SC_OK)
-            .extract()
-            .path("refreshToken");
+            .extract();
 
-        AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
-        refreshRequest.username = "user";
-        refreshRequest.refreshToken = refreshToken;
+            String refreshToken = tokens.path("refreshToken");
+            String accessToken = tokens.path("accessToken");
+    
+            AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
+            refreshRequest.accessToken = accessToken;
+            refreshRequest.refreshToken = refreshToken;
 
-        given()
+        given().header("Authorization", "Bearer " + accessToken)
             .contentType(ContentType.JSON)
             .body(refreshRequest)
             .when()
@@ -124,11 +125,22 @@ public class AuthResourceTest {
 
     @Test
     public void testRefreshAccessTokenWithInvalidRefreshToken() {
+        AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
+        String accessToken = given()
+            .contentType(ContentType.JSON)
+            .body(credentials)
+            .when()
+            .post(authUrl + "/token")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .path("accessToken");
+
         AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
-        refreshRequest.username = "admin";
+        refreshRequest.accessToken = accessToken;
         refreshRequest.refreshToken = "invalidRefreshToken";
 
-        given()
+        given().header("Authorization", "Bearer " + accessToken)
             .contentType(ContentType.JSON)
             .body(refreshRequest)
             .when()

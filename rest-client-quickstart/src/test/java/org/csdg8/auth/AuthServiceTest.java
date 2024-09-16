@@ -79,8 +79,10 @@ public class AuthServiceTest {
         String refreshToken = authService.createRefreshToken(username, password);
         assertNotNull(refreshToken, "Refresh token should not be null for valid admin credentials");
 
-        String accessToken = authService.refreshAccessToken(username, refreshToken);
-        assertNotNull(accessToken, "Access token should not be null for valid refresh token");
+        String accessToken = authService.createAccessToken(username, password);
+
+        String newAccessToken = authService.refreshAccessToken(refreshToken, accessToken);
+        assertNotNull(newAccessToken, "New access token should not be null for valid refresh token");
     }
 
     @Test
@@ -91,8 +93,10 @@ public class AuthServiceTest {
         String refreshToken = authService.createRefreshToken(username, password);
         assertNotNull(refreshToken, "Refresh token should not be null for valid user credentials");
 
-        String accessToken = authService.refreshAccessToken(username, refreshToken);
-        assertNotNull(accessToken, "Access token should not be null for valid refresh token");
+        String accessToken = this.authService.createAccessToken(username, password);
+
+        String newAccessToken = authService.refreshAccessToken(refreshToken, accessToken);
+        assertNotNull(newAccessToken, "New access token should not be null for valid refresh token");
     }
 
     @Test

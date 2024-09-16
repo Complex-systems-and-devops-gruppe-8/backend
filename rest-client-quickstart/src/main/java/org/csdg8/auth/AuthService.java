@@ -45,12 +45,16 @@ public class AuthService {
         return refreshToken;
     }
 
-    public String refreshAccessToken(String username, String refreshToken) {
-        if (!this.tokenService.isValidRefreshToken(username, refreshToken)) {
+    public String refreshAccessToken(String refreshToken, String prevAccessToken) {
+        Optional<String> username = this.tokenService.getUsername(prevAccessToken);
+        if (username.isEmpty()) {
+            throw new InvalidCredentialsException();
+        }
+        if (!this.tokenService.isValidRefreshToken(username.get(), refreshToken)) {
             throw new InvalidCredentialsException();
         }
 
-        Optional<User> user = this.userService.findByUsername(username);
+        Optional<User> user = this.userService.findByUsername(username.get());
 
         return this.tokenService.generateAccessToken(user.get());
     }
