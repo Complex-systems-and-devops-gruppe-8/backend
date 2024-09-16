@@ -84,7 +84,7 @@ public class AuthResourceTest {
         refreshRequest.accessToken = accessToken;
         refreshRequest.refreshToken = refreshToken;
 
-        given().header("Authorization", "Bearer " + accessToken)
+        given().header("Authorization", "Bearer " + refreshRequest.accessToken)
             .contentType(ContentType.JSON)
             .body(refreshRequest)
             .when()
@@ -113,7 +113,7 @@ public class AuthResourceTest {
             refreshRequest.accessToken = accessToken;
             refreshRequest.refreshToken = refreshToken;
 
-        given().header("Authorization", "Bearer " + accessToken)
+        given().header("Authorization", "Bearer " + refreshRequest.accessToken)
             .contentType(ContentType.JSON)
             .body(refreshRequest)
             .when()
@@ -140,7 +140,33 @@ public class AuthResourceTest {
         refreshRequest.accessToken = accessToken;
         refreshRequest.refreshToken = "invalidRefreshToken";
 
-        given().header("Authorization", "Bearer " + accessToken)
+        given().header("Authorization", "Bearer " + refreshRequest.accessToken)
+            .contentType(ContentType.JSON)
+            .body(refreshRequest)
+            .when()
+            .post(authUrl + "/token/refresh")
+            .then()
+            .statusCode(HttpStatus.SC_UNAUTHORIZED);
+    }
+
+    @Test
+    public void shouldReturnUnauthorizedWhenRefreshingAccessTokenWithInvalidAccessToken() {
+        AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
+        String refreshToken = given()
+            .contentType(ContentType.JSON)
+            .body(credentials)
+            .when()
+            .post(authUrl + "/token")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .path("refreshToken");
+
+        AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
+        refreshRequest.accessToken = "invalidAccessToken";
+        refreshRequest.refreshToken = refreshToken;
+
+        given().header("Authorization", "Bearer " + refreshRequest.accessToken)
             .contentType(ContentType.JSON)
             .body(refreshRequest)
             .when()
