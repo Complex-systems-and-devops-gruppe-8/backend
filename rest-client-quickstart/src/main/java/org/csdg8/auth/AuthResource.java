@@ -1,7 +1,10 @@
 package org.csdg8.auth;
 
+import org.csdg8.model.exception.InvalidCredentialsException;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -76,5 +79,10 @@ public class AuthResource {
         public RefreshAccessTokenResponse(String accessToken) {
             this.accessToken = accessToken;
         }
+    }
+
+    @ServerExceptionMapper(InvalidCredentialsException.class)
+    public RestResponse<String> handleInvalidCredentialsException(InvalidCredentialsException e) {
+        return RestResponse.status(Response.Status.UNAUTHORIZED, "Invalid credentials");
     }
 }
