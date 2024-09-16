@@ -23,7 +23,7 @@ public class AuthResourceTest {
     URL authUrl;
 
     @Test
-    public void testCreateTokenWithValidAdminCredentials() {
+    public void shouldReturnOkAndTokensWhenCreatingTokenWithValidAdminCredentials() {
         AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
 
         given()
@@ -38,7 +38,7 @@ public class AuthResourceTest {
     }
 
     @Test
-    public void testCreateTokenWithValidUserCredentials() {
+    public void shouldReturnOkAndTokensWhenCreatingTokenWithValidUserCredentials() {
         AuthResource.Credentials credentials = new AuthResource.Credentials("user", "user");
 
         given()
@@ -53,7 +53,7 @@ public class AuthResourceTest {
     }
 
     @Test
-    public void testCreateTokenWithInvalidCredentials() {
+    public void shouldReturnUnauthorizedWhenCreatingTokenWithInvalidCredentials() {
         AuthResource.Credentials credentials = new AuthResource.Credentials("invalidUser", "invalidPassword");
 
         given()
@@ -66,7 +66,7 @@ public class AuthResourceTest {
     }
 
     @Test
-    public void testRefreshAccessTokenWithValidAdminRefreshToken() {
+    public void shouldReturnOkAndNewAccessTokenWhenRefreshingAccessTokenWithValidAdminRefreshToken() {
         AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
         ExtractableResponse<io.restassured.response.Response> tokens = given()
             .contentType(ContentType.JSON)
@@ -95,7 +95,7 @@ public class AuthResourceTest {
     }
 
     @Test
-    public void testRefreshAccessTokenWithValidUserRefreshToken() {
+    public void shouldReturnOkAndNewAccessTokenWhenRefreshingAccessTokenWithValidUserRefreshToken() {
         AuthResource.Credentials credentials = new AuthResource.Credentials("user", "user");
         ExtractableResponse<Response> tokens = given()
             .contentType(ContentType.JSON)
@@ -124,7 +124,7 @@ public class AuthResourceTest {
     }
 
     @Test
-    public void testRefreshAccessTokenWithInvalidRefreshToken() {
+    public void shouldReturnUnauthorizedWhenRefreshingAccessTokenWithInvalidRefreshToken() {
         AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
         String accessToken = given()
             .contentType(ContentType.JSON)
