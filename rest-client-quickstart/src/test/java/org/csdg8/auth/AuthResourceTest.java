@@ -70,6 +70,7 @@ public class AuthResourceTest {
         AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
         ExtractableResponse<io.restassured.response.Response> tokens = given()
             .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
             .body(credentials)
             .when()
             .post(authUrl + "/token")
@@ -99,6 +100,7 @@ public class AuthResourceTest {
         AuthResource.Credentials credentials = new AuthResource.Credentials("user", "user");
         ExtractableResponse<Response> tokens = given()
             .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
             .body(credentials)
             .when()
             .post(authUrl + "/token")
@@ -128,6 +130,7 @@ public class AuthResourceTest {
         AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
         String accessToken = given()
             .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
             .body(credentials)
             .when()
             .post(authUrl + "/token")
@@ -154,6 +157,7 @@ public class AuthResourceTest {
         AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
         String refreshToken = given()
             .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
             .body(credentials)
             .when()
             .post(authUrl + "/token")
