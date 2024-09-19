@@ -1,11 +1,9 @@
 package org.csdg8.user;
 
-import java.util.List;
-import java.util.Set;
-
 import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.csdg8.model.exception.UserNotFoundException;
+import org.csdg8.user.UserController.RegistrationRequest;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -18,14 +16,12 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 @Path("/users")
 public class UserResource {
 
     @Inject
-    UserService userService;
+    UserController userController;
 
     @POST
     @Operation(summary = "Register a new user", description = "Registers a new user with a provided username and password. Upon successful registration, the user is assigned a default role of 'user'.")
@@ -35,37 +31,14 @@ public class UserResource {
     @APIResponse(responseCode = "500", description = "Server error during registration")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response register(RegistrationRequest request) {
-
-        this.userService.addUser(request.username, request.password, Set.of("user"));
-
-        return Response.status(Response.Status.CREATED)
-                .entity("User registered successfully")
-                .build();
-    }
-
-    public static class RegistrationRequest {
-        public String username;
-        public String password;
-
-        public RegistrationRequest(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
+        return this.userController.register(request);
     }
 
     @GET
     @Operation()
     @APIResponse()
     public Response all() {
-        List<User> users = this.userService.getAllUsers();
-        UserResponse[] userResponses = users.stream()
-            .map(this::mapToUserResponse)
-            .toArray(UserResponse[]::new);
-        return Response.ok(userResponses).build();
-    }
-
-    private UserResponse mapToUserResponse(User user) {
-        return new UserResponse(user.id, user.username, user.role);
+        return this.userController.all();
     }
 
     @GET
@@ -73,16 +46,7 @@ public class UserResource {
     @APIResponse()
     @Path("/{username}")
     public Response one(String username) {
-        User user = this.userService.getUser(username);
-        return Response.ok(new UserResponse(user.id, user.username, user.role)).build();
-    }
-
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class UserResponse {
-        public Long id;
-        public String username;
-        public Set<String> role;
+        return this.userController.one(username);
     }
 
     @ServerExceptionMapper
