@@ -1,10 +1,12 @@
 package org.csdg8.user;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.model.exception.UserAlreadyExistsException;
+import org.csdg8.model.exception.UserNotFoundException;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -67,5 +69,13 @@ public class UserService {
 
     private boolean isValidPassword(String password) {
         return password != null && password.length() >= 8;
+    }
+
+    public User getUser(String username) {
+        return this.findByUsername(username).orElseThrow(UserNotFoundException::new);
+    }
+
+    public List<User> getAllUsers() {
+        return User.listAll();
     }
 }

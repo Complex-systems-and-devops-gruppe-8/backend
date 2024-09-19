@@ -11,6 +11,7 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
@@ -46,6 +47,27 @@ public class UserResource {
             this.username = username;
             this.password = password;
         }
+    }
+
+    @GET
+    @Operation()
+    @APIResponse()
+    public Response all() {
+        return Response.ok(this.userService.getAllUsers()).build();
+    }
+
+    @GET
+    @Operation()
+    @APIResponse()
+    @Path("/{username}")
+    public Response one(String username) {
+        User user = this.userService.getUser(username);
+        return Response.ok(user).build();
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<String> mapExcepion(UserNotFoundException x) {
+        return RestResponse.status(Response.Status.NOT_FOUND, "User not found");
     }
 
     @ServerExceptionMapper
