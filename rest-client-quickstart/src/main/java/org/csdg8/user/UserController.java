@@ -3,11 +3,12 @@ package org.csdg8.user;
 import java.util.List;
 import java.util.Set;
 
+import org.csdg8.user.dto.RegistrationRequest;
+import org.csdg8.user.dto.UserResponse;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 @ApplicationScoped
 public class UserController {
@@ -37,20 +38,5 @@ public class UserController {
 
     private UserResponse mapToUserResponse(User user) {
         return new UserResponse(user.id, user.username, user.role);
-    }
-
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class RegistrationRequest {
-        public String username;
-        public String password;
-    }
-
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class UserResponse {
-        public Long id;
-        public String username;
-        public Set<String> role;
     }
 }

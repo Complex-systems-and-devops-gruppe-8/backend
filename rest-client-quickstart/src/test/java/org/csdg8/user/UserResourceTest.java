@@ -7,7 +7,7 @@ import static org.hamcrest.core.Is.is;
 import java.net.URL;
 
 import org.apache.http.HttpStatus;
-import org.csdg8.user.UserController.RegistrationRequest;
+import org.csdg8.user.dto.RegistrationRequest;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
