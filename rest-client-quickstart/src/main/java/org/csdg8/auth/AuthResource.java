@@ -1,7 +1,12 @@
 package org.csdg8.auth;
 
+import org.csdg8.auth.AuthController.Credentials;
+import org.csdg8.auth.AuthController.RefreshAccessTokenRequest;
+import org.csdg8.model.exception.InvalidCredentialsException;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -15,7 +20,7 @@ import jakarta.ws.rs.core.Response;
 public class AuthResource {
 
     @Inject
-    AuthService authService;
+    AuthController authController;
 
     @POST
     @Operation(summary = "Authenticate user and generate tokens", description = "Validates user credentials and, if successful, generates an access token and a refresh token. ")
@@ -24,31 +29,7 @@ public class AuthResource {
     @Path("/token")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createToken(Credentials credentials) {
-        String accessToken = this.authService.createAccessToken(credentials.username, credentials.password);
-        String refreshToken = this.authService.createRefreshToken(credentials.username, credentials.password);
-
-        CreateTokenResponse response = new CreateTokenResponse(accessToken, refreshToken);
-        return Response.ok(response).build();
-    }
-
-    public static class Credentials {
-        public String username;
-        public String password;
-
-        public Credentials(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
-    }
-
-    public static class CreateTokenResponse {
-        public String accessToken;
-        public String refreshToken;
-
-        public CreateTokenResponse(String accessToken, String refreshToken) {
-            this.accessToken = accessToken;
-            this.refreshToken = refreshToken;
-        }
+       return this.authController.createToken(credentials);
     }
 
     @POST
@@ -59,22 +40,11 @@ public class AuthResource {
     @Path("/token/refresh")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response refreshAccessToken(RefreshAccessTokenRequest request) {
-        String newAccessToken = this.authService.refreshAccessToken(request.refreshToken, request.accessToken);
-
-        RefreshAccessTokenResponse response = new RefreshAccessTokenResponse(newAccessToken);
-        return Response.ok(response).build();
+        return this.authController.refreshAccessToken(request);
     }
 
-    public static class RefreshAccessTokenRequest {
-        public String refreshToken;
-        public String accessToken;
-    }
-
-    public static class RefreshAccessTokenResponse {
-        public String accessToken;
-
-        public RefreshAccessTokenResponse(String accessToken) {
-            this.accessToken = accessToken;
-        }
+    @ServerExceptionMapper(InvalidCredentialsException.class)
+    public RestResponse<String> handleInvalidCredentialsException(InvalidCredentialsException e) {
+        return RestResponse.status(Response.Status.UNAUTHORIZED, "Invalid credentials");
     }
 }

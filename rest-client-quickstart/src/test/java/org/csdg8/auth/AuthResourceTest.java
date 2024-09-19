@@ -6,6 +6,8 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import java.net.URL;
 
 import org.apache.http.HttpStatus;
+import org.csdg8.auth.AuthController.Credentials;
+import org.csdg8.auth.AuthController.RefreshAccessTokenRequest;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -24,7 +26,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnOkAndTokensWhenCreatingTokenWithValidAdminCredentials() {
-        AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
+        Credentials credentials = new Credentials("admin", "admin");
 
         given()
             .contentType(ContentType.JSON)
@@ -39,7 +41,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnOkAndTokensWhenCreatingTokenWithValidUserCredentials() {
-        AuthResource.Credentials credentials = new AuthResource.Credentials("user", "user");
+        Credentials credentials = new Credentials("user", "user");
 
         given()
             .contentType(ContentType.JSON)
@@ -54,7 +56,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnUnauthorizedWhenCreatingTokenWithInvalidCredentials() {
-        AuthResource.Credentials credentials = new AuthResource.Credentials("invalidUser", "invalidPassword");
+        Credentials credentials = new Credentials("invalidUser", "invalidPassword");
 
         given()
             .contentType(ContentType.JSON)
@@ -67,7 +69,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnOkAndNewAccessTokenWhenRefreshingAccessTokenWithValidAdminRefreshToken() {
-        AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
+        Credentials credentials = new Credentials("admin", "admin");
         ExtractableResponse<io.restassured.response.Response> tokens = given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
@@ -81,7 +83,7 @@ public class AuthResourceTest {
         String refreshToken = tokens.path("refreshToken");
         String accessToken = tokens.path("accessToken");
 
-        AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
+        RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
         refreshRequest.accessToken = accessToken;
         refreshRequest.refreshToken = refreshToken;
 
@@ -97,7 +99,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnOkAndNewAccessTokenWhenRefreshingAccessTokenWithValidUserRefreshToken() {
-        AuthResource.Credentials credentials = new AuthResource.Credentials("user", "user");
+        Credentials credentials = new Credentials("user", "user");
         ExtractableResponse<Response> tokens = given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
@@ -111,7 +113,7 @@ public class AuthResourceTest {
             String refreshToken = tokens.path("refreshToken");
             String accessToken = tokens.path("accessToken");
     
-            AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
+            RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
             refreshRequest.accessToken = accessToken;
             refreshRequest.refreshToken = refreshToken;
 
@@ -127,7 +129,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnUnauthorizedWhenRefreshingAccessTokenWithInvalidRefreshToken() {
-        AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
+        Credentials credentials = new Credentials("admin", "admin");
         String accessToken = given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
@@ -139,7 +141,7 @@ public class AuthResourceTest {
             .extract()
             .path("accessToken");
 
-        AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
+        RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
         refreshRequest.accessToken = accessToken;
         refreshRequest.refreshToken = "invalidRefreshToken";
 
@@ -154,7 +156,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnUnauthorizedWhenRefreshingAccessTokenWithInvalidAccessToken() {
-        AuthResource.Credentials credentials = new AuthResource.Credentials("admin", "admin");
+        Credentials credentials = new Credentials("admin", "admin");
         String refreshToken = given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
@@ -166,7 +168,7 @@ public class AuthResourceTest {
             .extract()
             .path("refreshToken");
 
-        AuthResource.RefreshAccessTokenRequest refreshRequest = new AuthResource.RefreshAccessTokenRequest();
+        RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
         refreshRequest.accessToken = "invalidAccessToken";
         refreshRequest.refreshToken = refreshToken;
 
