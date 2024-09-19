@@ -14,8 +14,6 @@ import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 
 @QuarkusTest
 public class AuthResourceTest {
@@ -70,7 +68,7 @@ public class AuthResourceTest {
     @Test
     public void shouldReturnOkAndNewAccessTokenWhenRefreshingAccessTokenWithValidAdminRefreshToken() {
         CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin");
-        ExtractableResponse<io.restassured.response.Response> tokens = given()
+        RefreshAccessTokenRequest tokens = given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
             .body(credentials)
@@ -78,18 +76,11 @@ public class AuthResourceTest {
             .post(authUrl + "/token")
             .then()
             .statusCode(HttpStatus.SC_OK)
-            .extract();
+            .extract().as(RefreshAccessTokenRequest.class);
 
-        String refreshToken = tokens.path("refreshToken");
-        String accessToken = tokens.path("accessToken");
-
-        RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
-        refreshRequest.accessToken = accessToken;
-        refreshRequest.refreshToken = refreshToken;
-
-        given().header("Authorization", "Bearer " + refreshRequest.accessToken)
+        given().header("Authorization", "Bearer " + tokens.accessToken)
             .contentType(ContentType.JSON)
-            .body(refreshRequest)
+            .body(tokens)
             .when()
             .post(authUrl + "/token/refresh")
             .then()
@@ -100,7 +91,7 @@ public class AuthResourceTest {
     @Test
     public void shouldReturnOkAndNewAccessTokenWhenRefreshingAccessTokenWithValidUserRefreshToken() {
         CreateTokenRequest credentials = new CreateTokenRequest("user", "user");
-        ExtractableResponse<Response> tokens = given()
+        RefreshAccessTokenRequest tokens = given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
             .body(credentials)
@@ -108,18 +99,11 @@ public class AuthResourceTest {
             .post(authUrl + "/token")
             .then()
             .statusCode(HttpStatus.SC_OK)
-            .extract();
+            .extract().as(RefreshAccessTokenRequest.class);
 
-            String refreshToken = tokens.path("refreshToken");
-            String accessToken = tokens.path("accessToken");
-    
-            RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
-            refreshRequest.accessToken = accessToken;
-            refreshRequest.refreshToken = refreshToken;
-
-        given().header("Authorization", "Bearer " + refreshRequest.accessToken)
+        given().header("Authorization", "Bearer " + tokens.accessToken)
             .contentType(ContentType.JSON)
-            .body(refreshRequest)
+            .body(tokens)
             .when()
             .post(authUrl + "/token/refresh")
             .then()
@@ -139,7 +123,8 @@ public class AuthResourceTest {
             .then()
             .statusCode(HttpStatus.SC_OK)
             .extract()
-            .path("accessToken");
+            .as(RefreshAccessTokenRequest.class)
+            .accessToken;
 
         RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
         refreshRequest.accessToken = accessToken;
@@ -165,8 +150,8 @@ public class AuthResourceTest {
             .post(authUrl + "/token")
             .then()
             .statusCode(HttpStatus.SC_OK)
-            .extract()
-            .path("refreshToken");
+            .extract().as(RefreshAccessTokenRequest.class)
+            .refreshToken;
 
         RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
         refreshRequest.accessToken = "invalidAccessToken";
