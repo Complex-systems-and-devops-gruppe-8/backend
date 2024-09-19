@@ -8,8 +8,8 @@ import java.net.URL;
 
 import org.apache.http.HttpStatus;
 import org.csdg8.auth.AuthResource;
-import org.csdg8.auth.AuthController.CreateTokenResponse;
-import org.csdg8.auth.AuthController.Credentials;
+import org.csdg8.auth.dto.CreateTokenRequest;
+import org.csdg8.auth.dto.CreateTokenResponse;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -91,7 +91,7 @@ public class HelloResourceTest {
     }
 
     private String obtainToken(String username, String password) {
-        Response response = authResource.createToken(new Credentials(username, password));
+        Response response = authResource.createToken(new CreateTokenRequest(username, password));
         CreateTokenResponse tokenResponse = response.readEntity(CreateTokenResponse.class);
         if (response.getStatus() != HttpStatus.SC_OK) {
             throw new RuntimeException(String.format(

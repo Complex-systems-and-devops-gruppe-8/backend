@@ -1,7 +1,7 @@
 package org.csdg8.auth;
 
-import org.csdg8.auth.AuthController.Credentials;
-import org.csdg8.auth.AuthController.RefreshAccessTokenRequest;
+import org.csdg8.auth.dto.RefreshAccessTokenRequest;
+import org.csdg8.auth.dto.CreateTokenRequest;
 import org.csdg8.model.exception.InvalidCredentialsException;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -28,7 +28,7 @@ public class AuthResource {
     @APIResponse(responseCode = "401", description = "Invalid credentials")
     @Path("/token")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createToken(Credentials credentials) {
+    public Response createToken(CreateTokenRequest credentials) {
        return this.authController.createToken(credentials);
     }
 
