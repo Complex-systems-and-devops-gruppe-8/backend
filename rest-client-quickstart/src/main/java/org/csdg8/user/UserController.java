@@ -2,9 +2,11 @@ package org.csdg8.user;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.csdg8.user.dto.RegistrationRequest;
 import org.csdg8.user.dto.UserResponse;
+import org.csdg8.user.dto.UserResponseList;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -25,10 +27,11 @@ public class UserController {
 
     public Response all() {
         List<User> users = this.userService.getAllUsers();
-        UserResponse[] userResponses = users.stream()
+        List<UserResponse> userResponses = users.stream()
                 .map(this::mapToUserResponse)
-                .toArray(UserResponse[]::new);
-        return Response.ok(userResponses).build();
+                .collect(Collectors.toList());
+        UserResponseList responseList = new UserResponseList(userResponses);
+        return Response.ok(responseList).build();
     }
 
     public Response one(String username) {

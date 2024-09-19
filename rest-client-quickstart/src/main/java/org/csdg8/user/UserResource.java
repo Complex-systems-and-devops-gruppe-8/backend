@@ -5,6 +5,7 @@ import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.csdg8.model.exception.UserNotFoundException;
 import org.csdg8.user.dto.RegistrationRequest;
 import org.csdg8.user.dto.UserResponse;
+import org.csdg8.user.dto.UserResponseList;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -41,8 +42,8 @@ public class UserResource {
     @GET
     @Operation(summary = "Get all users", description = "Retrieves a list of all registered users.")
     @APIResponse(responseCode = "200", description = "Successfully retrieved all users", content = {
-            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UserResponse[].class)),
-            @Content(mediaType = MediaType.APPLICATION_XML, schema = @Schema(implementation = UserResponse[].class))
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UserResponseList.class)),
+            @Content(mediaType = MediaType.APPLICATION_XML, schema = @Schema(implementation = UserResponseList.class))
     })
     public Response all() {
         return this.userController.all();
