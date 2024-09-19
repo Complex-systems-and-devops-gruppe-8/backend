@@ -9,7 +9,6 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -31,14 +30,6 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response register(RegistrationRequest request) {
 
-        if (!isValidUsername(request.username) || !isValidPassword(request.password)) {
-            throw new BadRequestException("Invalid username or password format");
-        }
-
-        if (this.userService.findByUsername(request.username).isPresent()) {
-            throw new UserAlreadyExistsException();
-        }
-
         this.userService.addUser(request.username, request.password, Set.of("user"));
 
         return Response.status(Response.Status.CREATED)
@@ -54,16 +45,6 @@ public class UserResource {
             this.username = username;
             this.password = password;
         }
-    }
-
-    // TODO username validation logic to more suitable class
-    private boolean isValidUsername(String username) {
-        return username != null && username.matches("^[a-zA-Z0-9_]{3,20}$");
-    }
-
-    // TODO password validation logic to more suitable class
-    private boolean isValidPassword(String password) {
-        return password != null && password.length() >= 8;
     }
 
     @ServerExceptionMapper
