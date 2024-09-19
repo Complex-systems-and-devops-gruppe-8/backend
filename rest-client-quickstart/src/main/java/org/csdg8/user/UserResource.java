@@ -2,6 +2,7 @@ package org.csdg8.user;
 
 import java.util.Set;
 
+import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -50,5 +51,10 @@ public class UserResource {
     @ServerExceptionMapper
     public RestResponse<String> mapException(UserAlreadyExistsException x) {
         return RestResponse.status(Response.Status.CONFLICT, "Username already exists");
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<String> mapException(InvalidCredentialsException x) {
+        return RestResponse.status(Response.Status.BAD_REQUEST, "Invalid username or password format");
     }
 }

@@ -3,12 +3,12 @@ package org.csdg8.user;
 import java.util.Optional;
 import java.util.Set;
 
+import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.model.exception.UserAlreadyExistsException;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.BadRequestException;
 
 @ApplicationScoped
 public class UserService {
@@ -52,7 +52,7 @@ public class UserService {
     @Transactional
     public void addUser(String username, String password, Set<String> roles) {
         if (!isValidUsername(username) || !isValidPassword(password)) {
-            throw new BadRequestException("Invalid username or password format");
+            throw new InvalidCredentialsException();
         }
 
         if (this.findByUsername(username).isPresent()) {
