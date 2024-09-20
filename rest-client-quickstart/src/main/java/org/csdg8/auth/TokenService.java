@@ -3,16 +3,23 @@ package org.csdg8.auth;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.csdg8.user.User;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import io.smallrye.jwt.auth.principal.JWTParser;
+import io.smallrye.jwt.auth.principal.ParseException;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class TokenService {
+
+    @Inject
+    JWTParser parser;
 
     @Inject
     @ConfigProperty(name = "mp.jwt.verify.issuer")
@@ -57,5 +64,18 @@ public class TokenService {
                 .groups(presentUser.role)
                 .expiresIn(Duration.ofMinutes(5))
                 .sign();
+    }
+
+    public Optional<String> getUsername(String accessToken) {
+        try {
+            String username = parser.parse(accessToken).getClaim("upn");
+            return Optional.of(username);
+        } catch (ParseException e) {
+            return Optional.empty();
+        }
+    }
+
+    public String generateRefreshToken() {
+        return UUID.randomUUID().toString();
     }
 }

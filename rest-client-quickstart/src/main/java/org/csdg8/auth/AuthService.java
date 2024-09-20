@@ -1,7 +1,6 @@
 package org.csdg8.auth;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.user.User;
@@ -27,7 +26,6 @@ public class AuthService {
         }
 
         User presentUser = user.get();
-
         return this.tokenService.generateAccessToken(presentUser);
     }
 
@@ -40,18 +38,21 @@ public class AuthService {
 
         User presentUser = user.get();
 
-        String refreshToken = UUID.randomUUID().toString();
+        String refreshToken = this.tokenService.generateRefreshToken();
         this.tokenService.storeRefreshToken(presentUser.username, refreshToken);
         return refreshToken;
     }
 
-    public String refreshAccessToken(String username, String refreshToken) {
-        if (!this.tokenService.isValidRefreshToken(username, refreshToken)) {
+    public String refreshAccessToken(String refreshToken, String prevAccessToken) {
+        Optional<String> username = this.tokenService.getUsername(prevAccessToken);
+        if (username.isEmpty()) {
+            throw new InvalidCredentialsException();
+        }
+        if (!this.tokenService.isValidRefreshToken(username.get(), refreshToken)) {
             throw new InvalidCredentialsException();
         }
 
-        Optional<User> user = this.userService.findByUsername(username);
-
+        Optional<User> user = this.userService.findByUsername(username.get());
         return this.tokenService.generateAccessToken(user.get());
     }
 }

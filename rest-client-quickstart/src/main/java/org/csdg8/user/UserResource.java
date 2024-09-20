@@ -1,73 +1,78 @@
 package org.csdg8.user;
 
-import java.util.Set;
-
+import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.model.exception.UserAlreadyExistsException;
+import org.csdg8.model.exception.UserNotFoundException;
+import org.csdg8.user.dto.RegistrationRequest;
+import org.csdg8.user.dto.UserResponse;
+import org.csdg8.user.dto.UserResponseList;
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/users")
+@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 public class UserResource {
 
     @Inject
-    UserService userService;
+    UserController userController;
 
     @POST
-    @Operation(summary = "Register a new user", description = "Registers a new user with a provided username and password. Upon successful registration, the user is assigned a default role of 'user'.")
+    @Operation(summary = "Register a new user", description = "Registers a new user with a provided username and password.")
     @APIResponse(responseCode = "201", description = "User registered successfully")
     @APIResponse(responseCode = "400", description = "Invalid username or password format")
     @APIResponse(responseCode = "409", description = "Username already exists")
-    @APIResponse(responseCode = "500", description = "Server error during registration")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response register(RegistrationRequest request) {
-
-        if (!isValidUsername(request.username) || !isValidPassword(request.password)) {
-            throw new BadRequestException("Invalid username or password format");
-        }
-
-        if (this.userService.findByUsername(request.username).isPresent()) {
-            throw new UserAlreadyExistsException();
-        }
-
-        this.userService.addUser(request.username, request.password, Set.of("user"));
-
-        return Response.status(Response.Status.CREATED)
-                .entity("User registered successfully")
-                .build();
+        return this.userController.register(request);
     }
 
-    public static class RegistrationRequest {
-        public String username;
-        public String password;
-
-        public RegistrationRequest(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
+    @GET
+    @Operation(summary = "Get all users", description = "Retrieves a list of all registered users.")
+    @APIResponse(responseCode = "200", description = "Successfully retrieved all users", content = {
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UserResponseList.class)),
+            @Content(mediaType = MediaType.APPLICATION_XML, schema = @Schema(implementation = UserResponseList.class))
+    })
+    public Response all() {
+        return this.userController.all();
     }
 
-    // TODO username validation logic to more suitable class
-    private boolean isValidUsername(String username) {
-        return username != null && username.matches("^[a-zA-Z0-9_]{3,20}$");
+    @GET
+    @Path("/{username}")
+    @Operation(summary = "Get user by username", description = "Retrieves a specific user by their username.")
+    @APIResponse(responseCode = "200", description = "Successfully retrieved the user", content = {
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UserResponse.class)),
+            @Content(mediaType = MediaType.APPLICATION_XML, schema = @Schema(implementation = UserResponse.class))
+    })
+    @APIResponse(responseCode = "404", description = "User not found")
+    public Response one(String username) {
+        return this.userController.one(username);
     }
 
-    // TODO password validation logic to more suitable class
-    private boolean isValidPassword(String password) {
-        return password != null && password.length() >= 8;
+    @ServerExceptionMapper
+    public RestResponse<String> mapExcepion(UserNotFoundException x) {
+        return RestResponse.status(Response.Status.NOT_FOUND, "User not found");
     }
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(UserAlreadyExistsException x) {
         return RestResponse.status(Response.Status.CONFLICT, "Username already exists");
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<String> mapException(InvalidCredentialsException x) {
+        return RestResponse.status(Response.Status.BAD_REQUEST, "Invalid username or password format");
     }
 }
