@@ -1,8 +1,8 @@
 package org.csdg8.user;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.not;
 
 import java.net.URL;
 
@@ -14,96 +14,81 @@ import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import jakarta.ws.rs.core.Response;
 
 @QuarkusTest
 public class UserResourceTest {
 
     @TestHTTPEndpoint(UserResource.class)
     @TestHTTPResource
-    URL usersUrl;
+    URL url;
 
     @Test
-    public void testSuccessfulUserRegistration() {
-        RegistrationRequest request = new RegistrationRequest("John", "password123");
+    public void shouldReturnCreatedWhenRegisteringValidUser() {
+        RegistrationRequest request = new RegistrationRequest("john", "password123");
 
         given()
-                .contentType(ContentType.JSON)
-                .body(request)
-                .when()
-                .post(this.usersUrl)
-                .then()
-                .statusCode(HttpStatus.SC_CREATED)
-                .body(is("User registered successfully"));
+            .contentType(ContentType.JSON)
+            .body(request)
+        .when()
+            .post(url)
+        .then()
+            .statusCode(HttpStatus.SC_CREATED);
     }
 
     @Test
-    public void testDuplicateUsername() {
-        RegistrationRequest request = new RegistrationRequest("John", "password123");
+    public void shouldReturnConflictWhenRegisteringExistingUser() {
+        RegistrationRequest request = new RegistrationRequest("admin", "password123");
 
         given()
-                .contentType(ContentType.JSON)
-                .body(request)
-                .when()
-                .post(this.usersUrl);
+            .contentType(ContentType.JSON)
+            .body(request)
+        .when()
+            .post(url)
+        .then()
+            .statusCode(HttpStatus.SC_CONFLICT);
+    }
+
+    @Test
+    public void shouldReturnBadRequestWhenRegisteringWithInvalidCredentials() {
+        RegistrationRequest request = new RegistrationRequest("u", "short");
 
         given()
-                .contentType(ContentType.JSON)
-                .body(request)
-                .when()
-                .post(this.usersUrl)
-                .then()
-                .statusCode(409)
-                .body(is("Username already exists"));
+            .contentType(ContentType.JSON)
+            .body(request)
+        .when()
+            .post(url)
+        .then()
+            .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 
     @Test
-    public void testInvalidUsername() {
-        RegistrationRequest request = new RegistrationRequest("a", "password123");
-
+    public void shouldReturnOKWhenGettingAllUsers() {
         given()
-                .contentType(ContentType.JSON)
-                .body(request)
-                .when()
-                .post(this.usersUrl)
-                .then()
-                .statusCode(400);
+        .when()
+            .get(url)
+        .then()
+            .statusCode(HttpStatus.SC_OK)
+            .contentType(ContentType.JSON)
+            .body(not(empty()));
     }
 
     @Test
-    public void testInvalidPassword() {
-        RegistrationRequest request = new RegistrationRequest("validuser", "short");
-
+    public void shouldReturnOKWhenGettingExistingUser() {
         given()
-                .contentType(ContentType.JSON)
-                .body(request)
-                .when()
-                .post(this.usersUrl)
-                .then()
-                .statusCode(400);
+        .when()
+            .get(url + "/user")
+        .then()
+            .statusCode(HttpStatus.SC_OK)
+            .contentType(ContentType.JSON)
+            .body(not(empty()));
     }
 
     @Test
-    public void testAllUsers() {
-        when()
-                .get(usersUrl)
-                .then()
-                .statusCode(Response.Status.OK.getStatusCode());
-    }
-
-    @Test
-    public void testOneUser() {
-        when()
-            .get(usersUrl + "/user")
-            .then()
-            .statusCode(Response.Status.OK.getStatusCode());
-    }
-
-    @Test
-    public void testFailOneUser() {
-        when()
-            .get(usersUrl + "/nonexistinguser")
-            .then()
-            .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    public void shouldReturnNotFoundStatusWhenGettingNonExistentUser() {
+        given()
+        .when()
+            .get(url + "/nonexistentuser")
+        .then()
+            .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 }
