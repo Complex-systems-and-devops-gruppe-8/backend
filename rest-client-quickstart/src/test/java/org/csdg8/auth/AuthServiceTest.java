@@ -3,17 +3,36 @@ package org.csdg8.auth;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Set;
+
 import org.csdg8.model.exception.InvalidCredentialsException;
+import org.csdg8.user.User;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @QuarkusTest
 public class AuthServiceTest {
 
     @Inject
     AuthService authService;
+
+    @BeforeAll
+    @Transactional
+    public static void setup() {
+        User.add("admin", "admin", Set.of("admin"));
+        User.add("user", "user", Set.of("user"));
+    }
+
+    @AfterAll
+    @Transactional
+    public static void teardown() {
+        User.deleteAll();
+    }
 
     @Test
     public void testCreateAccessTokenWithValidAdminCredentials() {

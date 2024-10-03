@@ -14,16 +14,32 @@ import java.util.Set;
 import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.csdg8.model.exception.UserNotFoundException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @QuarkusTest
 public class UserServiceTest {
 
     @Inject
     UserService userService;
+
+    @BeforeEach
+    @Transactional
+    public void setup() {
+        User.add("admin", "admin", Set.of("admin"));
+        User.add("user", "user", Set.of("user"));
+    }
+
+    @AfterEach
+    @Transactional
+    public void teardown() {
+        User.deleteAll();
+    }
 
     @Test
     public void shouldValidateUserWithCorrectCredentials() {
