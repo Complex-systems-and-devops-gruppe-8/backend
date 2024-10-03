@@ -35,7 +35,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testCreateAccessTokenWithValidAdminCredentials() {
+    public void shouldCreateAccessTokenWhenValidAdminCredentialsProvided() {
         String username = "admin";
         String password = "admin";
 
@@ -44,7 +44,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testCreateAccessTokenWithValidUserCredentials() {
+    public void shouldCreateAccessTokenWhenValidUserCredentialsProvided() {
         String username = "user";
         String password = "user";
 
@@ -53,7 +53,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testCreateAccessTokenWithInvalidCredentials() {
+    public void shouldThrowExceptionWhenInvalidCredentialsProvidedForAccessToken() {
         String username = "invalidUser";
         String password = "invalidPassword";
 
@@ -63,7 +63,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testCreateRefreshTokenWithValidAdminCredentials() {
+    public void shouldCreateRefreshTokenWhenValidAdminCredentialsProvided() {
         String username = "admin";
         String password = "admin";
 
@@ -72,7 +72,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testCreateRefreshTokenWithValidUserCredentials() {
+    public void shouldCreateRefreshTokenWhenValidUserCredentialsProvided() {
         String username = "user";
         String password = "user";
 
@@ -81,7 +81,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testCreateRefreshTokenWithInvalidCredentials() {
+    public void shouldThrowExceptionWhenInvalidCredentialsProvidedForRefreshToken() {
         String username = "invalidUser";
         String password = "invalidPassword";
 
@@ -91,7 +91,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testRefreshAccessTokenWithValidAdminRefreshToken() {
+    public void shouldRefreshAccessTokenWhenValidAdminRefreshTokenProvided() {
         String username = "admin";
         String password = "admin";
 
@@ -105,7 +105,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testRefreshAccessTokenWithValidUserRefreshToken() {
+    public void shouldRefreshAccessTokenWhenValidUserRefreshTokenProvided() {
         String username = "user";
         String password = "user";
 
@@ -119,7 +119,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testRefreshAccessTokenWithInvalidRefreshToken() {
+    public void shouldThrowExceptionWhenInvalidRefreshTokenProvidedForAccessTokenRefresh() {
         String username = "admin";
         String invalidRefreshToken = "invalidRefreshToken";
 

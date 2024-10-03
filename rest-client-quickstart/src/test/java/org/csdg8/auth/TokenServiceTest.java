@@ -3,6 +3,7 @@ package org.csdg8.auth;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
@@ -36,7 +37,7 @@ public class TokenServiceTest {
     }
 
     @Test
-    public void testStoreRefreshToken() {
+    public void shouldStoreRefreshTokenWhenValidInputsProvided() {
         String username = "testUser";
         String refreshToken = "testRefreshToken";
 
@@ -46,7 +47,7 @@ public class TokenServiceTest {
     }
 
     @Test
-    public void testIsValidRefreshToken() {
+    public void shouldValidateRefreshTokenWhenCorrectTokenProvided() {
         String username = "testUser";
         String refreshToken = "testRefreshToken";
 
@@ -60,7 +61,7 @@ public class TokenServiceTest {
     }
 
     @Test
-    public void testRevokeRefreshToken() {
+    public void shouldRevokeRefreshTokenWhenRequested() {
         String username = "testUser";
         String refreshToken = "testRefreshToken";
 
@@ -74,7 +75,7 @@ public class TokenServiceTest {
     }
 
     @Test
-    public void testGenerateAccessToken() {
+    public void shouldGenerateAccessTokenWhenUserProvided() {
         User user = new User();
         user.username = "testUser";
         user.role = Set.of("user");
@@ -86,40 +87,40 @@ public class TokenServiceTest {
     }
 
     @Test
-    public void testStoreRefreshTokenWithEmptyUsername() {
+    public void shouldThrowExceptionWhenStoringRefreshTokenWithEmptyUsername() {
         String refreshToken = "testRefreshToken";
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrowsExactly(IllegalArgumentException.class, () -> {
             tokenService.storeRefreshToken("", refreshToken);
         }, "Storing a blank username should throw NullPointerException");
     }
 
     @Test
-    public void testStoreRefreshTokenWithNullUsername() {
+    public void shouldThrowExceptionWhenStoringRefreshTokenWithNullUsername() {
         String refreshToken = "testRefreshToken";
-        assertThrows(NullPointerException.class, () -> {
+        assertThrowsExactly(NullPointerException.class, () -> {
             tokenService.storeRefreshToken(null, refreshToken);
         }, "Storing null username should throw NullPointerException");
     }
 
     @Test
-    public void testStoreRefreshTokenWithNullToken() {
+    public void shouldThrowExceptionWhenStoringRefreshTokenWithNullToken() {
         String username = "testUser";
-        assertThrows(NullPointerException.class, () -> {
+        assertThrowsExactly(NullPointerException.class, () -> {
             tokenService.storeRefreshToken(username, null);
         }, "Storing a null refresh token should throw NullPointerException");
     }
 
     @Test
-    public void testStoreRefreshTokenWithEmptyToken() {
+    public void shouldThrowExceptionWhenStoringRefreshTokenWithEmptyToken() {
         String username = "testUser";
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrowsExactly(IllegalArgumentException.class, () -> {
             tokenService.storeRefreshToken(username, "");
         }, "Storing a blank refresh token should throw NullPointerException");
     }
 
 
     @Test
-    public void testOverwriteRefreshToken() {
+    public void shouldOverwriteRefreshTokenWhenNewTokenStored() {
         String username = "testUser";
         String refreshToken1 = "testRefreshToken1";
         String refreshToken2 = "testRefreshToken2";
@@ -136,7 +137,7 @@ public class TokenServiceTest {
     }
 
     @Test
-    public void testMultipleUsersRefreshTokens() {
+    public void shouldHandleMultipleUsersRefreshTokensCorrectly() {
         String user1 = "user1";
         String user2 = "user2";
         String refreshToken1 = "refreshToken1";
@@ -153,14 +154,14 @@ public class TokenServiceTest {
     }
 
     @Test
-    public void testGenerateAccessTokenWithNullUser() {
+    public void shouldThrowExceptionWhenGeneratingAccessTokenWithNullUser() {
         assertThrows(NullPointerException.class, () -> {
             tokenService.generateAccessToken(null);
         }, "Generating access token with null user should throw NullPointerException");
     }
 
     @Test
-    public void testGenerateAccessTokenWithEmptyRole() {
+    public void shouldGenerateAccessTokenWithEmptyRole() {
         User user = new User();
         user.username = "testUser";
         user.role = Set.of("");
@@ -171,7 +172,7 @@ public class TokenServiceTest {
     }
 
     @Test
-    public void testGenerateAccessTokenWithNullRole() {
+    public void shouldThrowExceptionWhenGeneratingAccessTokenWithNullRole() {
         User user = new User();
         user.username = "testUser";
         user.role = null;
@@ -183,14 +184,14 @@ public class TokenServiceTest {
 
 
     @Test
-    public void testRevokeRefreshTokenWithNullUsername() {
+    public void shouldThrowExceptionWhenRevokingRefreshTokenWithNullUsername() {
         assertThrows(NullPointerException.class, () -> {
             tokenService.revokeRefreshToken(null);
         }, "Revoking refresh token with null username should throw NullPointerException");
     }
 
     @Test
-    public void testRevokeRefreshTokenWithEmptyUsername() {
+    public void shouldInvalidateRefreshTokenWhenRevokedWithEmptyUsername() {
         tokenService.revokeRefreshToken("");
         assertFalse(tokenService.isValidRefreshToken("", "testRefreshToken"), "Refresh token should not be valid for empty username after revoking");
     }
