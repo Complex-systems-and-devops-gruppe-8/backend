@@ -23,6 +23,13 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Set Environment Variables
+        env:
+          MP_JWT_VERIFY_PUBLICKEY_LOCATION: ${{ secrets.PUBLIC_KEY }}
+          SMALLRYE_JWT_SIGN_KEY_LOCATION: ${{ secrets.PRIVATE_KEY }}   
+        run: |
+          echo "Environment variables set successfully."
+
       - name: Build with Maven
         working-directory: rest-client-quickstart
         run: ./mvnw clean package -Dnative
@@ -56,8 +63,8 @@ jobs:
           region: europe-north1
           flags: '--allow-unauthenticated'
           env_vars: |
-            PUBLIC_KEY=${{ secrets.PUBLIC_KEY }}
-            PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}
+            MP_JWT_VERIFY_PUBLICKEY_LOCATION=${{ secrets.PUBLIC_KEY }}
+            SMALLRYE_JWT_SIGN_KEY_LOCATION=${{ secrets.PRIVATE_KEY }}
 
       - name: Run Post-Deployment Scripts
         working-directory: script/prod
