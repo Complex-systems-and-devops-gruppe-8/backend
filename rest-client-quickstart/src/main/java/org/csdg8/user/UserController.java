@@ -10,6 +10,7 @@ import org.csdg8.user.dto.UserResponseList;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
@@ -18,7 +19,7 @@ public class UserController {
     @Inject
     UserService userService;
 
-    public Response register(RegistrationRequest request) {
+    public Response register(@Valid RegistrationRequest request) {
         this.userService.addUser(request.username, request.password, Set.of("user"));
         return Response.status(Response.Status.CREATED)
                 .entity("User registered successfully")

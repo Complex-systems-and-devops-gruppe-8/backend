@@ -8,6 +8,7 @@ import org.csdg8.auth.dto.RefreshAccessTokenResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
+import jakarta.validation.Valid;
 
 @ApplicationScoped
 public class AuthController {
@@ -15,15 +16,15 @@ public class AuthController {
     @Inject
     AuthService authService;
 
-    public Response createToken(CreateTokenRequest credentials) {
-        String accessToken = this.authService.createAccessToken(credentials.username, credentials.password);
-        String refreshToken = this.authService.createRefreshToken(credentials.username, credentials.password);
+    public Response createToken(@Valid CreateTokenRequest request) {
+        String accessToken = this.authService.createAccessToken(request.username, request.password);
+        String refreshToken = this.authService.createRefreshToken(request.username, request.password);
 
         CreateTokenResponse response = new CreateTokenResponse(accessToken, refreshToken);
         return Response.ok(response).build();
     }
 
-    public Response refreshAccessToken(RefreshAccessTokenRequest request) {
+    public Response refreshAccessToken(@Valid RefreshAccessTokenRequest request) {
         String newAccessToken = this.authService.refreshAccessToken(request.refreshToken, request.accessToken);
 
         RefreshAccessTokenResponse response = new RefreshAccessTokenResponse(newAccessToken);
