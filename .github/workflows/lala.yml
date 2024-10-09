@@ -22,12 +22,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-          
+
+
       - name: Build with Maven
         working-directory: rest-client-quickstart
         env:
-          MP_JWT_VERIFY_PUBLICKEY_LOCATION: ${{ secrets.PUBLIC_KEY }}
-          SMALLRYE_JWT_SIGN_KEY_LOCATION: ${{ secrets.PRIVATE_KEY }}  
+          MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
+          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }} 
         run: ./mvnw clean package -Dnative
 
       - name: List target directory
