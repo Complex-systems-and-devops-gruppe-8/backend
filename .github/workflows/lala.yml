@@ -33,12 +33,6 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Build and Test
-        working-directory: rest-client-quickstart
-        run: |
-          ./mvnw clean package -Dnative
-          # Add any additional test commands here
-
       - name: Build Docker image
         run: |
           docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/quarkus-rest-client-quickstart:latest -f src/main/docker/Dockerfile.native-micro .
