@@ -4,16 +4,21 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 import java.net.URL;
+import java.util.Set;
 
 import org.apache.http.HttpStatus;
 import org.csdg8.auth.dto.CreateTokenRequest;
 import org.csdg8.auth.dto.RefreshAccessTokenRequest;
+import org.csdg8.user.User;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import jakarta.transaction.Transactional;
 
 @QuarkusTest
 public class AuthResourceTest {
@@ -21,6 +26,19 @@ public class AuthResourceTest {
     @TestHTTPResource
     @TestHTTPEndpoint(AuthResource.class)
     URL authUrl;
+
+    @BeforeAll
+    @Transactional
+    public static void setup() {
+        User.add("admin", "admin", Set.of("admin"));
+        User.add("user", "user", Set.of("user"));
+    }
+
+    @AfterAll
+    @Transactional
+    public static void teardown() {
+        User.deleteAll();
+    }
 
     @Test
     public void shouldReturnOkAndTokensWhenCreatingTokenWithValidAdminCreateTokenRequest() {
