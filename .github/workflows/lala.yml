@@ -64,3 +64,7 @@ jobs:
           image: eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
           region: europe-north1
           flags: '--allow-unauthenticated'
+          env_vars: |
+            MP_JWT_VERIFY_ISSUER=${{ secrets.JWT_VERIFY_ISSUER }}
+            MP_JWT_VERIFY_PUBLICKEY_LOCATION=${{ secrets.PUBLIC_KEY }}
+            SMALLRYE_JWT_SIGN_KEY_LOCATION=${{ secrets.PRIVATE_KEY }}
