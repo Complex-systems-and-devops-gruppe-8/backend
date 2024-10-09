@@ -65,11 +65,7 @@ jobs:
           region: europe-north1
           flags: |
             --allow-unauthenticated
-            --port=8080
-            --min-instances=1
-            --cpu=1
-            --memory=512Mi
-          env_vars: |
+          secrets: |
             MP_JWT_VERIFY_ISSUER=${{ secrets.JWT_VERIFY_ISSUER }}
             MP_JWT_VERIFY_PUBLICKEY=${{ secrets.PUBLIC_KEY }}
             SMALLRYE_JWT_SIGN_KEY=${{ secrets.PRIVATE_KEY }}
