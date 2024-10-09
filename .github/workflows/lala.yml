@@ -63,7 +63,12 @@ jobs:
           service: quarkus-rest-client-quickstart
           image: eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
           region: europe-north1
-          flags: '--allow-unauthenticated'
+          flags: |
+            --allow-unauthenticated
+            --port=8080
+            --min-instances=1
+            --cpu=1
+            --memory=512Mi
           env_vars: |
             MP_JWT_VERIFY_ISSUER=${{ secrets.JWT_VERIFY_ISSUER }}
             MP_JWT_VERIFY_PUBLICKEY=${{ secrets.PUBLIC_KEY }}
