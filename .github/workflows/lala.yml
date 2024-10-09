@@ -22,16 +22,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-
-      - name: Set Environment Variables
-        env:
-          MP_JWT_VERIFY_PUBLICKEY_LOCATION: ${{ secrets.PUBLIC_KEY }}
-          SMALLRYE_JWT_SIGN_KEY_LOCATION: ${{ secrets.PRIVATE_KEY }}   
-        run: |
-          echo "Environment variables set successfully."
-
+          
       - name: Build with Maven
         working-directory: rest-client-quickstart
+        env:
+          MP_JWT_VERIFY_PUBLICKEY_LOCATION: ${{ secrets.PUBLIC_KEY }}
+          SMALLRYE_JWT_SIGN_KEY_LOCATION: ${{ secrets.PRIVATE_KEY }}  
         run: ./mvnw clean package -Dnative
 
       - name: List target directory
