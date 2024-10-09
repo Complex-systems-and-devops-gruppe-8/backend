@@ -51,16 +51,16 @@ jobs:
       - name: Build Docker image
         working-directory: rest-client-quickstart
         run: |
-          docker build -f src/main/docker/Dockerfile.native-micro -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
+          docker build -f src/main/docker/Dockerfile.native-micro -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
 
       - name: Push Docker image to Google Container Registry
         run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
+          docker push eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: quarkus-rest-client-quickstart
-          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
+          image: eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
           region: europe-north1
           flags: '--allow-unauthenticated'
