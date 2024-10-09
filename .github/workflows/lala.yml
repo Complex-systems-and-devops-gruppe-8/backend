@@ -1,0 +1,50 @@
+name: Build, Test, and Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - kevin
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.3.0
+        with:
+          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Build and Test
+        run: |
+          ./mvnw clean package -Dnative
+          # Add any additional test commands here
+
+      - name: Build Docker image
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/quarkus-rest-client-quickstart:latest -f src/main/docker/Dockerfile.native-micro .
+
+      - name: Push Docker image to Google Container Registry
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/quarkus-rest-client-quickstart:latest
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: quarkus-rest-client-quickstart
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/quarkus-rest-client-quickstart:latest
+          region: us-central1
+          flags: '--allow-unauthenticated'
+          env_vars: |
+            PUBLIC_KEY=${{ secrets.PUBLIC_KEY }}
+            PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}
+
+      - name: Run Post-Deployment Scripts
+        run: |
+          ./prod/build.sh
+          ./prod/run.sh
