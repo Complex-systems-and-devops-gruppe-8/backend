@@ -1,5 +1,5 @@
-#!/bin/sh
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+#!/usr/bin/env sh
+SCRIPT_DIR=$(CDPATH="" cd -- "$(dirname -- "$0")" && pwd)
 
 openssl genrsa -out "$SCRIPT_DIR/dev_private_key.pem" 2048
 openssl rsa -in "$SCRIPT_DIR/dev_private_key.pem" -pubout -out "$SCRIPT_DIR/dev_public_key.pem"

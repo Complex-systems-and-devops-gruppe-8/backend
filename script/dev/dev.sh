@@ -1,9 +1,8 @@
-#!/bin/sh
-
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+#!/usr/bin/env sh
+SCRIPT_DIR=$(CDPATH="" cd -- "$(dirname -- "$0")" && pwd)
 
 if [ -f "$SCRIPT_DIR/dev_env.sh" ]; then
-    source "$SCRIPT_DIR/dev_env.sh"
+    . "$SCRIPT_DIR/dev_env.sh"
 else
     echo "JWT environment file not found. Please run setup.sh first."
     exit 1
