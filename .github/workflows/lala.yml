@@ -23,22 +23,31 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: Build with Maven
+        working-directory: rest-client-quickstart
+        run: ./mvnw clean package -Dnative
+
+      - name: List target directory
+        run: ls -la target
 
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-
-      - name: Push Docker image
-        uses: docker/build-push-action@v4
+      
+      - name: Set up Cloud SDK
+        uses: 'google-github-actions/setup-gcloud@v2'
         with:
-          context: .
-          file: rest-client-quickstart/src/main/docker/Dockerfile.native-micro
-          push: true
-          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/quarkus-rest-client-quickstart:latest
-  
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/quarkus-rest-client-quickstart:latest -f rest-client-quickstart/src/main/docker/Dockerfile.native-micro .
+
+      - name: Push Docker image to Google Container Registry
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/quarkus-rest-client-quickstart:latest
+
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
