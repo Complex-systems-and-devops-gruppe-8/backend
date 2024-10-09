@@ -28,6 +28,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Build and Test
+        working-directory: rest-client-quickstart
         run: |
           ./mvnw clean package -Dnative
           # Add any additional test commands here
@@ -45,13 +46,14 @@ jobs:
         with:
           service: quarkus-rest-client-quickstart
           image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/quarkus-rest-client-quickstart:latest
-          region: us-central1
+          region: europe-north1
           flags: '--allow-unauthenticated'
           env_vars: |
             PUBLIC_KEY=${{ secrets.PUBLIC_KEY }}
             PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}
 
       - name: Run Post-Deployment Scripts
+        working-directory: script/prod
         run: |
           ./prod/build.sh
           ./prod/run.sh
