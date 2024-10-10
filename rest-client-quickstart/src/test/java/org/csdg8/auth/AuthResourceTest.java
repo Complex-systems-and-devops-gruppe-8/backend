@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 
 import java.net.URL;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.http.HttpStatus;
 import org.csdg8.auth.dto.CreateTokenRequest;
@@ -146,7 +147,8 @@ public class AuthResourceTest {
 
         RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
         refreshRequest.accessToken = accessToken;
-        refreshRequest.refreshToken = "invalidRefreshToken";
+        String invalidRefreshToken = UUID.randomUUID().toString();
+        refreshRequest.refreshToken = invalidRefreshToken;
 
         given().header("Authorization", "Bearer " + refreshRequest.accessToken)
             .contentType(ContentType.JSON)
