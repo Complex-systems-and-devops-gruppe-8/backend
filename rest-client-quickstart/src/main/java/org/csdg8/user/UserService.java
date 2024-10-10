@@ -64,7 +64,12 @@ public class UserService {
     }
 
     private boolean isValidUsername(String username) {
-        return username != null && username.matches("^[a-zA-Z0-9_]{3,20}$");
+        String validChars = "a-zA-Z0-9_";
+        int minLength = 3;
+        int maxLength = 30;
+
+        String regex = "^[%s]{%d,%d}$".formatted(validChars, minLength, maxLength);
+        return username != null && username.matches(regex);
     }
 
     private boolean isValidPassword(String password) {
