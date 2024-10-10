@@ -31,8 +31,8 @@ public class UserControllerTest {
     @BeforeEach
     @Transactional
     public void setup() {
-        User.add("admin", "admin", Set.of("admin"));
-        User.add("user", "user", Set.of("user"));
+        User.add("admin", "admin1234", Set.of("admin"));
+        User.add("user", "user1234", Set.of("user"));
     }
 
     @AfterEach
