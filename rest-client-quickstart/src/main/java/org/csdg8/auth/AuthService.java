@@ -22,7 +22,7 @@ public class AuthService {
     public String createAccessToken(String username, String password) {
         Optional<User> user = this.userService.validateUser(username, password);
         if (user.isEmpty()) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Invalid credentials, user not found when creating access token");
         }
 
         User presentUser = user.get();
@@ -33,7 +33,7 @@ public class AuthService {
     public String createRefreshToken(String username, String password) {
         Optional<User> user = this.userService.validateUser(username, password);
         if (user.isEmpty()) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Invalid credentials, user not found when creating refresh token");
         }
 
         User presentUser = user.get();
@@ -46,10 +46,10 @@ public class AuthService {
     public String refreshAccessToken(String refreshToken, String prevAccessToken) {
         Optional<String> username = this.tokenService.getUsername(prevAccessToken);
         if (username.isEmpty()) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Invalid credentials, username not found when refreshing access token");
         }
         if (!this.tokenService.isValidRefreshToken(username.get(), refreshToken)) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Invalid credentials, refresh token was invalid");
         }
 
         Optional<User> user = this.userService.findByUsername(username.get());
