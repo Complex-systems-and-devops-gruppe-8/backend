@@ -1,9 +1,12 @@
 package org.csdg8.infrastructure;
 
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -72,32 +75,40 @@ import jakarta.ws.rs.ext.Provider;
  */
 @Provider
 public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
+
+    @Context
+    private HttpHeaders headers;
+
     @Override
     public Response toResponse(final ConstraintViolationException e) {
-        final JsonObject responseBody = new JsonObject();
+        List<MediaType> acceptableMediaTypes = headers.getAcceptableMediaTypes();
+        MediaType responseType = determineResponseType(acceptableMediaTypes);
 
-        // Describe the error in the payload.
-        responseBody.put("title", "Constraint Violation");
-        responseBody.put("description", "The submitted payload is incorrect");
+        ConstraintViolationResponse responseBody = new ConstraintViolationResponse();
+        responseBody.title = "Constraint Violation";
+        responseBody.description = "The submitted payload is incorrect";
 
-        final JsonArray violations = new JsonArray();
+        List<ConstraintViolationDetail> violations = e.getConstraintViolations().stream()
+                .map(constraintViolation -> {
+                    ConstraintViolationDetail violation = new ConstraintViolationDetail();
+                    violation.field = constraintViolation.getPropertyPath().toString();
+                    violation.message = constraintViolation.getMessage();
+                    return violation;
+                })
+                .collect(Collectors.toList());
 
-        // Describe the fields that generated an error.
-        for (final ConstraintViolation<?> constraintViolation : e.getConstraintViolations()) {
-            final JsonObject violation = new JsonObject();
+        responseBody.violations = violations;
 
-            violation.put("field", constraintViolation.getPropertyPath().toString());
-            violation.put("message", constraintViolation.getMessage());
-
-            violations.add(violation);
-        }
-
-        responseBody.put("violations", violations);
-
-        return Response
-                .status(Response.Status.BAD_REQUEST)
-                .type(MediaType.APPLICATION_JSON)
-                .entity(responseBody.encode())
+        return Response.status(Response.Status.BAD_REQUEST)
+                .type(responseType)
+                .entity(responseBody)
                 .build();
+    }
+
+    private MediaType determineResponseType(List<MediaType> acceptableMediaTypes) {
+        if (acceptableMediaTypes.contains(MediaType.APPLICATION_XML_TYPE)) {
+            return MediaType.APPLICATION_XML_TYPE;
+        }
+        return MediaType.APPLICATION_JSON_TYPE;
     }
 }
