@@ -68,7 +68,7 @@ public class UserService {
     }
 
     private boolean isValidPassword(String password) {
-        return password != null && password.length() >= 8;
+        return password != null && password.length() >= 8 && password.length() < 50;
     }
 
     public User getUser(String username) {
