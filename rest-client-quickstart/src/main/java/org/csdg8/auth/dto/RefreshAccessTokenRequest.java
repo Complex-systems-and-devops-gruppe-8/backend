@@ -18,6 +18,7 @@ public class RefreshAccessTokenRequest {
     public String refreshToken;
 
     @NotBlank
+    @Size(max = 1000)
     @XmlElement
     public String accessToken;
 }
