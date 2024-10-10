@@ -54,11 +54,11 @@ public class UserService {
     @Transactional
     public void addUser(String username, String password, Set<String> roles) {
         if (!isValidUsername(username) || !isValidPassword(password)) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Failed to add user %s as the credentials were not valid");
         }
 
         if (this.findByUsername(username).isPresent()) {
-            throw new UserAlreadyExistsException();
+            throw new UserAlreadyExistsException("Failed to add user %s as they already exist");
         }
         User.add(username, password, roles);
     }
@@ -77,7 +77,8 @@ public class UserService {
     }
 
     public User getUser(String username) {
-        return this.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        return this.findByUsername(username).orElseThrow(
+                () -> new UserNotFoundException("No user found with username %s".formatted(username)));
     }
 
     public List<User> getAllUsers() {
