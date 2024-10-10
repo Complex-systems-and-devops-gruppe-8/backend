@@ -18,7 +18,7 @@ public class CreateTokenRequest {
     public String username;
 
     @NotBlank
-    @Size(min=8, max=50)
+    @Size(min = 8, max = 50)
     @XmlElement
     public String password;
 }

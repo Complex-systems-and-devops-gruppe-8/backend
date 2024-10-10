@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @XmlRootElement
 public class RegistrationRequest {
-    
+
     @NotBlank
     @Size(min = 3, max = 30)
     @XmlElement
     public String username;
-    
+
     @NotBlank
     @Size(min = 8, max = 50)
     @XmlElement
