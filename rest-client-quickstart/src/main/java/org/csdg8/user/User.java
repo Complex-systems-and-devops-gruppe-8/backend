@@ -31,6 +31,10 @@ public class User extends PanacheEntity {
      * @param role     the user assigned roles
      */
     public static void add(String username, String password, Set<String> role) {
+        assert username.length() != 0;
+        assert password.length() != 0;
+        assert !role.isEmpty();
+
         User user = new User();
         user.username = username;
         user.password = BcryptUtil.bcryptHash(password);

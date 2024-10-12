@@ -5,17 +5,22 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.net.URL;
+import java.util.Set;
 
 import org.apache.http.HttpStatus;
 import org.csdg8.auth.AuthResource;
 import org.csdg8.auth.dto.CreateTokenRequest;
 import org.csdg8.auth.dto.CreateTokenResponse;
+import org.csdg8.user.User;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 
 @QuarkusTest
@@ -27,6 +32,19 @@ public class HelloResourceTest {
 
     @Inject
     AuthResource authResource;
+
+    @BeforeAll
+    @Transactional
+    public static void setup() {
+        User.add("admin", "admin", Set.of("admin"));
+        User.add("user", "user", Set.of("user"));
+    }
+
+    @AfterAll
+    @Transactional
+    public static void teardown() {
+        User.deleteAll();
+    }
 
     @Test
     public void shouldReturnOkAndHelloWorldWhenAccessingAllEndpointAnonymously() {
