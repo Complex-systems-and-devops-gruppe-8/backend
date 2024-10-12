@@ -23,6 +23,7 @@ public class UserResourceTest {
     @BeforeEach
     @Transactional
     public void setup() {
+        User.deleteAll();
         User.add("admin", "admin1234", Set.of("admin"));
         User.add("user", "user1234", Set.of("user"));
     }
@@ -103,9 +104,10 @@ public class UserResourceTest {
 
     @Test
     public void shouldReturnOKWhenGettingExistingUser() {
+        //TODO get username (create new endpoint)
         given()
         .when()
-            .get(url + "/user")
+            .get(PATH + "/user")
         .then()
             .statusCode(HttpStatus.SC_OK)
             .contentType(ContentType.JSON)

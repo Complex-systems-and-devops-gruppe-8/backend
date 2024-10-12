@@ -11,6 +11,7 @@ import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -24,6 +25,7 @@ public class User extends PanacheEntity {
 
     @Username
     @NotBlank
+    @Column(unique = true) // Uniqueness must be checked at DB level https://stackoverflow.com/q/3495368
     @Size(min = 3, max = 30)
     public String username;
 
@@ -47,6 +49,7 @@ public class User extends PanacheEntity {
         assert username.length() != 0;
         assert password.length() != 0;
         assert !role.isEmpty();
+        assert findByUsername(username).isEmpty();
 
         User user = new User();
         user.username = username;

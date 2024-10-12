@@ -31,6 +31,7 @@ public class AuthResourceTest {
     @BeforeAll
     @Transactional
     public static void setup() {
+        User.deleteAll();
         User.add("admin", "admin1234", Set.of("admin"));
         User.add("user", "user1234", Set.of("user"));
     }
