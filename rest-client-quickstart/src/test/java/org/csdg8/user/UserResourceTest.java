@@ -4,17 +4,13 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.not;
 
-import java.net.URL;
 import java.util.Set;
 
 import org.apache.http.HttpStatus;
-import org.csdg8.user.dto.RegistrationRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.common.http.TestHTTPEndpoint;
-import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import jakarta.transaction.Transactional;
@@ -22,9 +18,7 @@ import jakarta.transaction.Transactional;
 @QuarkusTest
 public class UserResourceTest {
 
-    @TestHTTPEndpoint(UserResource.class)
-    @TestHTTPResource
-    URL url;
+    final static String PATH = "/users";
 
     @BeforeEach
     @Transactional
@@ -41,39 +35,57 @@ public class UserResourceTest {
 
     @Test
     public void shouldReturnCreatedWhenRegisteringValidUser() {
-        RegistrationRequest request = new RegistrationRequest("john", "password123");
+        String request = """
+            {
+                "username": "john",
+                "password": "password123",
+                "role": ["user"]
+            }
+        """;
 
         given()
             .contentType(ContentType.JSON)
             .body(request)
         .when()
-            .post(url)
+            .post(PATH)
         .then()
             .statusCode(HttpStatus.SC_CREATED);
     }
 
     @Test
     public void shouldReturnConflictWhenRegisteringExistingUser() {
-        RegistrationRequest request = new RegistrationRequest("admin", "password123");
+        String request = """
+            {
+                "username": "admin",
+                "password": "password123",
+                "role": ["user"]
+            }
+        """;
 
         given()
             .contentType(ContentType.JSON)
             .body(request)
         .when()
-            .post(url)
+            .post(PATH)
         .then()
             .statusCode(HttpStatus.SC_CONFLICT);
     }
 
     @Test
     public void shouldReturnBadRequestWhenRegisteringWithInvalidCredentials() {
-        RegistrationRequest request = new RegistrationRequest("u", "short");
+        String request = """
+            {
+                "username": "u",
+                "password": "short",
+                "role": ["user"]
+            }
+        """;
 
         given()
             .contentType(ContentType.JSON)
             .body(request)
         .when()
-            .post(url)
+            .post(PATH)
         .then()
             .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
@@ -82,7 +94,7 @@ public class UserResourceTest {
     public void shouldReturnOKWhenGettingAllUsers() {
         given()
         .when()
-            .get(url)
+            .get(PATH)
         .then()
             .statusCode(HttpStatus.SC_OK)
             .contentType(ContentType.JSON)
@@ -104,7 +116,7 @@ public class UserResourceTest {
     public void shouldReturnNotFoundStatusWhenGettingNonExistentUser() {
         given()
         .when()
-            .get(url + "/nonexistentuser")
+            .get(PATH + "/nonexistentuser")
         .then()
             .statusCode(HttpStatus.SC_NOT_FOUND);
     }
