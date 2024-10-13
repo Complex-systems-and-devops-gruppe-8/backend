@@ -1,19 +1,27 @@
 package org.csdg8.user;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.csdg8.user.dto.RegistrationRequest;
-import org.csdg8.user.dto.UserResponse;
-import org.csdg8.user.dto.UserResponseList;
+
+import com.google.code.siren4j.component.Entity;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 
 @ApplicationScoped
 public class UserController {
+
+    @Context
+    UriInfo uriInfo;
+
+    @Inject
+    UserEntityBuilder userEntityBuilder;
 
     @Inject
     UserService userService;
@@ -23,21 +31,13 @@ public class UserController {
         return Response.created(URI.create("/users/" + id)).build();
     }
 
-    public Response all() {
+    public Entity getUsers() {
         List<User> users = this.userService.getAllUsers();
-        List<UserResponse> userResponses = users.stream()
-                .map(this::mapToUserResponse)
-                .collect(Collectors.toList());
-        UserResponseList responseList = new UserResponseList(userResponses);
-        return Response.ok(responseList).build();
+        return userEntityBuilder.buildUsers(users, uriInfo);
     }
 
-    public Response one(String username) {
+    public Entity getUser(String username) {
         User user = this.userService.getUser(username);
-        return Response.ok(new UserResponse(user.id, user.username, user.role)).build();
-    }
-
-    private UserResponse mapToUserResponse(User user) {
-        return new UserResponse(user.id, user.username, user.role);
+        return userEntityBuilder.buildUser(user, uriInfo);
     }
 }

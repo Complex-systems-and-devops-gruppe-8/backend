@@ -13,6 +13,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
+import com.google.code.siren4j.component.Entity;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -23,7 +25,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/users")
-@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+@Produces({ MediaType.APPLICATION_JSON, "application/vnd.siren+json"})
 public class UserResource {
 
     @Inject
@@ -45,8 +47,8 @@ public class UserResource {
             @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UserResponseList.class)),
             @Content(mediaType = MediaType.APPLICATION_XML, schema = @Schema(implementation = UserResponseList.class))
     })
-    public Response all() {
-        return this.userController.all();
+    public Entity getUsers() {
+        return this.userController.getUsers();
     }
 
     @GET
@@ -57,8 +59,8 @@ public class UserResource {
             @Content(mediaType = MediaType.APPLICATION_XML, schema = @Schema(implementation = UserResponse.class))
     })
     @APIResponse(responseCode = "404", description = "User not found")
-    public Response one(String username) {
-        return this.userController.one(username);
+    public Entity getUser(String username) {
+        return this.userController.getUser(username);
     }
 
     @ServerExceptionMapper
