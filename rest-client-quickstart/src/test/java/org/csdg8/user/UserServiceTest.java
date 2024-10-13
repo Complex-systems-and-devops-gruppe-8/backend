@@ -31,8 +31,8 @@ public class UserServiceTest {
     @BeforeEach
     @Transactional
     public void setup() {
-        User.add("admin", "admin", Set.of("admin"));
-        User.add("user", "user", Set.of("user"));
+        User.add("admin", "admin1234", Set.of("admin"));
+        User.add("user", "user1234", Set.of("user"));
     }
 
     @AfterEach
@@ -43,7 +43,7 @@ public class UserServiceTest {
 
     @Test
     public void shouldValidateUserWithCorrectCredentials() {
-        Optional<User> user = userService.validateUser("admin", "admin");
+        Optional<User> user = userService.validateUser("admin", "admin1234");
         assertTrue(user.isPresent());
         assertEquals("admin", user.get().username);
     }

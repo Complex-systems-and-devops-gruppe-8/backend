@@ -3,9 +3,9 @@ package org.csdg8.user;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.Response;
 
-import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.csdg8.model.exception.UserNotFoundException;
 import org.csdg8.user.dto.RegistrationRequest;
@@ -31,8 +31,8 @@ public class UserControllerTest {
     @BeforeEach
     @Transactional
     public void setup() {
-        User.add("admin", "admin", Set.of("admin"));
-        User.add("user", "user", Set.of("user"));
+        User.add("admin", "admin1234", Set.of("admin"));
+        User.add("user", "user1234", Set.of("user"));
     }
 
     @AfterEach
@@ -59,9 +59,9 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldThrowInvalidCredentialsExceptionForInvalidCredentials() {
+    public void shouldThrowConstraintViolationException() {
         RegistrationRequest request = new RegistrationRequest("u", "short");
-        assertThrowsExactly(InvalidCredentialsException.class, () -> {
+        assertThrowsExactly(ConstraintViolationException.class, () -> {
             userController.register(request);
         });
     }

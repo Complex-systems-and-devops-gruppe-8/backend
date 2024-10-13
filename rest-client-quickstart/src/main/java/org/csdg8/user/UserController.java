@@ -10,6 +10,8 @@ import com.google.code.siren4j.component.Entity;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
@@ -26,7 +28,7 @@ public class UserController {
     @Inject
     UserService userService;
 
-    public Response register(RegistrationRequest request) {
+    public Response register(@Valid @NotNull RegistrationRequest request) {
         Long id = this.userService.addUser(request.username, request.password, Set.of("user"));
         return Response.created(URI.create("/users/" + id)).build();
     }

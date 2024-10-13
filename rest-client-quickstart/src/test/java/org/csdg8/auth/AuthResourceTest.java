@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 
 import java.net.URL;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.http.HttpStatus;
 import org.csdg8.auth.dto.CreateTokenRequest;
@@ -30,8 +31,8 @@ public class AuthResourceTest {
     @BeforeAll
     @Transactional
     public static void setup() {
-        User.add("admin", "admin", Set.of("admin"));
-        User.add("user", "user", Set.of("user"));
+        User.add("admin", "admin1234", Set.of("admin"));
+        User.add("user", "user1234", Set.of("user"));
     }
 
     @AfterAll
@@ -42,7 +43,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnOkAndTokensWhenCreatingTokenWithValidAdminCreateTokenRequest() {
-        CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin");
+        CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin1234");
 
         given()
             .contentType(ContentType.JSON)
@@ -57,7 +58,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnOkAndTokensWhenCreatingTokenWithValidUserCreateTokenRequest() {
-        CreateTokenRequest credentials = new CreateTokenRequest("user", "user");
+        CreateTokenRequest credentials = new CreateTokenRequest("user", "user1234");
 
         given()
             .contentType(ContentType.JSON)
@@ -85,7 +86,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnOkAndNewAccessTokenWhenRefreshingAccessTokenWithValidAdminRefreshToken() {
-        CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin");
+        CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin1234");
         RefreshAccessTokenRequest tokens = given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
@@ -108,7 +109,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnOkAndNewAccessTokenWhenRefreshingAccessTokenWithValidUserRefreshToken() {
-        CreateTokenRequest credentials = new CreateTokenRequest("user", "user");
+        CreateTokenRequest credentials = new CreateTokenRequest("user", "user1234");
         RefreshAccessTokenRequest tokens = given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
@@ -131,7 +132,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnUnauthorizedWhenRefreshingAccessTokenWithInvalidRefreshToken() {
-        CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin");
+        CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin1234");
         String accessToken = given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
@@ -146,7 +147,8 @@ public class AuthResourceTest {
 
         RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
         refreshRequest.accessToken = accessToken;
-        refreshRequest.refreshToken = "invalidRefreshToken";
+        String invalidRefreshToken = UUID.randomUUID().toString();
+        refreshRequest.refreshToken = invalidRefreshToken;
 
         given().header("Authorization", "Bearer " + refreshRequest.accessToken)
             .contentType(ContentType.JSON)
@@ -159,7 +161,7 @@ public class AuthResourceTest {
 
     @Test
     public void shouldReturnUnauthorizedWhenRefreshingAccessTokenWithInvalidAccessToken() {
-        CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin");
+        CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin1234");
         String refreshToken = given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)

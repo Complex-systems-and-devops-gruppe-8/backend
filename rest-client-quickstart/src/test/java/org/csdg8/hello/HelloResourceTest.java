@@ -36,8 +36,8 @@ public class HelloResourceTest {
     @BeforeAll
     @Transactional
     public static void setup() {
-        User.add("admin", "admin", Set.of("admin"));
-        User.add("user", "user", Set.of("user"));
+        User.add("admin", "admin1234", Set.of("admin"));
+        User.add("user", "user1234", Set.of("user"));
     }
 
     @AfterAll
@@ -64,7 +64,7 @@ public class HelloResourceTest {
 
     @Test
     void shouldReturnOkWhenAccessingAdminEndpointAsAdmin() {
-        String adminToken = obtainToken("admin", "admin");
+        String adminToken = obtainToken("admin", "admin1234");
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
@@ -75,7 +75,7 @@ public class HelloResourceTest {
 
     @Test
     void shouldReturnOkWhenAccessingAllEndpointAsAdmin() {
-        String adminToken = obtainToken("admin", "admin");
+        String adminToken = obtainToken("admin", "admin1234");
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
@@ -86,7 +86,7 @@ public class HelloResourceTest {
 
     @Test
     void shouldReturnForbiddenWhenAccessingUserEndpointAsAdmin() {
-        String adminToken = obtainToken("admin", "admin");
+        String adminToken = obtainToken("admin", "admin1234");
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
@@ -98,7 +98,7 @@ public class HelloResourceTest {
     @Test
     void shouldReturnOkAndUserIdentityWhenAccessingUserEndpointAsUser() {
         String username = "user";
-        String userToken = obtainToken(username, "user");
+        String userToken = obtainToken(username, "user1234");
 
         given().header("Authorization", "Bearer " + userToken)
                 .when()
