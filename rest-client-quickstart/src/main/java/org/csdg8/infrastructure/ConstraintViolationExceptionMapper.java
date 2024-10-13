@@ -106,9 +106,6 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
     }
 
     private MediaType determineResponseType(List<MediaType> acceptableMediaTypes) {
-        if (acceptableMediaTypes.contains(MediaType.APPLICATION_XML_TYPE)) {
-            return MediaType.APPLICATION_XML_TYPE;
-        }
         return MediaType.APPLICATION_JSON_TYPE;
     }
 }
