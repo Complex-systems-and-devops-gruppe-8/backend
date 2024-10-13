@@ -19,10 +19,8 @@ public class UserController {
     UserService userService;
 
     public Response register(RegistrationRequest request) {
-        this.userService.addUser(request.username, request.password, Set.of("user"));
-        return Response.status(Response.Status.CREATED)
-                .entity("User registered successfully")
-                .build();
+        Long id = this.userService.addUser(request.username, request.password, Set.of("user"));
+        return Response.created(URI.create("/users/" + id)).build();
     }
 
     public Response all() {

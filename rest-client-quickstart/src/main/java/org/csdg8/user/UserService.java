@@ -52,7 +52,7 @@ public class UserService {
     }
 
     @Transactional
-    public void addUser(String username, String password, Set<String> roles) {
+    public Long addUser(String username, String password, Set<String> roles) {
         if (!isValidUsername(username) || !isValidPassword(password)) {
             throw new InvalidCredentialsException();
         }
@@ -60,7 +60,7 @@ public class UserService {
         if (this.findByUsername(username).isPresent()) {
             throw new UserAlreadyExistsException();
         }
-        User.add(username, password, roles);
+        return User.add(username, password, roles);
     }
 
     private boolean isValidUsername(String username) {
