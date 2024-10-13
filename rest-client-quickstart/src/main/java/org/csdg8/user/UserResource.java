@@ -25,7 +25,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/users")
-@Produces({ MediaType.APPLICATION_JSON, "application/vnd.siren+json"})
+@Produces({ MediaType.APPLICATION_JSON, Siren4J.JSON_MEDIATYPE})
 public class UserResource {
 
     @Inject
