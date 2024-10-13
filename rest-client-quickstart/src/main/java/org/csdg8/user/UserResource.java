@@ -37,8 +37,8 @@ public class UserResource {
     @APIResponse(responseCode = "400", description = "Invalid username or password format")
     @APIResponse(responseCode = "409", description = "Username already exists")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response register(CreateUserRequest request) {
-        return this.userController.register(request);
+    public Response createUser(CreateUserRequest request) {
+        return this.userController.createUser(request);
     }
 
     @GET

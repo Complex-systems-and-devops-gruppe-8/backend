@@ -44,7 +44,7 @@ public class UserControllerTest {
     @Test
     public void shouldRegisterUserAndReturnCreatedResponse() {
         CreateUserRequest request = new CreateUserRequest("john", "password123");
-        Response response = userController.register(request);
+        Response response = userController.createUser(request);
 
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
         assertEquals("User registered successfully", response.getEntity());
@@ -54,7 +54,7 @@ public class UserControllerTest {
     public void shouldThrowUserAlreadyExistsExceptionWhenRegisteringExistingUser() {
         CreateUserRequest request = new CreateUserRequest("admin", "password123");
         assertThrowsExactly(UserAlreadyExistsException.class, () -> {
-            userController.register(request);
+            userController.createUser(request);
         });
     }
 
@@ -62,7 +62,7 @@ public class UserControllerTest {
     public void shouldThrowConstraintViolationException() {
         CreateUserRequest request = new CreateUserRequest("u", "short");
         assertThrowsExactly(ConstraintViolationException.class, () -> {
-            userController.register(request);
+            userController.createUser(request);
         });
     }
 

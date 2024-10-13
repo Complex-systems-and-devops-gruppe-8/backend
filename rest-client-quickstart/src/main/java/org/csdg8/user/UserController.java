@@ -28,7 +28,7 @@ public class UserController {
     @Inject
     UserService userService;
 
-    public Response register(@Valid @NotNull CreateUserRequest request) {
+    public Response createUser(@Valid @NotNull CreateUserRequest request) {
         Long id = this.userService.addUser(request.username, request.password, Set.of("user"));
         return Response.created(URI.create("/users/" + id)).build();
     }
