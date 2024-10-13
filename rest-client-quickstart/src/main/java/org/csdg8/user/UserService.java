@@ -76,9 +76,11 @@ public class UserService {
         return password != null && password.length() >= 8 && password.length() < 50;
     }
 
-    public User getUser(String username) {
-        return this.findByUsername(username).orElseThrow(
-                () -> new UserNotFoundException("No user found with username %s".formatted(username)));
+    public User getUser(Long id) {
+        Optional<User> optUser = Optional.of(User.findById(id));
+
+        return optUser.orElseThrow(
+            () -> new UserNotFoundException("No user found with id %d".formatted(id)));
     }
 
     public List<User> getAllUsers() {
