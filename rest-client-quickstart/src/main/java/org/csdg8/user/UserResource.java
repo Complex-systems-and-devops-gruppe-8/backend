@@ -45,7 +45,6 @@ public class UserResource {
     @Operation(summary = "Get all users", description = "Retrieves a list of all registered users.")
     @APIResponse(responseCode = "200", description = "Successfully retrieved all users", content = {
             @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UserResponseList.class)),
-            @Content(mediaType = MediaType.APPLICATION_XML, schema = @Schema(implementation = UserResponseList.class))
     })
     public Entity getUsers() {
         return this.userController.getUsers();
@@ -56,7 +55,6 @@ public class UserResource {
     @Operation(summary = "Get user by username", description = "Retrieves a specific user by their username.")
     @APIResponse(responseCode = "200", description = "Successfully retrieved the user", content = {
             @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UserResponse.class)),
-            @Content(mediaType = MediaType.APPLICATION_XML, schema = @Schema(implementation = UserResponse.class))
     })
     @APIResponse(responseCode = "404", description = "User not found")
     public Entity getUser(String username) {
