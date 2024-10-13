@@ -3,27 +3,24 @@ package org.csdg8.user;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.csdg8.user.dto.CollectionUserResponse;
 import org.csdg8.user.dto.CreateUserRequest;
+import org.csdg8.user.dto.UserResponse;
 
 import com.google.code.siren4j.component.Entity;
+import com.google.code.siren4j.converter.ReflectingConverter;
+import com.google.code.siren4j.error.Siren4JException;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
 
 @ApplicationScoped
 public class UserController {
-
-    @Context
-    UriInfo uriInfo;
-
-    @Inject
-    UserEntityBuilder userEntityBuilder;
 
     @Inject
     UserService userService;
@@ -33,13 +30,18 @@ public class UserController {
         return Response.created(URI.create("/users/" + id)).build();
     }
 
-    public Entity getUsers() {
+    public Entity getUsers() throws Siren4JException {
         List<User> users = this.userService.getAllUsers();
-        return userEntityBuilder.buildUsers(users, uriInfo);
+        List<UserResponse> userResponses = users.stream()
+                .map(user -> new UserResponse(user.id, user.username, user.role.toString()))
+                .collect(Collectors.toList());
+        CollectionUserResponse collectionUserResponses = new CollectionUserResponse(userResponses);
+        return ReflectingConverter.newInstance().toEntity(collectionUserResponses);
     }
 
-    public Entity getUser(String username) {
-        User user = this.userService.getUser(username);
-        return userEntityBuilder.buildUser(user, uriInfo);
+    public Entity getUser(Long id) throws Siren4JException {
+        User user = this.userService.getUser(id);
+        UserResponse userResponse = new UserResponse(user.id, user.username, user.role.toString());
+        return ReflectingConverter.newInstance().toEntity(userResponse);
     }
 }

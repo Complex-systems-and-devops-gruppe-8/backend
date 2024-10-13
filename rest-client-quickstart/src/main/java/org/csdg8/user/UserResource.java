@@ -5,7 +5,7 @@ import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.csdg8.model.exception.UserNotFoundException;
 import org.csdg8.user.dto.CreateUserRequest;
 import org.csdg8.user.dto.UserResponse;
-import org.csdg8.user.dto.UserResponseList;
+import org.csdg8.user.dto.CollectionUserResponse;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -13,7 +13,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
+import com.google.code.siren4j.Siren4J;
 import com.google.code.siren4j.component.Entity;
+import com.google.code.siren4j.error.Siren4JException;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -44,21 +46,21 @@ public class UserResource {
     @GET
     @Operation(summary = "Get all users", description = "Retrieves a list of all registered users.")
     @APIResponse(responseCode = "200", description = "Successfully retrieved all users", content = {
-            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UserResponseList.class)),
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = CollectionUserResponse.class)),
     })
-    public Entity getUsers() {
+    public Entity getUsers() throws Siren4JException {
         return this.userController.getUsers();
     }
 
     @GET
-    @Path("/{username}")
-    @Operation(summary = "Get user by username", description = "Retrieves a specific user by their username.")
+    @Path("/{id}")
+    @Operation(summary = "Get user by id", description = "Retrieves a specific user by their id.")
     @APIResponse(responseCode = "200", description = "Successfully retrieved the user", content = {
             @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UserResponse.class)),
     })
     @APIResponse(responseCode = "404", description = "User not found")
-    public Entity getUser(String username) {
-        return this.userController.getUser(username);
+    public Entity getUser(Long id) throws Siren4JException {
+        return this.userController.getUser(id);
     }
 
     @ServerExceptionMapper

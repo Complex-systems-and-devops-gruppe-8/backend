@@ -1,14 +1,20 @@
 package org.csdg8.user.dto;
 
-import java.util.Set;
+import com.google.code.siren4j.annotations.Siren4JEntity;
+import com.google.code.siren4j.resource.BaseResource;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse { //TODO rename to GetUserResponse
-    public Long id;
-    public String username;
-    public Set<String> role;
+@Siren4JEntity(name = "user", uri = "/users/{id}")
+public class UserResponse extends BaseResource { // TODO rename to GetUserResponse
+    private Long id;
+    private String username;
+    private String roles;
 }
