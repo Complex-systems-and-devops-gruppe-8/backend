@@ -3,7 +3,7 @@ package org.csdg8.user;
 import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.csdg8.model.exception.UserNotFoundException;
-import org.csdg8.user.dto.RegistrationRequest;
+import org.csdg8.user.dto.CreateUserRequest;
 import org.csdg8.user.dto.UserResponse;
 import org.csdg8.user.dto.UserResponseList;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -37,7 +37,7 @@ public class UserResource {
     @APIResponse(responseCode = "400", description = "Invalid username or password format")
     @APIResponse(responseCode = "409", description = "Username already exists")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response register(RegistrationRequest request) {
+    public Response register(CreateUserRequest request) {
         return this.userController.register(request);
     }
 

@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.Response;
 
 import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.csdg8.model.exception.UserNotFoundException;
-import org.csdg8.user.dto.RegistrationRequest;
+import org.csdg8.user.dto.CreateUserRequest;
 import org.csdg8.user.dto.UserResponse;
 import org.csdg8.user.dto.UserResponseList;
 import org.junit.jupiter.api.AfterEach;
@@ -43,7 +43,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldRegisterUserAndReturnCreatedResponse() {
-        RegistrationRequest request = new RegistrationRequest("john", "password123");
+        CreateUserRequest request = new CreateUserRequest("john", "password123");
         Response response = userController.register(request);
 
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -52,7 +52,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldThrowUserAlreadyExistsExceptionWhenRegisteringExistingUser() {
-        RegistrationRequest request = new RegistrationRequest("admin", "password123");
+        CreateUserRequest request = new CreateUserRequest("admin", "password123");
         assertThrowsExactly(UserAlreadyExistsException.class, () -> {
             userController.register(request);
         });
@@ -60,7 +60,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldThrowConstraintViolationException() {
-        RegistrationRequest request = new RegistrationRequest("u", "short");
+        CreateUserRequest request = new CreateUserRequest("u", "short");
         assertThrowsExactly(ConstraintViolationException.class, () -> {
             userController.register(request);
         });

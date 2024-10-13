@@ -8,7 +8,7 @@ import java.net.URL;
 import java.util.Set;
 
 import org.apache.http.HttpStatus;
-import org.csdg8.user.dto.RegistrationRequest;
+import org.csdg8.user.dto.CreateUserRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ public class UserResourceTest {
 
     @Test
     public void shouldReturnCreatedWhenRegisteringValidUser() {
-        RegistrationRequest request = new RegistrationRequest("john", "password123");
+        CreateUserRequest request = new CreateUserRequest("john", "password123");
 
         given()
             .contentType(ContentType.JSON)
@@ -54,7 +54,7 @@ public class UserResourceTest {
 
     @Test
     public void shouldReturnConflictWhenRegisteringExistingUser() {
-        RegistrationRequest request = new RegistrationRequest("admin", "password123");
+        CreateUserRequest request = new CreateUserRequest("admin", "password123");
 
         given()
             .contentType(ContentType.JSON)
@@ -67,7 +67,7 @@ public class UserResourceTest {
 
     @Test
     public void shouldReturnBadRequestWhenRegisteringWithInvalidCredentials() {
-        RegistrationRequest request = new RegistrationRequest("u", "short");
+        CreateUserRequest request = new CreateUserRequest("u", "short");
 
         given()
             .contentType(ContentType.JSON)

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegistrationRequest { //TODO rename to CreateUserRequest
+public class CreateUserRequest { //TODO rename to CreateUserRequest
     
     @NotBlank
     @Size(min = 3, max = 30)

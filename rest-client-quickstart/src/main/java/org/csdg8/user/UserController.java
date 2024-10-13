@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
-import org.csdg8.user.dto.RegistrationRequest;
+import org.csdg8.user.dto.CreateUserRequest;
 
 import com.google.code.siren4j.component.Entity;
 
@@ -28,7 +28,7 @@ public class UserController {
     @Inject
     UserService userService;
 
-    public Response register(@Valid @NotNull RegistrationRequest request) {
+    public Response register(@Valid @NotNull CreateUserRequest request) {
         Long id = this.userService.addUser(request.username, request.password, Set.of("user"));
         return Response.created(URI.create("/users/" + id)).build();
     }
