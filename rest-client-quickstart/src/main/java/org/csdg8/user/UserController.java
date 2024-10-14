@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.csdg8.user.dto.CollectionUserResponse;
+import org.csdg8.user.dto.GetCollectionUserResponse;
 import org.csdg8.user.dto.CreateUserRequest;
 import org.csdg8.user.dto.GetUserResponse;
 
@@ -35,7 +35,7 @@ public class UserController {
         List<GetUserResponse> userResponses = users.stream()
                 .map(user -> new GetUserResponse(user.id, user.username, user.role.toString()))
                 .collect(Collectors.toList());
-        CollectionUserResponse collectionUserResponses = new CollectionUserResponse(userResponses);
+        GetCollectionUserResponse collectionUserResponses = new GetCollectionUserResponse(userResponses);
         return ReflectingConverter.newInstance().toEntity(collectionUserResponses);
     }
 

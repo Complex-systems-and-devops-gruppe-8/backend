@@ -3,7 +3,7 @@ package org.csdg8.user;
 import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.csdg8.model.exception.UserNotFoundException;
-import org.csdg8.user.dto.CollectionUserResponse;
+import org.csdg8.user.dto.GetCollectionUserResponse;
 import org.csdg8.user.dto.CreateUserRequest;
 import org.csdg8.user.dto.GetUserResponse;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -46,7 +46,7 @@ public class UserResource {
     @GET
     @Operation(summary = "Get all users", description = "Retrieves a list of all registered users.")
     @APIResponse(responseCode = "200", description = "Successfully retrieved all users", content = {
-            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = CollectionUserResponse.class)),
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GetCollectionUserResponse.class)),
     })
     public Entity getUsers() throws Siren4JException {
         return this.userController.getUsers();

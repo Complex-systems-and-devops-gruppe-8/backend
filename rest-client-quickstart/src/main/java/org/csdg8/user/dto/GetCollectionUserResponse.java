@@ -6,8 +6,8 @@ import com.google.code.siren4j.annotations.Siren4JEntity;
 import com.google.code.siren4j.resource.CollectionResource;
 
 @Siren4JEntity(name = "users", uri = "/users")
-public class CollectionUserResponse extends CollectionResource<GetUserResponse> {
-    public CollectionUserResponse(Collection<GetUserResponse> items) {
+public class GetCollectionUserResponse extends CollectionResource<GetUserResponse> {
+    public GetCollectionUserResponse(Collection<GetUserResponse> items) {
         setItems(items);
     }
 }
