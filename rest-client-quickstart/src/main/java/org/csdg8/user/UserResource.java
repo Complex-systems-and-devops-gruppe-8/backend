@@ -3,9 +3,9 @@ package org.csdg8.user;
 import org.csdg8.model.exception.InvalidCredentialsException;
 import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.csdg8.model.exception.UserNotFoundException;
+import org.csdg8.user.dto.CollectionUserResponse;
 import org.csdg8.user.dto.CreateUserRequest;
 import org.csdg8.user.dto.UserResponse;
-import org.csdg8.user.dto.CollectionUserResponse;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -27,7 +27,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/users")
-@Produces({ MediaType.APPLICATION_JSON, Siren4J.JSON_MEDIATYPE})
+@Produces(Siren4J.JSON_MEDIATYPE)
 public class UserResource {
 
     @Inject
