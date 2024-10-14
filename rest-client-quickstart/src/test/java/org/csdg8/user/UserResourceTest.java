@@ -13,6 +13,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.google.code.siren4j.Siren4J;
+
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
@@ -85,7 +87,7 @@ public class UserResourceTest {
             .get(url)
         .then()
             .statusCode(HttpStatus.SC_OK)
-            .contentType(ContentType.JSON)
+            .contentType(Siren4J.JSON_MEDIATYPE)
             .body(not(empty()));
     }
 
@@ -93,10 +95,10 @@ public class UserResourceTest {
     public void shouldReturnOKWhenGettingExistingUser() {
         given()
         .when()
-            .get(url + "/user")
+            .get(url + "/1")
         .then()
             .statusCode(HttpStatus.SC_OK)
-            .contentType(ContentType.JSON)
+            .contentType(Siren4J.JSON_MEDIATYPE)
             .body(not(empty()));
     }
 
