@@ -11,7 +11,6 @@ import com.google.code.siren4j.error.Siren4JException;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -29,10 +28,10 @@ public class AuthController {
         return ReflectingConverter.newInstance().toEntity(createTokenResponse);
     }
 
-    public Response refreshAccessToken(@Valid @NotNull RefreshAccessTokenRequest request) {
+    public Entity refreshAccessToken(@Valid @NotNull RefreshAccessTokenRequest request) throws Siren4JException {
         String newAccessToken = this.authService.refreshAccessToken(request.refreshToken, request.accessToken);
 
-        RefreshAccessTokenResponse response = new RefreshAccessTokenResponse(newAccessToken);
-        return Response.ok(response).build();
+        RefreshAccessTokenResponse refreshAccessTokenResponse = new RefreshAccessTokenResponse(newAccessToken);
+        return ReflectingConverter.newInstance().toEntity(refreshAccessTokenResponse);
     }
 }

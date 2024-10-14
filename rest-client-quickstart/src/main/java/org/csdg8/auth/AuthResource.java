@@ -44,7 +44,7 @@ public class AuthResource {
     @RolesAllowed({ "user", "admin" })
     @Path("/token/refresh")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response refreshAccessToken(RefreshAccessTokenRequest request) {
+    public Entity refreshAccessToken(RefreshAccessTokenRequest request) throws Siren4JException {
         return this.authController.refreshAccessToken(request);
     }
 
