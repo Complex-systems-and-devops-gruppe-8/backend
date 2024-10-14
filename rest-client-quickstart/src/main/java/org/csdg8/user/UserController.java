@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.csdg8.user.dto.CollectionUserResponse;
 import org.csdg8.user.dto.CreateUserRequest;
-import org.csdg8.user.dto.UserResponse;
+import org.csdg8.user.dto.GetUserResponse;
 
 import com.google.code.siren4j.component.Entity;
 import com.google.code.siren4j.converter.ReflectingConverter;
@@ -32,8 +32,8 @@ public class UserController {
 
     public Entity getUsers() throws Siren4JException {
         List<User> users = this.userService.getAllUsers();
-        List<UserResponse> userResponses = users.stream()
-                .map(user -> new UserResponse(user.id, user.username, user.role.toString()))
+        List<GetUserResponse> userResponses = users.stream()
+                .map(user -> new GetUserResponse(user.id, user.username, user.role.toString()))
                 .collect(Collectors.toList());
         CollectionUserResponse collectionUserResponses = new CollectionUserResponse(userResponses);
         return ReflectingConverter.newInstance().toEntity(collectionUserResponses);
@@ -41,7 +41,7 @@ public class UserController {
 
     public Entity getUser(Long id) throws Siren4JException {
         User user = this.userService.getUser(id);
-        UserResponse userResponse = new UserResponse(user.id, user.username, user.role.toString());
+        GetUserResponse userResponse = new GetUserResponse(user.id, user.username, user.role.toString());
         return ReflectingConverter.newInstance().toEntity(userResponse);
     }
 }

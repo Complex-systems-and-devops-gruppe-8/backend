@@ -5,7 +5,7 @@ import org.csdg8.model.exception.UserAlreadyExistsException;
 import org.csdg8.model.exception.UserNotFoundException;
 import org.csdg8.user.dto.CollectionUserResponse;
 import org.csdg8.user.dto.CreateUserRequest;
-import org.csdg8.user.dto.UserResponse;
+import org.csdg8.user.dto.GetUserResponse;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -56,7 +56,7 @@ public class UserResource {
     @Path("/{id}")
     @Operation(summary = "Get user by id", description = "Retrieves a specific user by their id.")
     @APIResponse(responseCode = "200", description = "Successfully retrieved the user", content = {
-            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = UserResponse.class)),
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GetUserResponse.class)),
     })
     @APIResponse(responseCode = "404", description = "User not found")
     public Entity getUser(Long id) throws Siren4JException {

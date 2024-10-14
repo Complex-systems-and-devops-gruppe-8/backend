@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Siren4JEntity(name = "user", uri = "/users/{id}")
-public class UserResponse extends BaseResource { // TODO rename to GetUserResponse
+public class GetUserResponse extends BaseResource {
     private Long id;
     private String username;
     private String roles;
