@@ -77,7 +77,7 @@ public class UserService {
     }
 
     public User getUser(Long id) {
-        Optional<User> optUser = Optional.of(User.findById(id));
+        Optional<User> optUser = Optional.ofNullable(User.findById(id));
 
         return optUser.orElseThrow(
             () -> new UserNotFoundException("No user found with id %d".formatted(id)));
