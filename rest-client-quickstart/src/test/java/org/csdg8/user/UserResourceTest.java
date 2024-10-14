@@ -31,6 +31,10 @@ import jakarta.transaction.Transactional;
 @QuarkusTest
 public class UserResourceTest {
 
+    @SuppressWarnings("unused")
+    private Long adminId;
+    private Long userId;
+
     @TestHTTPEndpoint(UserResource.class)
     @TestHTTPResource
     URL url;
@@ -54,8 +58,8 @@ public class UserResourceTest {
     @BeforeEach
     @Transactional
     public void setup() {
-        User.add("admin", "admin1234", Set.of("admin"));
-        User.add("user", "user1234", Set.of("user"));
+        this.adminId = User.add("admin", "admin1234", Set.of("admin"));
+        this.userId = User.add("user", "user1234", Set.of("user"));
     }
 
     @AfterEach
@@ -118,7 +122,7 @@ public class UserResourceTest {
     public void shouldReturnOKWhenGettingExistingUser() {
         given()
         .when()
-            .get(url + "/1")
+            .get(url + "/" + this.userId)
         .then()
             .statusCode(HttpStatus.SC_OK)
             .contentType(Siren4J.JSON_MEDIATYPE)
@@ -129,7 +133,7 @@ public class UserResourceTest {
     public void shouldReturnNotFoundStatusWhenGettingNonExistentUser() {
         given()
         .when()
-            .get(url + "/nonexistentuser")
+            .get(url + "/99999")
         .then()
             .statusCode(HttpStatus.SC_NOT_FOUND);
     }
