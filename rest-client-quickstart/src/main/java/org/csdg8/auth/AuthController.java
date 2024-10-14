@@ -5,6 +5,10 @@ import org.csdg8.auth.dto.CreateTokenResponse;
 import org.csdg8.auth.dto.RefreshAccessTokenRequest;
 import org.csdg8.auth.dto.RefreshAccessTokenResponse;
 
+import com.google.code.siren4j.component.Entity;
+import com.google.code.siren4j.converter.ReflectingConverter;
+import com.google.code.siren4j.error.Siren4JException;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
@@ -17,12 +21,12 @@ public class AuthController {
     @Inject
     AuthService authService;
 
-    public Response createToken(@Valid @NotNull CreateTokenRequest request) {
-        String accessToken = this.authService.createAccessToken(request.username, request.password);
-        String refreshToken = this.authService.createRefreshToken(request.username, request.password);
+    public Entity createToken(@Valid @NotNull CreateTokenRequest request) throws Siren4JException {
+        String accessToken = this.authService.createAccessToken(request.getUsername(), request.getPassword());
+        String refreshToken = this.authService.createRefreshToken(request.getUsername(), request.getPassword());
 
-        CreateTokenResponse response = new CreateTokenResponse(accessToken, refreshToken);
-        return Response.ok(response).build();
+        CreateTokenResponse createTokenResponse = new CreateTokenResponse(accessToken, refreshToken);
+        return ReflectingConverter.newInstance().toEntity(createTokenResponse);
     }
 
     public Response refreshAccessToken(@Valid @NotNull RefreshAccessTokenRequest request) {

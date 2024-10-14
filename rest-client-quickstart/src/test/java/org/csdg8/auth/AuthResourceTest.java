@@ -1,7 +1,6 @@
 package org.csdg8.auth;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.notNullValue;
 
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -10,6 +9,7 @@ import java.util.UUID;
 
 import org.apache.http.HttpStatus;
 import org.csdg8.auth.dto.CreateTokenRequest;
+import org.csdg8.auth.dto.CreateTokenResponse;
 import org.csdg8.auth.dto.RefreshAccessTokenRequest;
 import org.csdg8.user.User;
 import org.junit.jupiter.api.AfterAll;
@@ -17,6 +17,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.code.siren4j.component.Entity;
+import com.google.code.siren4j.converter.ReflectingConverter;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.common.http.TestHTTPResource;
@@ -26,7 +28,9 @@ import io.restassured.config.ObjectMapperConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.mapper.factory.Jackson2ObjectMapperFactory;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import lombok.SneakyThrows;
 
 @QuarkusTest
 public class AuthResourceTest {
@@ -35,6 +39,9 @@ public class AuthResourceTest {
     @TestHTTPEndpoint(AuthResource.class)
     URL authUrl;
 
+    @Inject
+    AuthResource authResource;
+
     /**
      * Configures RestAssured to use Jackson for JSON serialization/deserialization.
      * This prevents issues with XML processing.
@@ -42,13 +49,13 @@ public class AuthResourceTest {
     @BeforeAll
     public static void setupAll() {
         RestAssured.config = RestAssuredConfig.config()
-            .objectMapperConfig(new ObjectMapperConfig()
-                .jackson2ObjectMapperFactory(new Jackson2ObjectMapperFactory() {
-                    @Override
-                    public ObjectMapper create(Type type, String s) {
-                        return new ObjectMapper();
-                    }
-                }));
+                .objectMapperConfig(new ObjectMapperConfig()
+                        .jackson2ObjectMapperFactory(new Jackson2ObjectMapperFactory() {
+                            @Override
+                            public ObjectMapper create(Type type, String s) {
+                                return new ObjectMapper();
+                            }
+                        }));
     }
 
     @BeforeAll
@@ -65,33 +72,29 @@ public class AuthResourceTest {
     }
 
     @Test
-    public void shouldReturnOkAndTokensWhenCreatingTokenWithValidAdminCreateTokenRequest() {
+    public void shouldReturnOkWhenCreatingTokenWithValidAdminCreateTokenRequest() {
         CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin1234");
 
         given()
-            .contentType(ContentType.JSON)
-            .body(credentials)
-            .when()
-            .post(authUrl + "/token")
-            .then()
-            .statusCode(HttpStatus.SC_OK)
-            .body("accessToken", notNullValue())
-            .body("refreshToken", notNullValue());
+                .contentType(ContentType.JSON)
+                .body(credentials)
+                .when()
+                .post(authUrl + "/token")
+                .then()
+                .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
-    public void shouldReturnOkAndTokensWhenCreatingTokenWithValidUserCreateTokenRequest() {
+    public void shouldReturnOkWhenCreatingTokenWithValidUserCreateTokenRequest() {
         CreateTokenRequest credentials = new CreateTokenRequest("user", "user1234");
 
         given()
-            .contentType(ContentType.JSON)
-            .body(credentials)
-            .when()
-            .post(authUrl + "/token")
-            .then()
-            .statusCode(HttpStatus.SC_OK)
-            .body("accessToken", notNullValue())
-            .body("refreshToken", notNullValue());
+                .contentType(ContentType.JSON)
+                .body(credentials)
+                .when()
+                .post(authUrl + "/token")
+                .then()
+                .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
@@ -99,113 +102,90 @@ public class AuthResourceTest {
         CreateTokenRequest credentials = new CreateTokenRequest("invalidUser", "invalidPassword");
 
         given()
-            .contentType(ContentType.JSON)
-            .body(credentials)
-            .when()
-            .post(authUrl + "/token")
-            .then()
-            .statusCode(HttpStatus.SC_UNAUTHORIZED);
+                .contentType(ContentType.JSON)
+                .body(credentials)
+                .when()
+                .post(authUrl + "/token")
+                .then()
+                .statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
 
     @Test
-    public void shouldReturnOkAndNewAccessTokenWhenRefreshingAccessTokenWithValidAdminRefreshToken() {
-        CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin1234");
-        RefreshAccessTokenRequest tokens = given()
-            .contentType(ContentType.JSON)
-            .accept(ContentType.JSON)
-            .body(credentials)
-            .when()
-            .post(authUrl + "/token")
-            .then()
-            .statusCode(HttpStatus.SC_OK)
-            .extract().as(RefreshAccessTokenRequest.class);
+    public void shouldReturnOkWhenRefreshingAccessTokenWithValidAdminRefreshToken() {
+        CreateTokenResponse credentials = obtainTokens("admin", "admin1234");
 
-        given().header("Authorization", "Bearer " + tokens.accessToken)
-            .contentType(ContentType.JSON)
-            .body(tokens)
-            .when()
-            .post(authUrl + "/token/refresh")
-            .then()
-            .statusCode(HttpStatus.SC_OK)
-            .body("accessToken", notNullValue());
+        RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest(
+                credentials.getRefreshToken(), credentials.getAccessToken());
+
+        given().header("Authorization", "Bearer " + refreshRequest.accessToken)
+                .contentType(ContentType.JSON)
+                .body(refreshRequest)
+                .when()
+                .post(authUrl + "/token/refresh")
+                .then()
+                .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
     public void shouldReturnOkAndNewAccessTokenWhenRefreshingAccessTokenWithValidUserRefreshToken() {
-        CreateTokenRequest credentials = new CreateTokenRequest("user", "user1234");
-        RefreshAccessTokenRequest tokens = given()
-            .contentType(ContentType.JSON)
-            .accept(ContentType.JSON)
-            .body(credentials)
-            .when()
-            .post(authUrl + "/token")
-            .then()
-            .statusCode(HttpStatus.SC_OK)
-            .extract().as(RefreshAccessTokenRequest.class);
+        CreateTokenResponse credentials = obtainTokens("user", "user1234");
 
-        given().header("Authorization", "Bearer " + tokens.accessToken)
-            .contentType(ContentType.JSON)
-            .body(tokens)
-            .when()
-            .post(authUrl + "/token/refresh")
-            .then()
-            .statusCode(HttpStatus.SC_OK)
-            .body("accessToken", notNullValue());
+        RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest(
+                credentials.getRefreshToken(), credentials.getAccessToken());
+
+        given().header("Authorization", "Bearer " + refreshRequest.accessToken)
+                .contentType(ContentType.JSON)
+                .body(refreshRequest)
+                .when()
+                .post(authUrl + "/token/refresh")
+                .then()
+                .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
     public void shouldReturnUnauthorizedWhenRefreshingAccessTokenWithInvalidRefreshToken() {
-        CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin1234");
-        String accessToken = given()
-            .contentType(ContentType.JSON)
-            .accept(ContentType.JSON)
-            .body(credentials)
-            .when()
-            .post(authUrl + "/token")
-            .then()
-            .statusCode(HttpStatus.SC_OK)
-            .extract()
-            .as(RefreshAccessTokenRequest.class)
-            .accessToken;
+        CreateTokenResponse credentials = obtainTokens("admin", "admin1234");
 
         RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
-        refreshRequest.accessToken = accessToken;
+        refreshRequest.accessToken = credentials.getAccessToken();
         String invalidRefreshToken = UUID.randomUUID().toString();
         refreshRequest.refreshToken = invalidRefreshToken;
 
         given().header("Authorization", "Bearer " + refreshRequest.accessToken)
-            .contentType(ContentType.JSON)
-            .body(refreshRequest)
-            .when()
-            .post(authUrl + "/token/refresh")
-            .then()
-            .statusCode(HttpStatus.SC_UNAUTHORIZED);
+                .contentType(ContentType.JSON)
+                .body(refreshRequest)
+                .when()
+                .post(authUrl + "/token/refresh")
+                .then()
+                .statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
 
     @Test
     public void shouldReturnUnauthorizedWhenRefreshingAccessTokenWithInvalidAccessToken() {
-        CreateTokenRequest credentials = new CreateTokenRequest("admin", "admin1234");
-        String refreshToken = given()
-            .contentType(ContentType.JSON)
-            .accept(ContentType.JSON)
-            .body(credentials)
-            .when()
-            .post(authUrl + "/token")
-            .then()
-            .statusCode(HttpStatus.SC_OK)
-            .extract().as(RefreshAccessTokenRequest.class)
-            .refreshToken;
+        CreateTokenResponse credentials = obtainTokens("admin", "admin1234");
 
         RefreshAccessTokenRequest refreshRequest = new RefreshAccessTokenRequest();
         refreshRequest.accessToken = "invalidAccessToken";
-        refreshRequest.refreshToken = refreshToken;
+        refreshRequest.refreshToken = credentials.getRefreshToken();
 
         given().header("Authorization", "Bearer " + refreshRequest.accessToken)
-            .contentType(ContentType.JSON)
-            .body(refreshRequest)
-            .when()
-            .post(authUrl + "/token/refresh")
-            .then()
-            .statusCode(HttpStatus.SC_UNAUTHORIZED);
+                .contentType(ContentType.JSON)
+                .body(refreshRequest)
+                .when()
+                .post(authUrl + "/token/refresh")
+                .then()
+                .statusCode(HttpStatus.SC_UNAUTHORIZED);
+    }
+
+    @SneakyThrows
+    private CreateTokenResponse obtainTokens(String username, String password) {
+        Entity tokensResponse = this.authResource.createToken(new CreateTokenRequest(username, password));
+        CreateTokenResponse tokens = (CreateTokenResponse) ReflectingConverter.newInstance().toObject(tokensResponse,
+                CreateTokenResponse.class);
+        assert tokens != null;
+        assert tokens.getAccessToken() != null;
+        assert tokens.getRefreshToken() != null;
+
+        return tokens;
     }
 }

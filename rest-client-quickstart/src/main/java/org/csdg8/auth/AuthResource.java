@@ -8,6 +8,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
+import com.google.code.siren4j.component.Entity;
+import com.google.code.siren4j.error.Siren4JException;
+
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -30,7 +33,7 @@ public class AuthResource {
     @APIResponse(responseCode = "401", description = "Invalid credentials")
     @Path("/token")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createToken(CreateTokenRequest credentials) {
+    public Entity createToken(CreateTokenRequest credentials) throws Siren4JException {
        return this.authController.createToken(credentials);
     }
 
