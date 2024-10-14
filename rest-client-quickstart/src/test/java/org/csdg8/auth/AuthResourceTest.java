@@ -3,6 +3,7 @@ package org.csdg8.auth;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Set;
 import java.util.UUID;
@@ -15,10 +16,16 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.RestAssured;
+import io.restassured.config.ObjectMapperConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.mapper.factory.Jackson2ObjectMapperFactory;
 import jakarta.transaction.Transactional;
 
 @QuarkusTest
@@ -27,6 +34,22 @@ public class AuthResourceTest {
     @TestHTTPResource
     @TestHTTPEndpoint(AuthResource.class)
     URL authUrl;
+
+    /**
+     * Configures RestAssured to use Jackson for JSON serialization/deserialization.
+     * This prevents issues with XML processing.
+     */
+    @BeforeAll
+    public static void setupAll() {
+        RestAssured.config = RestAssuredConfig.config()
+            .objectMapperConfig(new ObjectMapperConfig()
+                .jackson2ObjectMapperFactory(new Jackson2ObjectMapperFactory() {
+                    @Override
+                    public ObjectMapper create(Type type, String s) {
+                        return new ObjectMapper();
+                    }
+                }));
+    }
 
     @BeforeAll
     @Transactional
