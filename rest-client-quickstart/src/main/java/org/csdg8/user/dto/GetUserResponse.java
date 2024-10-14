@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Siren4JEntity(name = "user", uri = "/users/{id}")
+@Siren4JEntity(entityClass = "user", uri = "/users/{id}")
 public class GetUserResponse extends BaseResource {
     private Long id;
     private String username;

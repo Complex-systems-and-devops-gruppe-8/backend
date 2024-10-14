@@ -10,7 +10,7 @@ import com.google.code.siren4j.resource.CollectionResource;
 
 import jakarta.ws.rs.core.MediaType;
 
-@Siren4JEntity(name = "users", uri = "/users", actions = {
+@Siren4JEntity(entityClass = "users", uri = "/users", actions = {
         @Siren4JAction(name = "create-user", title = "Create user", method = Method.POST, href = "/users", type = MediaType.APPLICATION_JSON, fields = {
                 @Siren4JActionField(name = "username", title = "Username", required = true, type = "text"),
                 @Siren4JActionField(name = "password", title = "Plain-text password", required = true, type = "text")
