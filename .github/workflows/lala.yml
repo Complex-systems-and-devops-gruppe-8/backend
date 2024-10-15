@@ -66,6 +66,6 @@ jobs:
           flags: |
             --allow-unauthenticated
           secrets: |
-            MP_JWT_VERIFY_ISSUER=${{ secrets.JWT_VERIFY_ISSUER }}
+            MP_JWT_VERIFY_ISSUER=jwt_verify_issuer:latest
             MP_JWT_VERIFY_PUBLICKEY=public_key:latest
             SMALLRYE_JWT_SIGN_KEY=private_key:latest
