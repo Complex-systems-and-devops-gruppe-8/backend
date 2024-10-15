@@ -26,10 +26,7 @@ jobs:
 
       - name: Build with Maven
         working-directory: rest-client-quickstart
-        env:
-          MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
-          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }} 
-        run: ./mvnw clean package -Dnative
+        run: ./mvnw clean package -Dquarkus.profile=prod
 
       - name: List target directory
         working-directory: rest-client-quickstart
@@ -51,7 +48,7 @@ jobs:
       - name: Build Docker image
         working-directory: rest-client-quickstart
         run: |
-          docker build -f src/main/docker/Dockerfile.native-micro -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
+          docker build -f src/main/docker/Dockerfile.jvm -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
 
       - name: Push Docker image to Google Container Registry
         run: |
@@ -67,3 +64,5 @@ jobs:
             --allow-unauthenticated
           env_vars: |
             MP_JWT_VERIFY_ISSUER=${{ secrets.JWT_VERIFY_ISSUER }}
+            MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
+            SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }} 
