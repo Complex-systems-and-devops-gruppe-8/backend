@@ -57,12 +57,6 @@ jobs:
         run: |
           docker push eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
 
-      - name: Remove existing environment variables
-        run: |
-          gcloud run services update quarkus-rest-client-quickstart \
-          --remove-env-vars=MP_JWT_VERIFY_ISSUER,MP_JWT_VERIFY_PUBLICKEY,SMALLRYE_JWT_SIGN_KEY \
-          --region europe-north1
-
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
@@ -71,7 +65,7 @@ jobs:
           region: europe-north1
           flags: |
             --allow-unauthenticated
-          secrets: |
+          env_vars: |
             MP_JWT_VERIFY_ISSUER=jwt_verify_issuer:latest
             MP_JWT_VERIFY_PUBLICKEY=public_key:latest
             SMALLRYE_JWT_SIGN_KEY=private_key:latest
