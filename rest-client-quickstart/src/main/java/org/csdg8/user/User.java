@@ -30,7 +30,7 @@ public class User extends PanacheEntity {
      * @param password the unencrypted password (it is encrypted with bcrypt)
      * @param role     the user assigned roles
      */
-    public static void add(String username, String password, Set<String> role) {
+    public static Long add(String username, String password, Set<String> role) {
         assert username.length() != 0;
         assert password.length() != 0;
         assert !role.isEmpty();
@@ -40,6 +40,7 @@ public class User extends PanacheEntity {
         user.password = BcryptUtil.bcryptHash(password);
         user.role = role;
         user.persist();
+        return user.id;
     }
 
     /**
