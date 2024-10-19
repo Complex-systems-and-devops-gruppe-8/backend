@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.csdg8.util.SirenAssertion.actionShouldHaveField;
 import static org.csdg8.util.SirenAssertion.actionShouldHaveHref;
 import static org.csdg8.util.SirenAssertion.actionShouldHaveType;
+import static org.hamcrest.Matchers.equalTo;
 import static org.csdg8.util.SirenAssertion.actionShouldHaveMethod;
 
 import java.lang.reflect.Type;
@@ -75,6 +76,16 @@ public class AuthResourceTest {
     @Transactional
     public static void teardown() {
         User.deleteAll();
+    }
+
+    @Test
+    public void shouldBeReachableViaHypermedia() {
+        given()
+                .when()
+                .get("/")
+                .then()
+                .body("links.find { it.rel.contains('auth') }.href",
+                        equalTo("/auth"));
     }
 
     @Test

@@ -2,6 +2,7 @@ package org.csdg8.user;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
 import java.lang.reflect.Type;
@@ -66,6 +67,15 @@ public class UserResourceTest {
     @Transactional
     public void teardown() {
         User.deleteAll();
+    }
+
+    @Test
+    public void shouldBeReachableViaHypermedia() {
+        given().when()
+            .get("/")
+        .then()
+            .body("links.find { it.rel.contains('users') }.href",
+                    equalTo("/users"));
     }
 
     @Test
