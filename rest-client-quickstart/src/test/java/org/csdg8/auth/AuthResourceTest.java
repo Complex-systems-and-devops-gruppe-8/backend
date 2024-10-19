@@ -1,10 +1,10 @@
 package org.csdg8.auth;
 
 import static io.restassured.RestAssured.given;
-import static org.csdg8.util.SirenAssertion.itShouldHaveField;
-import static org.csdg8.util.SirenAssertion.itShouldHaveHref;
-import static org.csdg8.util.SirenAssertion.itShouldHaveJSONAcceptType;
-import static org.csdg8.util.SirenAssertion.itShouldHaveMethod;
+import static org.csdg8.util.SirenAssertion.actionShouldHaveField;
+import static org.csdg8.util.SirenAssertion.actionShouldHaveHref;
+import static org.csdg8.util.SirenAssertion.actionShouldHaveType;
+import static org.csdg8.util.SirenAssertion.actionShouldHaveMethod;
 
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -199,20 +199,20 @@ public class AuthResourceTest {
 
     private void itShouldHaveActionToCreateToken(Response response) {
         String actionName = "create-token";
-        itShouldHaveMethod(response, actionName, Method.POST);
-        itShouldHaveJSONAcceptType(response, actionName);
-        itShouldHaveHref(response, actionName, "/auth/token");
-        itShouldHaveField(response, actionName, "username", "TEXT", true);
-        itShouldHaveField(response, actionName, "password", "TEXT", true);
+        actionShouldHaveMethod(response, actionName, Method.POST);
+        actionShouldHaveType(response, actionName);
+        actionShouldHaveHref(response, actionName, "/auth/token");
+        actionShouldHaveField(response, actionName, "username", "TEXT", true);
+        actionShouldHaveField(response, actionName, "password", "TEXT", true);
     }
 
     private void itShouldHaveActionToRefreshAccessToken(Response response) {
         String actionName = "refresh-access-token";
-        itShouldHaveMethod(response, actionName, Method.POST);
-        itShouldHaveJSONAcceptType(response, actionName);
-        itShouldHaveHref(response, actionName, "/auth/token/refresh");
-        itShouldHaveField(response, actionName, "accessToken", "TEXT", true);
-        itShouldHaveField(response, actionName, "refreshToken", "TEXT", true);
+        actionShouldHaveMethod(response, actionName, Method.POST);
+        actionShouldHaveType(response, actionName);
+        actionShouldHaveHref(response, actionName, "/auth/token/refresh");
+        actionShouldHaveField(response, actionName, "accessToken", "TEXT", true);
+        actionShouldHaveField(response, actionName, "refreshToken", "TEXT", true);
     }
 
     @SneakyThrows

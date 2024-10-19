@@ -21,7 +21,7 @@ public class SirenAssertion {
      * @param actionName
      * @param methodType
      */
-    public static void itShouldHaveMethod(Response response, String actionName, Method methodType) {
+    public static void actionShouldHaveMethod(Response response, String actionName, Method methodType) {
         response.then()
                 .body("actions.find { it.name == '" + actionName + "' }.method",
                         equalTo(methodType.toString()));
@@ -35,7 +35,7 @@ public class SirenAssertion {
      * @param response
      * @param actionName
      */
-    public static void itShouldHaveJSONAcceptType(Response response, String actionName) {
+    public static void actionShouldHaveType(Response response, String actionName) {
         response.then()
                 .body("actions.find { it.name == '" + actionName + "' }.type",
                         equalTo(MediaType.APPLICATION_JSON.toString()));
@@ -50,7 +50,7 @@ public class SirenAssertion {
      * @param actionName the name of the action
      * @param href       the expected href uri
      */
-    public static void itShouldHaveHref(Response response, String actionName, String href) {
+    public static void actionShouldHaveHref(Response response, String actionName, String href) {
         response.then()
                 .body("actions.find { it.name == '" + actionName + "' }.href",
                         equalTo(href));
@@ -68,7 +68,7 @@ public class SirenAssertion {
      * @param type       the type of the field in the expected field
      * @param isRequired whether the field is expected to be required.
      */
-    public static void itShouldHaveField(Response response, String actionName, String fieldName, String type,
+    public static void actionShouldHaveField(Response response, String actionName, String fieldName, String type,
             boolean isRequired) {
         response.then()
                 .body("actions.find { it.name == '" + actionName + "' }.fields.find { it.name == '" + fieldName
