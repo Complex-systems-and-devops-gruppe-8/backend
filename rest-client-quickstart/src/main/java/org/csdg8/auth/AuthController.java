@@ -2,6 +2,7 @@ package org.csdg8.auth;
 
 import org.csdg8.auth.dto.CreateTokenRequest;
 import org.csdg8.auth.dto.CreateTokenResponse;
+import org.csdg8.auth.dto.GetAuthResponse;
 import org.csdg8.auth.dto.RefreshAccessTokenRequest;
 import org.csdg8.auth.dto.RefreshAccessTokenResponse;
 
@@ -33,5 +34,10 @@ public class AuthController {
 
         RefreshAccessTokenResponse refreshAccessTokenResponse = new RefreshAccessTokenResponse(newAccessToken);
         return ReflectingConverter.newInstance().toEntity(refreshAccessTokenResponse);
+    }
+
+    public Entity getAuth() throws Siren4JException {
+        GetAuthResponse authResponse = new GetAuthResponse();
+        return ReflectingConverter.newInstance().toEntity(authResponse);
     }
 }
