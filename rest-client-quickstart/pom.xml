@@ -71,6 +71,10 @@
             <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.googlecode.siren4j</groupId>
             <artifactId>siren4j</artifactId>
             <version>2.1.0</version>
