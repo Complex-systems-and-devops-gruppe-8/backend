@@ -1,4 +1,4 @@
-package org.csdg8.auth.dto;
+package org.csdg8.user.dto;
 
 import com.google.code.siren4j.annotations.Siren4JEntity;
 import com.google.code.siren4j.resource.BaseResource;
@@ -12,8 +12,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Siren4JEntity(entityClass = "access-token", uri = "/auth/token")
-public class CreateTokenResponse extends BaseResource {
-    private String accessToken;
-    private String refreshToken;
+@Siren4JEntity(entityClass = "user", uri = "/users/{id}")
+public class GetUserResponse extends BaseResource {
+    private Long id;
+    private String username;
+    private String roles;
 }
