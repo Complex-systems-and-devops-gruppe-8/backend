@@ -70,6 +70,17 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
+        <!-- Monitoring -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkiverse.dashbuilder</groupId>
+            <artifactId>quarkus-dashbuilder</artifactId>
+            <version>0.32.0</version>
+        </dependency>
+        <!-- End of Monitoring -->
         <dependency>
             <groupId>com.googlecode.siren4j</groupId>
             <artifactId>siren4j</artifactId>
