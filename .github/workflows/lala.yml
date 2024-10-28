@@ -48,15 +48,19 @@ jobs:
       - name: Configure Docker for GCR
         run: gcloud auth configure-docker --quiet
 
+      - name: Decode Multiline Secrets
+        run: |
+          echo "${{ secrets.ENCODED_PUBLIC_KEY }}" | base64 -d > public_key.pem
+          echo "${{ secrets.ENCODED_PRIVATE_KEY }}" | base64 -d > private_key.pem
+
       - name: Build Docker image
         working-directory: rest-client-quickstart
         env:
-          MP_JWT_VERIFY_PUBLICKEY: |
-            ${{ secrets.PUBLIC_KEY }}
-          SMALLRYE_JWT_SIGN_KEY: |
-            ${{ secrets.PRIVATE_KEY }} 
+          MP_JWT_VERIFY_PUBLICKEY: $(cat public_key.pem)
+          SMALLRYE_JWT_SIGN_KEY: $(cat private_key.pem)
         run: |
           docker build -f src/main/docker/Dockerfile.jvm -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
+
 
       - name: Push Docker image to Google Container Registry
         run: |
