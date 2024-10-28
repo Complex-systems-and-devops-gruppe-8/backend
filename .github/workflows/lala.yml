@@ -23,29 +23,23 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v2'
-        with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-
-      - id: 'fetch-secrets'
-        uses: 'google-github-actions/get-secretmanager-secrets@v2'
-        with:
-          secrets: |
-            MP_JWT_VERIFY_PUBLICKEY:projects/cs-devops-62582-group8/secrets/public_key
-            SMALLRYE_JWT_SIGN_KEY:projects/cs-devops-62582-group8/secrets/private_key
 
       - name: Build with Maven
         working-directory: rest-client-quickstart
         env:
-          MP_JWT_VERIFY_PUBLICKEY: ${{ steps.fetch-secrets.outputs.MP_JWT_VERIFY_PUBLICKEY }}
-          SMALLRYE_JWT_SIGN_KEY: ${{ steps.fetch-secrets.outputs.SMALLRYE_JWT_SIGN_KEY }}
+          MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
+          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }} 
         run: ./mvnw clean package -Dquarkus.profile=prod
 
       - name: List target directory
         working-directory: rest-client-quickstart
         run: ls -la target
 
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2'
         with:
@@ -57,17 +51,11 @@ jobs:
       - name: Build Docker image
         working-directory: rest-client-quickstart
         run: |
-          docker build \
-            --build-arg MP_JWT_VERIFY_PUBLICKEY="${{ steps.fetch-secrets.outputs.MP_JWT_VERIFY_PUBLICKEY }}" \
-            --build-arg SMALLRYE_JWT_SIGN_KEY="${{ steps.fetch-secrets.outputs.SMALLRYE_JWT_SIGN_KEY }}" \
-            -f src/main/docker/Dockerfile.jvm \
-            -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
-
-
+          docker build -f src/main/docker/Dockerfile.jvm -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
+          
       - name: Push Docker image to Google Container Registry
         run: |
           docker push eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
-
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
@@ -78,4 +66,6 @@ jobs:
             --allow-unauthenticated
             --timeout=600s
           env_vars: |
-            MP_JWT_VERIFY_ISSUER = ${{ secrets.JWT_VERIFY_ISSUER }} 
+            MP_JWT_VERIFY_ISSUER = ${{ secrets.JWT_VERIFY_ISSUER }}
+            MP_JWT_VERIFY_PUBLICKEY = ${{ secrets.PUBLIC_KEY }}
+            SMALLRYE_JWT_SIGN_KEY = ${{ secrets.PRIVATE_KEY }} 
