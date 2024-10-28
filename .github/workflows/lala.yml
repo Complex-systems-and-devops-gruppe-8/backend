@@ -56,11 +56,12 @@ jobs:
 
       - name: Build Docker image
         working-directory: rest-client-quickstart
-        env:
-          MP_JWT_VERIFY_PUBLICKEY: ${{ steps.fetch-secrets.outputs.MP_JWT_VERIFY_PUBLICKEY }}
-          SMALLRYE_JWT_SIGN_KEY: ${{ steps.fetch-secrets.outputs.privSMALLRYE_JWT_SIGN_KEYate_key }}
         run: |
-          docker build -f src/main/docker/Dockerfile.jvm -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
+          docker build \
+            --build-arg MP_JWT_VERIFY_PUBLICKEY="${{ steps.fetch-secrets.outputs.MP_JWT_VERIFY_PUBLICKEY }}" \
+            --build-arg SMALLRYE_JWT_SIGN_KEY="${{ steps.fetch-secrets.outputs.SMALLRYE_JWT_SIGN_KEY }}" \
+            -f src/main/docker/Dockerfile.jvm \
+            -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
 
 
       - name: Push Docker image to Google Container Registry
