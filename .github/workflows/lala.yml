@@ -27,8 +27,8 @@ jobs:
       - name: Build with Maven
         working-directory: rest-client-quickstart
         env:
-          MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
-          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }} 
+          MP_JWT_VERIFY_PUBLICKEY: ${{ steps.fetch-secrets.outputs.MP_JWT_VERIFY_PUBLICKEY }}
+          SMALLRYE_JWT_SIGN_KEY: ${{ steps.fetch-secrets.outputs.SMALLRYE_JWT_SIGN_KEY }}
         run: ./mvnw clean package -Dquarkus.profile=prod
 
       - name: List target directory
@@ -48,16 +48,11 @@ jobs:
       - name: Configure Docker for GCR
         run: gcloud auth configure-docker --quiet
 
-      - name: Decode Multiline Secrets
-        run: |
-          echo "${{ secrets.ENCODED_PUBLIC_KEY }}" | base64 -d > public_key.pem
-          echo "${{ secrets.ENCODED_PRIVATE_KEY }}" | base64 -d > private_key.pem
-
       - name: Build Docker image
         working-directory: rest-client-quickstart
         env:
-          MP_JWT_VERIFY_PUBLICKEY: $(cat public_key.pem)
-          SMALLRYE_JWT_SIGN_KEY: $(cat private_key.pem)
+          MP_JWT_VERIFY_PUBLICKEY: ${{ steps.fetch-secrets.outputs.MP_JWT_VERIFY_PUBLICKEY }}
+          SMALLRYE_JWT_SIGN_KEY: ${{ steps.fetch-secrets.outputs.SMALLRYE_JWT_SIGN_KEY }}
         run: |
           docker build -f src/main/docker/Dockerfile.jvm -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
 
