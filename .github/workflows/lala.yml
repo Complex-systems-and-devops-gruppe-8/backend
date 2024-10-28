@@ -68,6 +68,6 @@ jobs:
           region: europe-north1
           flags: |
             --allow-unauthenticated
-            --timeout=600s  # Increase the timeout to 600 seconds (10 minutes)
+            --timeout=600s
           env_vars: |
             MP_JWT_VERIFY_ISSUER = ${{ secrets.JWT_VERIFY_ISSUER }} 
