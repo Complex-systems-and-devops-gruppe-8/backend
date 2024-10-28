@@ -71,6 +71,7 @@ jobs:
             --region europe-north1 \
             --allow-unauthenticated \
             --timeout=600s \
+            --add-cloudsql-instances=cs-devops-62582-group8:europe-north1 \
             --set-env-vars="MP_JWT_VERIFY_ISSUER=${{ secrets.JWT_VERIFY_ISSUER }}" \
             --set-env-vars="MP_JWT_VERIFY_PUBLICKEY=${{ secrets.PUBLIC_KEY }}" \
             --set-env-vars="SMALLRYE_JWT_SIGN_KEY=${{ secrets.PRIVATE_KEY }}"
