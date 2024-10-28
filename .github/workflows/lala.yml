@@ -51,8 +51,10 @@ jobs:
       - name: Build Docker image
         working-directory: rest-client-quickstart
         env:
-          MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
-          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }} 
+          MP_JWT_VERIFY_PUBLICKEY: |
+            ${{ secrets.PUBLIC_KEY }}
+          SMALLRYE_JWT_SIGN_KEY: |
+            ${{ secrets.PRIVATE_KEY }} 
         run: |
           docker build -f src/main/docker/Dockerfile.jvm -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
 
