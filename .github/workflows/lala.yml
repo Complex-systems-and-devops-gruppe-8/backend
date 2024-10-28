@@ -27,8 +27,8 @@ jobs:
       - name: Build with Maven
         working-directory: rest-client-quickstart
         env:
-          MP_JWT_VERIFY_PUBLICKEY: ${{ steps.fetch-secrets.outputs.MP_JWT_VERIFY_PUBLICKEY }}
-          SMALLRYE_JWT_SIGN_KEY: ${{ steps.fetch-secrets.outputs.SMALLRYE_JWT_SIGN_KEY }}
+          MP_JWT_VERIFY_PUBLICKEY: ${{ steps.fetch-secrets.outputs.public_key }}
+          SMALLRYE_JWT_SIGN_KEY: ${{ steps.fetch-secrets.outputs.private_key }}
         run: ./mvnw clean package -Dquarkus.profile=prod
 
       - name: List target directory
@@ -51,8 +51,8 @@ jobs:
       - name: Build Docker image
         working-directory: rest-client-quickstart
         env:
-          MP_JWT_VERIFY_PUBLICKEY: ${{ steps.fetch-secrets.outputs.MP_JWT_VERIFY_PUBLICKEY }}
-          SMALLRYE_JWT_SIGN_KEY: ${{ steps.fetch-secrets.outputs.SMALLRYE_JWT_SIGN_KEY }}
+          MP_JWT_VERIFY_PUBLICKEY: ${{ steps.fetch-secrets.outputs.public_key }}
+          SMALLRYE_JWT_SIGN_KEY: ${{ steps.fetch-secrets.outputs.private_key }}
         run: |
           docker build -f src/main/docker/Dockerfile.jvm -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
 
