@@ -63,16 +63,14 @@ jobs:
       - name: Push Docker image to Google Container Registry
         run: |
           docker push eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
+
       - name: Deploy to Cloud Run
-        uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          service: quarkus-rest-client-quickstart
-          image: eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
-          region: europe-north1
-          flags: |
-            --allow-unauthenticated
-            --timeout=600s
-          env_vars: |
-            MP_JWT_VERIFY_ISSUER = ${{ secrets.JWT_VERIFY_ISSUER }}
-            MP_JWT_VERIFY_PUBLICKEY = ${{ secrets.PUBLIC_KEY }}
-            SMALLRYE_JWT_SIGN_KEY = ${{ secrets.PRIVATE_KEY }} 
+        run: |
+          gcloud run deploy quarkus-rest-client-quickstart \
+            --image eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest \
+            --region europe-north1 \
+            --allow-unauthenticated \
+            --timeout=600s \
+            --set-env-vars="MP_JWT_VERIFY_ISSUER=${{ secrets.JWT_VERIFY_ISSUER }}" \
+            --set-env-vars="MP_JWT_VERIFY_PUBLICKEY=${{ secrets.PUBLIC_KEY }}" \
+            --set-env-vars="SMALLRYE_JWT_SIGN_KEY=${{ secrets.PRIVATE_KEY }}"
