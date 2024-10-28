@@ -23,6 +23,13 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Debug Secret Lengths
+        run: |
+          echo "Public key length: ${#MP_JWT_VERIFY_PUBLICKEY}"
+          echo "Private key length: ${#SMALLRYE_JWT_SIGN_KEY}"
+        env:
+          MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
+          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }}
 
       - name: Build with Maven
         working-directory: rest-client-quickstart
@@ -52,7 +59,7 @@ jobs:
         working-directory: rest-client-quickstart
         run: |
           docker build -f src/main/docker/Dockerfile.jvm -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
-          
+
       - name: Push Docker image to Google Container Registry
         run: |
           docker push eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
