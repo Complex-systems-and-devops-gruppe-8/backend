@@ -41,14 +41,9 @@ jobs:
         echo "SMALLRYE_JWT_SIGN_KEY_LOCATION=$PWD/test_private_key.pem" >> $GITHUB_ENV
         echo "MP_JWT_VERIFY_PUBLICKEY_LOCATION=$PWD/test_public_key.pem" >> $GITHUB_ENV
 
-    - name: Make build script executable
-      working-directory: script/test
-      run: |
-        chmod +x build.sh
-
     - name: Build
       working-directory: script/test
-      run: ./build.sh
+      run: (cd ../../rest-client-quickstart ; ./mvnw clean package -Dquarkus.package.type=fast-jar -DskipTests)
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -84,13 +79,9 @@ jobs:
         echo "SMALLRYE_JWT_SIGN_KEY_LOCATION=$PWD/test_private_key.pem" >> $GITHUB_ENV
         echo "MP_JWT_VERIFY_PUBLICKEY_LOCATION=$PWD/test_public_key.pem" >> $GITHUB_ENV
 
-    - name: Make test script executable
-      working-directory: script/test
-      run: chmod +x test.sh
-    
     - name: Test
       working-directory: script/test
-      run: ./test.sh
+      run: ( cd ../../rest-client-quickstart ; ./mvnw test )
 
     - name: Clean up artifacts
       if: always()
