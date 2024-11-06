@@ -5,18 +5,26 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.net.URL;
+import java.util.Set;
 
 import org.apache.http.HttpStatus;
 import org.csdg8.auth.AuthResource;
 import org.csdg8.auth.dto.CreateTokenRequest;
 import org.csdg8.auth.dto.CreateTokenResponse;
+import org.csdg8.user.User;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import com.google.code.siren4j.component.Entity;
+import com.google.code.siren4j.converter.ReflectingConverter;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
+import jakarta.transaction.Transactional;
+import lombok.SneakyThrows;
 
 @QuarkusTest
 public class HelloResourceTest {
@@ -27,6 +35,19 @@ public class HelloResourceTest {
 
     @Inject
     AuthResource authResource;
+
+    @BeforeAll
+    @Transactional
+    public static void setup() {
+        User.add("admin", "admin1234", Set.of("admin"));
+        User.add("user", "user1234", Set.of("user"));
+    }
+
+    @AfterAll
+    @Transactional
+    public static void teardown() {
+        User.deleteAll();
+    }
 
     @Test
     public void shouldReturnOkAndHelloWorldWhenAccessingAllEndpointAnonymously() {
@@ -46,7 +67,7 @@ public class HelloResourceTest {
 
     @Test
     void shouldReturnOkWhenAccessingAdminEndpointAsAdmin() {
-        String adminToken = obtainToken("admin", "admin");
+        String adminToken = obtainTokens("admin", "admin1234").getAccessToken();
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
@@ -57,7 +78,7 @@ public class HelloResourceTest {
 
     @Test
     void shouldReturnOkWhenAccessingAllEndpointAsAdmin() {
-        String adminToken = obtainToken("admin", "admin");
+        String adminToken = obtainTokens("admin", "admin1234").getAccessToken();
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
@@ -68,7 +89,7 @@ public class HelloResourceTest {
 
     @Test
     void shouldReturnForbiddenWhenAccessingUserEndpointAsAdmin() {
-        String adminToken = obtainToken("admin", "admin");
+        String adminToken = obtainTokens("admin", "admin1234").getAccessToken();
 
         given().header("Authorization", "Bearer " + adminToken)
                 .when()
@@ -80,7 +101,7 @@ public class HelloResourceTest {
     @Test
     void shouldReturnOkAndUserIdentityWhenAccessingUserEndpointAsUser() {
         String username = "user";
-        String userToken = obtainToken(username, "user");
+        String userToken = obtainTokens(username, "user1234").getAccessToken();
 
         given().header("Authorization", "Bearer " + userToken)
                 .when()
@@ -90,17 +111,15 @@ public class HelloResourceTest {
                 .body(is("Hello, " + username + "!"));
     }
 
-    private String obtainToken(String username, String password) {
-        Response response = authResource.createToken(new CreateTokenRequest(username, password));
-        CreateTokenResponse tokenResponse = response.readEntity(CreateTokenResponse.class);
-        if (response.getStatus() != HttpStatus.SC_OK) {
-            throw new RuntimeException(String.format(
-                    "Failed to obtain token for user: %s"
-                            + " with password: %s"
-                            + ". Response: %s",
-                    username, password, response.readEntity(String.class)));
-        }
+    @SneakyThrows
+    private CreateTokenResponse obtainTokens(String username, String password) {
+        Entity tokensResponse = authResource.createToken(new CreateTokenRequest(username, password));
+        CreateTokenResponse tokens = (CreateTokenResponse) ReflectingConverter.newInstance().toObject(tokensResponse,
+                CreateTokenResponse.class);
+        assert tokens != null;
+        assert tokens.getAccessToken() != null;
+        assert tokens.getRefreshToken() != null;
 
-        return tokenResponse.accessToken;
+        return tokens;
     }
 }

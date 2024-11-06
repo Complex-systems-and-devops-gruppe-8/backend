@@ -3,11 +3,17 @@ package org.csdg8.auth;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Set;
+
 import org.csdg8.model.exception.InvalidCredentialsException;
+import org.csdg8.user.User;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @QuarkusTest
 public class AuthServiceTest {
@@ -15,26 +21,39 @@ public class AuthServiceTest {
     @Inject
     AuthService authService;
 
+    @BeforeAll
+    @Transactional
+    public static void setup() {
+        User.add("admin", "admin1234", Set.of("admin"));
+        User.add("user", "user1234", Set.of("user"));
+    }
+
+    @AfterAll
+    @Transactional
+    public static void teardown() {
+        User.deleteAll();
+    }
+
     @Test
-    public void testCreateAccessTokenWithValidAdminCredentials() {
+    public void shouldCreateAccessTokenWhenValidAdminCredentialsProvided() {
         String username = "admin";
-        String password = "admin";
+        String password = "admin1234";
 
         String accessToken = authService.createAccessToken(username, password);
         assertNotNull(accessToken, "Access token should not be null for valid admin credentials");
     }
 
     @Test
-    public void testCreateAccessTokenWithValidUserCredentials() {
+    public void shouldCreateAccessTokenWhenValidUserCredentialsProvided() {
         String username = "user";
-        String password = "user";
+        String password = "user1234";
 
         String accessToken = authService.createAccessToken(username, password);
         assertNotNull(accessToken, "Access token should not be null for valid user credentials");
     }
 
     @Test
-    public void testCreateAccessTokenWithInvalidCredentials() {
+    public void shouldThrowExceptionWhenInvalidCredentialsProvidedForAccessToken() {
         String username = "invalidUser";
         String password = "invalidPassword";
 
@@ -44,25 +63,25 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testCreateRefreshTokenWithValidAdminCredentials() {
+    public void shouldCreateRefreshTokenWhenValidAdminCredentialsProvided() {
         String username = "admin";
-        String password = "admin";
+        String password = "admin1234";
 
         String refreshToken = authService.createRefreshToken(username, password);
         assertNotNull(refreshToken, "Refresh token should not be null for valid admin credentials");
     }
 
     @Test
-    public void testCreateRefreshTokenWithValidUserCredentials() {
+    public void shouldCreateRefreshTokenWhenValidUserCredentialsProvided() {
         String username = "user";
-        String password = "user";
+        String password = "user1234";
 
         String refreshToken = authService.createRefreshToken(username, password);
         assertNotNull(refreshToken, "Refresh token should not be null for valid user credentials");
     }
 
     @Test
-    public void testCreateRefreshTokenWithInvalidCredentials() {
+    public void shouldThrowExceptionWhenInvalidCredentialsProvidedForRefreshToken() {
         String username = "invalidUser";
         String password = "invalidPassword";
 
@@ -72,9 +91,9 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testRefreshAccessTokenWithValidAdminRefreshToken() {
+    public void shouldRefreshAccessTokenWhenValidAdminRefreshTokenProvided() {
         String username = "admin";
-        String password = "admin";
+        String password = "admin1234";
 
         String refreshToken = authService.createRefreshToken(username, password);
         assertNotNull(refreshToken, "Refresh token should not be null for valid admin credentials");
@@ -86,9 +105,9 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testRefreshAccessTokenWithValidUserRefreshToken() {
+    public void shouldRefreshAccessTokenWhenValidUserRefreshTokenProvided() {
         String username = "user";
-        String password = "user";
+        String password = "user1234";
 
         String refreshToken = authService.createRefreshToken(username, password);
         assertNotNull(refreshToken, "Refresh token should not be null for valid user credentials");
@@ -100,7 +119,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testRefreshAccessTokenWithInvalidRefreshToken() {
+    public void shouldThrowExceptionWhenInvalidRefreshTokenProvidedForAccessTokenRefresh() {
         String username = "admin";
         String invalidRefreshToken = "invalidRefreshToken";
 

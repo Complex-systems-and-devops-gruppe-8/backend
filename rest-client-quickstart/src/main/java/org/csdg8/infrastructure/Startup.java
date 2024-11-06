@@ -14,10 +14,10 @@ import jakarta.transaction.Transactional;
 public class Startup {
 
     @Transactional
-    @IfBuildProfile(allOf = { "dev", "test" })
-    public void loadTestDevUsers(@Observes StartupEvent evt) {
+    @IfBuildProfile(allOf = { "dev" })
+    public void loadDevUsers(@Observes StartupEvent evt) {
         User.deleteAll();
-        User.add("admin", "admin", Set.of("admin"));
-        User.add("user", "user", Set.of("user"));
+        User.add("admin", "admin1234", Set.of("admin"));
+        User.add("user", "user1234", Set.of("user"));
     }
 }

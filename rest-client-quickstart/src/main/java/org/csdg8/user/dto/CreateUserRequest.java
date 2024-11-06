@@ -1,23 +1,19 @@
-package org.csdg8.auth.dto;
+package org.csdg8.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateTokenRequest {
-
+public class CreateUserRequest { //TODO rename to CreateUserRequest
+    
     @NotBlank
     @Size(min = 3, max = 30)
-    private String username;
+    public String username;
 
     @NotBlank
     @Size(min = 8, max = 50)
-    private String password;
+    public String password;
 }
