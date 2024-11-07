@@ -26,19 +26,8 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Debug Secret Lengths
-        run: |
-          echo "Public key length: ${#MP_JWT_VERIFY_PUBLICKEY}"
-          echo "Private key length: ${#SMALLRYE_JWT_SIGN_KEY}"
-        env:
-          MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
-          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }}
-
       - name: Build with Maven
         working-directory: rest-client-quickstart
-        env:
-          MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
-          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }} 
         run: ./mvnw clean package -Dquarkus.profile=prod
 
       - name: List target directory
@@ -77,4 +66,8 @@ jobs:
             --add-cloudsql-instances="${{ secrets.SQL_CONNECTION_NAME }}" \
             --set-env-vars="MP_JWT_VERIFY_ISSUER=${{ secrets.JWT_VERIFY_ISSUER }}" \
             --set-env-vars="MP_JWT_VERIFY_PUBLICKEY=${{ secrets.PUBLIC_KEY }}" \
-            --set-env-vars="SMALLRYE_JWT_SIGN_KEY=${{ secrets.PRIVATE_KEY }}"
+            --set-env-vars="SMALLRYE_JWT_SIGN_KEY=${{ secrets.PRIVATE_KEY }}" \
+            --set-env-vars="QUARKUS_DATASOURCE_DB_KIND=postgresql" \
+            --set-env-vars="QUARKUS_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" \
+            --set-env-vars="QUARKUS_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" \
+            --set-env-vars="QUARKUS_DATASOURCE_JDBC_URL=${{ secrets.JDBC_URL }}"
