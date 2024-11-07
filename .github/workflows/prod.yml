@@ -1,0 +1,80 @@
+name: Build, Test, and Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Debug Secret Lengths
+        run: |
+          echo "Public key length: ${#MP_JWT_VERIFY_PUBLICKEY}"
+          echo "Private key length: ${#SMALLRYE_JWT_SIGN_KEY}"
+        env:
+          MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
+          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Build with Maven
+        working-directory: rest-client-quickstart
+        env:
+          MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
+          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }} 
+        run: ./mvnw clean package -Dquarkus.profile=prod
+
+      - name: List target directory
+        working-directory: rest-client-quickstart
+        run: ls -la target
+
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      
+      - name: Set up Cloud SDK
+        uses: 'google-github-actions/setup-gcloud@v2'
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker --quiet
+
+      - name: Build Docker image
+        working-directory: rest-client-quickstart
+        run: |
+          docker build -f src/main/docker/Dockerfile.jvm -t eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest .
+
+      - name: Push Docker image to Google Container Registry
+        run: |
+          docker push eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy quarkus-rest-client-quickstart \
+            --image eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/runner:latest \
+            --region europe-north1 \
+            --allow-unauthenticated \
+            --timeout=600s \
+            --add-cloudsql-instances="${{ secrets.SQL_CONNECTION_NAME }}" \
+            --set-env-vars="MP_JWT_VERIFY_ISSUER=${{ secrets.JWT_VERIFY_ISSUER }}" \
+            --set-env-vars="MP_JWT_VERIFY_PUBLICKEY=${{ secrets.PUBLIC_KEY }}" \
+            --set-env-vars="SMALLRYE_JWT_SIGN_KEY=${{ secrets.PRIVATE_KEY }}"
