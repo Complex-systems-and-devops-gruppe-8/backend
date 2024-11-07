@@ -3,7 +3,7 @@ name: Build, Test, and Deploy to Cloud Run
 on:
   push:
     branches:
-      - main
+      - kevin
   pull_request:
     branches:
       - main
@@ -26,6 +26,13 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Set Environment Variables
+        run: |
+          echo "QUARKUS_DATASOURCE_DB_KIND=postgresql" >> $GITHUB_ENV
+          echo "QUARKUS_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
+          echo "QUARKUS_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "QUARKUS_DATASOURCE_JDBC_URL=${{ secrets.JDBC_URL }}" >> $GITHUB_ENV
+          
       - name: Debug Secret Lengths
         run: |
           echo "Public key length: ${#MP_JWT_VERIFY_PUBLICKEY}"
