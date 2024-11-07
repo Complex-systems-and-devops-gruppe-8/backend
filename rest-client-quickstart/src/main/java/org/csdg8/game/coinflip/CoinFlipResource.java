@@ -1,11 +1,12 @@
 package org.csdg8.game.coinflip;
 
 import org.csdg8.game.coinflip.dto.PlayCoinFlipRequest;
-import org.csdg8.hello.dto.GetHelloAdminResponse;
+import org.csdg8.model.exception.GameNotFoundException;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import com.google.code.siren4j.Siren4J;
 import com.google.code.siren4j.component.Entity;
-import com.google.code.siren4j.converter.ReflectingConverter;
 import com.google.code.siren4j.error.Siren4JException;
 
 import jakarta.annotation.security.PermitAll;
@@ -39,5 +40,10 @@ public class CoinFlipResource {
     @RolesAllowed("user")
     public Entity result(Long gameId) throws Siren4JException {
         return this.coinFlipController.result(gameId);
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<String> mapException(GameNotFoundException x) {
+        return RestResponse.status(Response.Status.NOT_FOUND, "Coin-flip game not found");
     }
 }
