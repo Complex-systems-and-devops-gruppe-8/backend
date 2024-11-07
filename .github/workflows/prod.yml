@@ -26,10 +26,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: List target directory
-        working-directory: rest-client-quickstart
-        run: ls -la target
-
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
