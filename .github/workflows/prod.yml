@@ -26,7 +26,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-
       - name: Debug Secret Lengths
         run: |
           echo "Public key length: ${#MP_JWT_VERIFY_PUBLICKEY}"
@@ -40,6 +39,10 @@ jobs:
         env:
           MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
           SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }} 
+          QUARKUS_DATASOURCE_DB_KIND: postgresql
+          QUARKUS_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
+          QUARKUS_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          QUARKUS_DATASOURCE_JDBC_URL: ${{ secrets.JDBC_URL }}
         run: ./mvnw clean package -Dquarkus.profile=prod
 
       - name: List target directory
