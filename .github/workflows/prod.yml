@@ -38,12 +38,12 @@ jobs:
         working-directory: rest-client-quickstart
         env:
           MP_JWT_VERIFY_PUBLICKEY: ${{ secrets.PUBLIC_KEY }}
-          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }} 
+          SMALLRYE_JWT_SIGN_KEY: ${{ secrets.PRIVATE_KEY }}
           QUARKUS_DATASOURCE_DB_KIND: postgresql
           QUARKUS_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
           QUARKUS_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
           QUARKUS_DATASOURCE_JDBC_URL: ${{ secrets.JDBC_URL }}
-        run: ./mvnw clean package -Dquarkus.profile=prod
+        run: ./mvnw clean package -Dquarkus.profile=prod -DskipTests
 
       - name: List target directory
         working-directory: rest-client-quickstart
@@ -81,4 +81,10 @@ jobs:
             --add-cloudsql-instances="${{ secrets.SQL_CONNECTION_NAME }}" \
             --set-env-vars="MP_JWT_VERIFY_ISSUER=${{ secrets.JWT_VERIFY_ISSUER }}" \
             --set-env-vars="MP_JWT_VERIFY_PUBLICKEY=${{ secrets.PUBLIC_KEY }}" \
-            --set-env-vars="SMALLRYE_JWT_SIGN_KEY=${{ secrets.PRIVATE_KEY }}"
+            --set-env-vars="SMALLRYE_JWT_SIGN_KEY=${{ secrets.PRIVATE_KEY }}" \
+            --set-env-vars="QUARKUS_DATASOURCE_DB_KIND=postgresql" \
+            --set-env-vars="QUARKUS_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" \
+            --set-env-vars="QUARKUS_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" \
+            --set-env-vars="QUARKUS_DATASOURCE_JDBC_URL=${{ secrets.JDBC_URL }}"
+
+
