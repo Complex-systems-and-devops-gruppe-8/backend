@@ -61,6 +61,7 @@ public class TokenService {
     public String generateAccessToken(User presentUser) {
         return Jwt.issuer(this.issuer)
                 .upn(presentUser.username)
+                .subject(presentUser.id.toString())
                 .groups(presentUser.role)
                 .expiresIn(Duration.ofMinutes(5))
                 .sign();
