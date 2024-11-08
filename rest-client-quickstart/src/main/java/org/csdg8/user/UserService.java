@@ -86,4 +86,12 @@ public class UserService {
     public List<User> getAllUsers() {
         return User.listAll();
     }
+
+    @Transactional
+    public void addGameToUser(Long userId, Long gameId) {
+        User user = getUser(userId);
+
+        user.linkedGames.add(gameId);
+        user.persist();
+    }
 }
