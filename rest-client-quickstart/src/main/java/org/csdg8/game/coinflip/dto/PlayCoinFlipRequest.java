@@ -2,8 +2,7 @@ package org.csdg8.game.coinflip.dto;
 
 import org.csdg8.game.coinflip.model.CoinFlipState;
 
-import io.smallrye.common.constraint.NotNull;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
