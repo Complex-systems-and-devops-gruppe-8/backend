@@ -1,5 +1,6 @@
 package org.csdg8.user;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -9,6 +10,7 @@ import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -22,6 +24,9 @@ public class User extends PanacheEntity {
     public String password;
     @Roles
     public Set<String> role;
+
+    @ElementCollection
+    public Set<Long> linkedGames = new HashSet<Long>();
 
     /**
      * Adds a new user to the database
