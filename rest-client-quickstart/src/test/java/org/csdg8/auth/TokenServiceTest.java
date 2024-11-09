@@ -77,6 +77,7 @@ public class TokenServiceTest {
     @Test
     public void shouldGenerateAccessTokenWhenUserProvided() {
         User user = new User();
+        user.id = 999L;
         user.username = "testUser";
         user.role = Set.of("user");
 
@@ -163,6 +164,7 @@ public class TokenServiceTest {
     @Test
     public void shouldGenerateAccessTokenWithEmptyRole() {
         User user = new User();
+        user.id = 999L;
         user.username = "testUser";
         user.role = Set.of("");
 
