@@ -119,4 +119,34 @@ public class UserServiceTest {
         assertEquals("admin", users.get(0).getUsername());
         assertEquals("user", users.get(1).getUsername());
     }
+
+    @Test
+    @Transactional
+    public void shouldAddBalanceToUser() {
+        User user = userService.findByUsername("user").get();
+        Integer currentBalance = user.getBalance();
+        Integer balanceToAdd = 10;
+        userService.addBalance(user.id, balanceToAdd);
+
+        Integer expectedBalance = currentBalance + balanceToAdd;
+        Integer actualBalance = userService.findByUsername("user").get().getBalance();
+        assertEquals(expectedBalance, actualBalance);
+    }
+
+    @Test
+    @Transactional
+    public void shouldSubtractBalanceFromUser() {
+        // add additional balance since default balance is 0
+        userService.addBalance(userService.findByUsername("user").get().id,10);
+
+        User user = userService.findByUsername("user").get();
+
+        Integer currentBalance = user.getBalance();
+        Integer balanceToSubtract = 10;
+        userService.subtractBalance(user.id, balanceToSubtract);
+
+        Integer expectedBalance = currentBalance - balanceToSubtract;
+        Integer actualBalance = userService.findByUsername("user").get().getBalance();
+        assertEquals(expectedBalance, actualBalance);
+    }
 }

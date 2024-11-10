@@ -94,4 +94,32 @@ public class UserService {
         user.getLinkedGames().add(gameId);
         user.persist();
     }
+
+    @Transactional
+    public void addBalance(Long userId, Integer value) {
+        assert value > 0;
+
+        User user = getUser(userId);
+        Integer currentBalance = user.getBalance();
+        Integer newBalance = currentBalance + value;
+
+        assert newBalance > 0;
+        assert newBalance > currentBalance;
+        user.setBalance(newBalance);
+        user.persist();
+    }
+
+    @Transactional
+    public void subtractBalance(Long userId, Integer value) {
+        assert value > 0;
+        
+        User user = getUser(userId);
+        Integer currentBalance = user.getBalance();
+        Integer newBalance = currentBalance - value;
+
+        assert newBalance >= 0;
+        assert currentBalance > newBalance;
+        user.setBalance(newBalance);
+        user.persist();
+    }
 }

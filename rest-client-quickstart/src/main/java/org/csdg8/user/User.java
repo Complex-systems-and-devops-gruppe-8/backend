@@ -32,6 +32,8 @@ public class User extends PanacheEntity {
     @ElementCollection
     private Set<Long> linkedGames = new HashSet<Long>();
 
+    private Integer balance;
+
     /**
      * Adds a new user to the database
      * 
@@ -48,7 +50,19 @@ public class User extends PanacheEntity {
         user.username = username;
         user.password = BcryptUtil.bcryptHash(password);
         user.role = role;
+        user.balance = 0;
+
+        assert user.username != null;
+        assert user.password != null;
+        assert user.role != null;
+        assert !user.role.isEmpty();
+        assert user.balance != null;
+        assert user.balance >= 0;
+
         user.persist();
+
+        assert user.id != null;
+        
         return user.id;
     }
 
