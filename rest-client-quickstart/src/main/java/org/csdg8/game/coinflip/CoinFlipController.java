@@ -31,8 +31,8 @@ public class CoinFlipController {
         CoinFlipGame game = this.coinFlipService.findById(id)
                 .orElseThrow(() -> new GameNotFoundException("No coin-flip game found with id %d".formatted(id)));
 
-        GetCoinFlipGameResponse gameResponse = new GetCoinFlipGameResponse(game.id, game.choice, game.result,
-                game.betAmount, game.gameResult);
+        GetCoinFlipGameResponse gameResponse = new GetCoinFlipGameResponse(game.id, game.getChoice(), game.getResult(),
+                game.getBetAmount(), game.getGameResult());
         return ReflectingConverter.newInstance().toEntity(gameResponse);
     }
 }

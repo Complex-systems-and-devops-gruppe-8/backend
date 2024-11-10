@@ -23,12 +23,10 @@ public class CoinFlipService {
     public Long play(CoinFlipState choice, Long betAmount) {
         //TODO pay / subtract money from user
 
-        CoinFlipGame game = new CoinFlipGame();
-        game.choice = choice;
-        game.betAmount = betAmount;
+        CoinFlipGame game = new CoinFlipGame(choice, betAmount);
 
-        game.result = Math.random() < 0.5 ? CoinFlipState.HEADS : CoinFlipState.TAILS;
-        game.gameResult = game.choice == game.result ? CoinFlipGameResult.USER_WIN : CoinFlipGameResult.USER_LOSE;
+        game.setResult(Math.random() < 0.5 ? CoinFlipState.HEADS : CoinFlipState.TAILS);
+        game.setGameResult(game.getChoice() == game.getResult() ? CoinFlipGameResult.USER_WIN : CoinFlipGameResult.USER_LOSE);
         
         Long gameId = CoinFlipGame.saveGame(game);
         Long userId = Long.valueOf(_userId);
