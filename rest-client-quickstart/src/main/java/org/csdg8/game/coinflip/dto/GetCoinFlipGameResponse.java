@@ -14,7 +14,7 @@ import jakarta.ws.rs.core.MediaType;
                         @Siren4JFieldOption(title = "Heads", value = "HEADS"),
                         @Siren4JFieldOption(title = "Tails", value = "TAILS")
                 }),
-                @Siren4JActionField(name = "betAmount", title = "Bet amount", required = true, type = "number")
+                @Siren4JActionField(name = "betAmount", title = "Bet amount", required = true, type = "number", min = 1)
         }),
         @Siren4JAction(name = "result", title = "Get coinflip game result", method = Method.GET, href = "/game/coin-flip/{id}")
 })
