@@ -13,20 +13,24 @@ import io.quarkus.security.jpa.Username;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "app-user")
 @UserDefinition
 public class User extends PanacheEntity {
     @Username
-    public String username;
+    private String username;
     @Password
-    public String password;
+    private String password;
     @Roles
-    public Set<String> role;
+    private Set<String> role;
 
     @ElementCollection
-    public Set<Long> linkedGames = new HashSet<Long>();
+    private Set<Long> linkedGames = new HashSet<Long>();
 
     /**
      * Adds a new user to the database

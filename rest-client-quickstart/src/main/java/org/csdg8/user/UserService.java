@@ -22,7 +22,7 @@ public class UserService {
             return Optional.empty();
         }
 
-        if (BcryptUtil.matches(password, user.get().password)) {
+        if (BcryptUtil.matches(password, user.get().getPassword())) {
             return user;
         } else {
             return Optional.empty();
@@ -36,7 +36,7 @@ public class UserService {
             return Optional.empty();
         }
 
-        Set<String> role = user.get().role;
+        Set<String> role = user.get().getRole();
 
         return Optional.of(role);
     }
@@ -91,7 +91,7 @@ public class UserService {
     public void addGameToUser(Long userId, Long gameId) {
         User user = getUser(userId);
 
-        user.linkedGames.add(gameId);
+        user.getLinkedGames().add(gameId);
         user.persist();
     }
 }

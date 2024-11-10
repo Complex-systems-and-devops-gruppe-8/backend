@@ -78,8 +78,8 @@ public class TokenServiceTest {
     public void shouldGenerateAccessTokenWhenUserProvided() {
         User user = new User();
         user.id = 999L;
-        user.username = "testUser";
-        user.role = Set.of("user");
+        user.setUsername("testUser");
+        user.setRole(Set.of("user"));
 
         String accessToken = tokenService.generateAccessToken(user);
 
@@ -165,8 +165,8 @@ public class TokenServiceTest {
     public void shouldGenerateAccessTokenWithEmptyRole() {
         User user = new User();
         user.id = 999L;
-        user.username = "testUser";
-        user.role = Set.of("");
+        user.setUsername("testUser");
+        user.setRole(Set.of(""));
 
         String accessToken = tokenService.generateAccessToken(user);
         assertNotNull(accessToken, "Access token should not be null even with empty role");
@@ -176,8 +176,8 @@ public class TokenServiceTest {
     @Test
     public void shouldThrowExceptionWhenGeneratingAccessTokenWithNullRole() {
         User user = new User();
-        user.username = "testUser";
-        user.role = null;
+        user.setUsername("testUser");
+        user.setRole(null);
 
         assertThrows(NullPointerException.class, () -> {
             tokenService.generateAccessToken(user);
