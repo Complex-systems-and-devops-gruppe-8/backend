@@ -23,7 +23,6 @@ public class CoinFlipResource {
 
     @Inject
     CoinFlipController coinFlipController;
-    //TODO add GET /game/coin-fip with actions to play and get result
     //TODO limit user interaction with other user's games.
     @POST
     @RolesAllowed("user")
@@ -36,6 +35,12 @@ public class CoinFlipResource {
     @RolesAllowed("user")
     public Entity result(Long gameId) throws Siren4JException {
         return this.coinFlipController.result(gameId);
+    }
+
+    @GET
+    @RolesAllowed("user")
+    public Entity game() throws Siren4JException {
+        return this.coinFlipController.game();
     }
 
     @ServerExceptionMapper

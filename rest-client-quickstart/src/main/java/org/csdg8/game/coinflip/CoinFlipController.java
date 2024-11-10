@@ -3,6 +3,7 @@ package org.csdg8.game.coinflip;
 import java.net.URI;
 
 import org.csdg8.game.coinflip.dto.GetCoinFlipGameResponse;
+import org.csdg8.game.coinflip.dto.GetCoinFlipGameResultResponse;
 import org.csdg8.game.coinflip.dto.PlayCoinFlipRequest;
 import org.csdg8.model.exception.GameNotFoundException;
 
@@ -31,8 +32,13 @@ public class CoinFlipController {
         CoinFlipGame game = this.coinFlipService.findById(id)
                 .orElseThrow(() -> new GameNotFoundException("No coin-flip game found with id %d".formatted(id)));
 
-        GetCoinFlipGameResponse gameResponse = new GetCoinFlipGameResponse(game.id, game.getChoice(), game.getResult(),
+        GetCoinFlipGameResultResponse gameResultResponse = new GetCoinFlipGameResultResponse(game.id, game.getChoice(), game.getResult(),
                 game.getBetAmount(), game.getGameResult());
+        return ReflectingConverter.newInstance().toEntity(gameResultResponse);
+    }
+
+    public Entity game() throws Siren4JException {
+        GetCoinFlipGameResponse gameResponse = new GetCoinFlipGameResponse();
         return ReflectingConverter.newInstance().toEntity(gameResponse);
     }
 }

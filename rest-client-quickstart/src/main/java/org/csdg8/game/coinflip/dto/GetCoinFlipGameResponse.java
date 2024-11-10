@@ -1,24 +1,18 @@
 package org.csdg8.game.coinflip.dto;
 
-import org.csdg8.game.coinflip.model.CoinFlipGameResult;
-import org.csdg8.game.coinflip.model.CoinFlipState;
-
+import com.google.code.siren4j.annotations.Siren4JAction;
+import com.google.code.siren4j.annotations.Siren4JActionField;
 import com.google.code.siren4j.annotations.Siren4JEntity;
+import com.google.code.siren4j.component.impl.ActionImpl.Method;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.ws.rs.core.MediaType;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Siren4JEntity(entityClass = "coin-flip-game", uri = "/game/coin-flip/{id}")
+@Siren4JEntity(entityClass = "game", uri = "/game", actions = {
+        @Siren4JAction(name = "play", title = "Play coinflip game", method = Method.POST, href = "/game/coin-flip", type = MediaType.APPLICATION_JSON, fields = {
+                @Siren4JActionField(name = "choice", title = "Choice", required = true, type = "text"),
+                @Siren4JActionField(name = "betAmount", title = "Bet amount", required = true, type = "number")
+        }),
+        @Siren4JAction(name = "result", title = "Get coinflip game result", method = Method.GET, href = "/game/coin-flip/{id}")
+})
 public class GetCoinFlipGameResponse {
-    private Long id;
-    private CoinFlipState userChoice;
-    private CoinFlipState result;
-    private Long betAmount;
-    private CoinFlipGameResult gameResult;
 }
