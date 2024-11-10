@@ -8,7 +8,7 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
 
 import jakarta.ws.rs.core.MediaType;
 
-@Siren4JEntity(entityClass = "game", uri = "/game", actions = {
+@Siren4JEntity(entityClass = "coin-flip", uri = "/game/coin-flip", actions = {
         @Siren4JAction(name = "play", title = "Play coinflip game", method = Method.POST, href = "/game/coin-flip", type = MediaType.APPLICATION_JSON, fields = {
                 @Siren4JActionField(name = "choice", title = "Choice", required = true, type = "text", options = {
                         @Siren4JFieldOption(title = "Heads", value = "HEADS"),
