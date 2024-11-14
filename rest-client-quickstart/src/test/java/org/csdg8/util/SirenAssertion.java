@@ -79,4 +79,40 @@ public class SirenAssertion {
                         + "' }.type",
                         equalTo(type));
     }
+
+    /**
+     * Parses the given {@code response} JSON, finds the link by
+     * {@code linkRel} and asserts it has the expected {@code linkHref}.
+     * 
+     * @param response the response body to parse
+     * @param linkRel  the rel of the link
+     * @param linkHref the href of the link
+     */
+    public static void responseShouldHaveLink(Response response, String linkRel, String linkHref) {
+        response.then()
+                .body("links.find { it.rel.contains('" + linkRel + "') }.href",
+                        equalTo(linkHref));
+    }
+
+    /**
+     * Parses the given {@code response} JSON, finds the action field option by
+     * {@code actionName} and {@code fieldName}
+     * and asserts it has the supplied {@code value},
+     * and whether the option {@code isDefault}.
+     * 
+     * @param response
+     * @param actionName
+     * @param fieldName
+     * @param value
+     * @param isDefault
+     */
+    public static void actionFieldShouldHaveOption(Response response, String actionName, String fieldName, String value,
+            boolean isDefault) {
+        response.then()
+                .body("actions.find { it.name == '" + actionName
+                        + "' }.fields.find { it.name == '" + fieldName
+                        + "' }.options.find { it.value == '" + value
+                        + "' }.default",
+                        equalTo(isDefault));
+    }
 }
