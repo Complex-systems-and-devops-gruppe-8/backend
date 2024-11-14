@@ -21,17 +21,30 @@ public class CoinFlipService {
     UserService userService;
 
     public Long play(CoinFlipState choice, Long betAmount) {
-        //TODO pay / subtract money from user
+        return playForUser(Long.valueOf(_userId), choice, betAmount);
+    }
 
-        CoinFlipGame game = new CoinFlipGame(choice, betAmount);
+    protected Long playForUser(Long userId, CoinFlipState choice, Long betAmount) {
+        CoinFlipGameLogic gameLogic = new CoinFlipGameLogic();
+        CoinFlipGame game = gameLogic.play(choice, betAmount);
 
-        game.setResult(Math.random() < 0.5 ? CoinFlipState.HEADS : CoinFlipState.TAILS);
-        game.setGameResult(game.getChoice() == game.getResult() ? CoinFlipGameResult.USER_WIN : CoinFlipGameResult.USER_LOSE);
-        
+        Long gameId = persistGameAndUpdateUser(userId, game);
+
+        return gameId;
+    }
+
+    private Long persistGameAndUpdateUser(Long userId, CoinFlipGame game) {
         Long gameId = CoinFlipGame.saveGame(game);
-        Long userId = Long.valueOf(_userId);
+        
         this.userService.addGameToUser(userId, gameId);
 
+        Integer betAmount = game.getBetAmount().intValue();
+        if (game.getGameResult() == CoinFlipGameResult.USER_WIN) {
+            this.userService.addBalance(userId, betAmount);
+        } else {
+            this.userService.subtractBalance(userId, betAmount);
+        }
+        
         return gameId;
     }
 
