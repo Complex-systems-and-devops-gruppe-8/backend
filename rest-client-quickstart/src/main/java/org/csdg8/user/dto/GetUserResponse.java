@@ -1,5 +1,7 @@
 package org.csdg8.user.dto;
 
+import java.util.Set;
+
 import com.google.code.siren4j.annotations.Siren4JEntity;
 import com.google.code.siren4j.resource.BaseResource;
 
@@ -17,4 +19,5 @@ public class GetUserResponse extends BaseResource {
     private Long id;
     private String username;
     private String roles;
+    private Set<Long> linkedGames;
 }

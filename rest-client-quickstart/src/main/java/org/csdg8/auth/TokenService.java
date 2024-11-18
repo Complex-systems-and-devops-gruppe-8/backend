@@ -60,8 +60,9 @@ public class TokenService {
 
     public String generateAccessToken(User presentUser) {
         return Jwt.issuer(this.issuer)
-                .upn(presentUser.username)
-                .groups(presentUser.role)
+                .upn(presentUser.getUsername())
+                .subject(presentUser.id.toString())
+                .groups(presentUser.getRole())
                 .expiresIn(Duration.ofMinutes(5))
                 .sign();
     }

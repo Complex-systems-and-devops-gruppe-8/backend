@@ -45,7 +45,7 @@ public class UserServiceTest {
     public void shouldValidateUserWithCorrectCredentials() {
         Optional<User> user = userService.validateUser("admin", "admin1234");
         assertTrue(user.isPresent());
-        assertEquals("admin", user.get().username);
+        assertEquals("admin", user.get().getUsername());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class UserServiceTest {
         userService.addUser("newuser", "password123", Set.of("user"));
         Optional<User> user = userService.findByUsername("newuser");
         assertTrue(user.isPresent());
-        assertEquals("newuser", user.get().username);
+        assertEquals("newuser", user.get().getUsername());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class UserServiceTest {
         Long id = userService.findByUsername("admin").orElseThrow().id;
         User user = userService.getUser(id);
         assertNotNull(user);
-        assertEquals("admin", user.username);
+        assertEquals("admin", user.getUsername());
     }
 
     @Test
@@ -116,7 +116,37 @@ public class UserServiceTest {
         List<User> users = userService.getAllUsers();
         assertNotNull(users);
         assertEquals(2, users.size());
-        assertEquals("admin", users.get(0).username);
-        assertEquals("user", users.get(1).username);
+        assertEquals("admin", users.get(0).getUsername());
+        assertEquals("user", users.get(1).getUsername());
+    }
+
+    @Test
+    @Transactional
+    public void shouldAddBalanceToUser() {
+        User user = userService.findByUsername("user").get();
+        Integer currentBalance = user.getBalance();
+        Integer balanceToAdd = 10;
+        userService.addBalance(user.id, balanceToAdd);
+
+        Integer expectedBalance = currentBalance + balanceToAdd;
+        Integer actualBalance = userService.findByUsername("user").get().getBalance();
+        assertEquals(expectedBalance, actualBalance);
+    }
+
+    @Test
+    @Transactional
+    public void shouldSubtractBalanceFromUser() {
+        // add additional balance since default balance is 0
+        userService.addBalance(userService.findByUsername("user").get().id,10);
+
+        User user = userService.findByUsername("user").get();
+
+        Integer currentBalance = user.getBalance();
+        Integer balanceToSubtract = 10;
+        userService.subtractBalance(user.id, balanceToSubtract);
+
+        Integer expectedBalance = currentBalance - balanceToSubtract;
+        Integer actualBalance = userService.findByUsername("user").get().getBalance();
+        assertEquals(expectedBalance, actualBalance);
     }
 }

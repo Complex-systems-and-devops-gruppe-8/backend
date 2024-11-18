@@ -22,7 +22,7 @@ public class UserService {
             return Optional.empty();
         }
 
-        if (BcryptUtil.matches(password, user.get().password)) {
+        if (BcryptUtil.matches(password, user.get().getPassword())) {
             return user;
         } else {
             return Optional.empty();
@@ -36,7 +36,7 @@ public class UserService {
             return Optional.empty();
         }
 
-        Set<String> role = user.get().role;
+        Set<String> role = user.get().getRole();
 
         return Optional.of(role);
     }
@@ -85,5 +85,41 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return User.listAll();
+    }
+
+    @Transactional
+    public void addGameToUser(Long userId, Long gameId) {
+        User user = getUser(userId);
+
+        user.getLinkedGames().add(gameId);
+        user.persist();
+    }
+
+    @Transactional
+    public void addBalance(Long userId, Integer value) {
+        assert value > 0;
+
+        User user = getUser(userId);
+        Integer currentBalance = user.getBalance();
+        Integer newBalance = currentBalance + value;
+
+        assert newBalance > 0;
+        assert newBalance > currentBalance;
+        user.setBalance(newBalance);
+        user.persist();
+    }
+
+    @Transactional
+    public void subtractBalance(Long userId, Integer value) {
+        assert value > 0;
+        
+        User user = getUser(userId);
+        Integer currentBalance = user.getBalance();
+        Integer newBalance = currentBalance - value;
+
+        assert newBalance >= 0;
+        assert currentBalance > newBalance;
+        user.setBalance(newBalance);
+        user.persist();
     }
 }

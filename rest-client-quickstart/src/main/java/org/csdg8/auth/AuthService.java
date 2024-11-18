@@ -39,7 +39,7 @@ public class AuthService {
         User presentUser = user.get();
 
         String refreshToken = this.tokenService.generateRefreshToken();
-        this.tokenService.storeRefreshToken(presentUser.username, refreshToken);
+        this.tokenService.storeRefreshToken(presentUser.getUsername(), refreshToken);
         return refreshToken;
     }
 

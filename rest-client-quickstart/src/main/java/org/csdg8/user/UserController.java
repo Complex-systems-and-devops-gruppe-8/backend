@@ -33,7 +33,7 @@ public class UserController {
     public Entity getUsers() throws Siren4JException {
         List<User> users = this.userService.getAllUsers();
         List<GetUserResponse> userResponses = users.stream()
-                .map(user -> new GetUserResponse(user.id, user.username, user.role.toString()))
+                .map(user -> new GetUserResponse(user.id, user.getUsername(), user.getRole().toString(), user.getLinkedGames()))
                 .collect(Collectors.toList());
         GetCollectionUserResponse collectionUserResponses = new GetCollectionUserResponse(userResponses);
         return ReflectingConverter.newInstance().toEntity(collectionUserResponses);
@@ -41,7 +41,7 @@ public class UserController {
 
     public Entity getUser(Long id) throws Siren4JException {
         User user = this.userService.getUser(id);
-        GetUserResponse userResponse = new GetUserResponse(user.id, user.username, user.role.toString());
+        GetUserResponse userResponse = new GetUserResponse(user.id, user.getUsername(), user.getRole().toString(), user.getLinkedGames());
         return ReflectingConverter.newInstance().toEntity(userResponse);
     }
 }
