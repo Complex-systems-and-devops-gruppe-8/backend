@@ -33,11 +33,11 @@ import jakarta.ws.rs.core.MediaType;
 public class CoinFlipResourceTest {
 
     @TestHTTPResource
-    @TestHTTPEndpoint(CoinFlipResource.class)
+    @TestHTTPEndpoint(BlackjackResource.class)
     URL coinFlipUrl;
 
     @Inject
-    CoinFlipResource coinFlipResource;
+    BlackjackResource coinFlipResource;
 
 
     @BeforeEach
