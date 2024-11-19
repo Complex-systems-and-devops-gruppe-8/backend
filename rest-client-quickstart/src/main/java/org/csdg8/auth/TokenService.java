@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.csdg8.user.User;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import io.quarkus.logging.Log;
 import io.smallrye.jwt.auth.principal.JWTParser;
 import io.smallrye.jwt.auth.principal.ParseException;
 import io.smallrye.jwt.build.Jwt;
@@ -28,50 +29,50 @@ public class TokenService {
     private Map<String, String> refreshTokens = new HashMap<>();
 
     public void storeRefreshToken(String username, String refreshToken) {
-        if (username == null) {
-            throw new NullPointerException("Username cannot be null");
-        }
+        assert username != null;
+        assert !username.isBlank();
 
-        if (username.isBlank()) {
-            throw new IllegalArgumentException("Username cannot be whitespace or empty");
-        }
-
-        if (refreshToken == null) {
-            throw new NullPointerException("Refresh token cannot be null");
-        }
-
-        if (refreshToken.isBlank()) {
-            throw new IllegalArgumentException("Refresh token cannot be whitespace or empty");
-        }
+        assert refreshToken != null;
+        assert !refreshToken.isBlank();
 
         refreshTokens.put(username, refreshToken);
+
+        assert refreshTokens.containsKey(username);
     }
 
     public boolean isValidRefreshToken(String username, String refreshToken) {
+        assert username != null;
+        assert refreshToken != null;
+
         return refreshTokens.containsKey(username) && refreshTokens.get(username).equals(refreshToken);
     }
 
     public void revokeRefreshToken(String username) {
-        if (username == null) {
-            throw new NullPointerException("Username cannot be null");
-        }
+        assert username != null;
+
         refreshTokens.remove(username);
     }
 
-    public String generateAccessToken(User presentUser) {
+    public String generateAccessToken(User user) {
+        assert user != null;
+        assert user.getRole() != null;
+
         return Jwt.issuer(this.issuer)
-                .upn(presentUser.getUsername())
-                .subject(presentUser.id.toString())
-                .groups(presentUser.getRole())
+                .upn(user.getUsername())
+                .subject(user.id.toString())
+                .groups(user.getRole())
                 .expiresIn(Duration.ofMinutes(5))
                 .sign();
     }
 
     public Optional<String> getUsername(String accessToken) {
+        assert accessToken != null;
+
         try {
             String username = parser.parse(accessToken).getClaim("upn");
             return Optional.of(username);
         } catch (ParseException e) {
+            Log.warn("Failed to parse 'upn' from supplied accessToken");
             return Optional.empty();
         }
     }

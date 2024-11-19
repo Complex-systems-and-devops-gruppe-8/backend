@@ -42,6 +42,8 @@ public class CoinFlipService {
 
         Long gameId = persistGameAndUpdateUser(userId, game);
 
+        assert gameId != null;
+
         return gameId;
     }
 
