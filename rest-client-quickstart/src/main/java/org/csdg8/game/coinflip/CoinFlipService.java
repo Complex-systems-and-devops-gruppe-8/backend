@@ -24,10 +24,19 @@ public class CoinFlipService {
     UserService userService;
 
     public Long play(CoinFlipState choice, Long betAmount) {
+        assert choice != null;
+        assert betAmount != null;
+        assert betAmount > 0;
+
         return playForUser(Long.valueOf(_userId), choice, betAmount);
     }
 
     protected Long playForUser(Long userId, CoinFlipState choice, Long betAmount) {
+        assert userId != null;
+        assert choice != null;
+        assert betAmount != null;
+        assert betAmount > 0;
+
         CoinFlipGameLogic gameLogic = new CoinFlipGameLogic();
         CoinFlipGame game = gameLogic.play(choice, betAmount);
 
@@ -37,6 +46,14 @@ public class CoinFlipService {
     }
 
     private Long persistGameAndUpdateUser(Long userId, CoinFlipGame game) {
+        assert userId != null;
+
+        assert game != null;
+        assert game.getChoice() != null;
+        assert game.getResult() != null;
+        assert game.getBetAmount() != null;
+        assert game.getGameResult() != null;
+
         Long gameId = CoinFlipGame.saveGame(game);
         
         this.userService.addGameToUser(userId, gameId);
