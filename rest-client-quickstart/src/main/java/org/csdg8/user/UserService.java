@@ -122,4 +122,12 @@ public class UserService {
         user.setBalance(newBalance);
         user.persist();
     }
+
+    @Transactional
+    public Set<Long> getUserGames(Long userId) {
+        assert userId != null;
+
+        User user = getUser(userId);
+        return user.getLinkedGames();
+    }
 }
