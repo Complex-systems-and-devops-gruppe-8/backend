@@ -5,13 +5,14 @@ import java.util.Set;
 
 import org.csdg8.game.coinflip.model.CoinFlipGameResult;
 import org.csdg8.game.coinflip.model.CoinFlipState;
+import org.csdg8.model.exception.UserNotLinkedToGameException;
 import org.csdg8.user.UserService;
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.Claims;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.BadRequestException;
+import jakarta.transaction.Transactional;
 
 @RequestScoped
 public class CoinFlipService {
@@ -55,12 +56,13 @@ public class CoinFlipService {
         return findByIdForUser(Long.valueOf(_userId), gameId);
     }
 
+    @Transactional
     public Optional<CoinFlipGame> findByIdForUser(Long userId, Long gameId) {
         assert userId != null;
         assert gameId != null;
 
         if (!userHasAccessToGame(userId, gameId)) {
-            throw new BadRequestException("User " + userId + " does not have access to game with id " + gameId);
+            throw new UserNotLinkedToGameException("User " + userId + " does not have access to coin-flip game with id " + gameId);
         }
 
         return Optional.ofNullable(CoinFlipGame.findById(gameId));
@@ -69,7 +71,7 @@ public class CoinFlipService {
     private boolean userHasAccessToGame(Long userId, Long gameId) {
         assert userId != null;
         assert gameId != null;
-        
+
         Set<Long> userGames = this.userService.getUserGames(userId);
         return userGames != null && userGames.contains(gameId);
     }

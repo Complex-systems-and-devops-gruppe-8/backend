@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.csdg8.game.coinflip.model.CoinFlipGameResult;
 import org.csdg8.game.coinflip.model.CoinFlipState;
+import org.csdg8.model.exception.UserNotLinkedToGameException;
 import org.csdg8.user.User;
 import org.csdg8.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.BadRequestException;
 
 @QuarkusTest
 class CoinFlipServiceTest {
@@ -58,7 +58,7 @@ class CoinFlipServiceTest {
 
     @Test
     @Transactional
-    void shouldThrowBadRequestException_whenUserIsNotLinkedToGame() {
+    void shouldThrowUserNotLinkedToGameException_whenUserIsNotLinkedToGame() {
         Long anotherUserId = User.add("anotherUser", "password", Set.of("user"));
 
         Integer initialBalance = 1000;
@@ -67,7 +67,7 @@ class CoinFlipServiceTest {
 
         Long gameId = this.coinFlipService.playForUser(anotherUserId, CoinFlipState.HEADS, betAmount);
 
-        assertThrows(BadRequestException.class,
+        assertThrows(UserNotLinkedToGameException.class,
                 () -> this.coinFlipService.findByIdForUser(userId, gameId));
     }
 
@@ -86,7 +86,7 @@ class CoinFlipServiceTest {
     void shouldNotFindGame_whenUserIsNotLinkedToGame() {
         Long gameId = 99999L;
 
-        assertThrows(BadRequestException.class,
+        assertThrows(UserNotLinkedToGameException.class,
                 () -> this.coinFlipService.findByIdForUser(userId, gameId));
     }
 }
