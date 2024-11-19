@@ -1,15 +1,14 @@
 package org.csdg8.game.blackjack;
 
-import org.csdg8.game.blackjack.model.BlackjackState;
-
 public class BlackjackGameLogic {
-    public BlackjackGame play(BlackjackState choice, Long betAmount) {
-        BlackjackGame game = new BlackjackGame(choice, betAmount);
-        /* 
-        game.setResult(Math.random() < 0.5 ? CoinFlipState.HEADS : CoinFlipState.TAILS);
-        game.setGameResult(game.getChoice() == game.getResult() ? 
-            CoinFlipGameResult.USER_WIN : CoinFlipGameResult.USER_LOSE);
-          */  
+    public BlackjackGame play( Long betAmount) {
+        BlackjackGame game = new BlackjackGame( betAmount);
+         
+        return game;
+    }
+
+    public BlackjackGame doAction( BlackjackGame game, BlackjackState action) {
+        game.doAction( action);
         return game;
     }
 }

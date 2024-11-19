@@ -21,13 +21,13 @@ public class BlackjackService {
     @Inject
     UserService userService;
 
-    public Long play(BlackjackState choice, Long betAmount) {
-        return playForUser(Long.valueOf(_userId), choice, betAmount);
+    public Long play(Long betAmount) {
+        return playForUser(Long.valueOf(_userId), betAmount);
     }
 
-    protected Long playForUser(Long userId, BlackjackState choice, Long betAmount) {
+    protected Long playForUser(Long userId, Long betAmount) {
         BlackjackGameLogic gameLogic = new BlackjackGameLogic();
-        BlackjackGame game = gameLogic.play(choice, betAmount);
+        BlackjackGame game = gameLogic.play(betAmount);
 
         Long gameId = persistGameAndUpdateUser(userId, game);
 

@@ -29,8 +29,7 @@ public class BlackjackGame extends PanacheEntity {
     private BlackjackGameResult gameResult;
     private LocalDateTime createdAt;
 
-    public BlackjackGame(BlackjackState choice, Long betAmount) {
-        this.choice = choice;
+    public BlackjackGame(  Long betAmount) {
         this.betAmount = betAmount;
         this.deck = new Deck();
         this.playerHand = new CardHand();

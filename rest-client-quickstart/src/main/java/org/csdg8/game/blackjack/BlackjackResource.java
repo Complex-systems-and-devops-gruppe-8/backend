@@ -36,6 +36,12 @@ public class BlackjackResource {
     public Entity result(Long gameId) throws Siren4JException {
         return this.blackjackController.result(gameId);
     }
+    @GET
+    @Path("/{gameId}")
+    @RolesAllowed("user")
+    public Entity performAction(PlayBlackjackRequest request)  {
+        return this.blackjackController.performAction(gameId, action)
+    }   
 
     @GET
     @RolesAllowed("user")

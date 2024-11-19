@@ -1,8 +1,6 @@
 package org.csdg8.game.blackjack.dto;
 
 //needs to be blackjack staet
-import org.csdg8.game.blackjack.model.BlackjackState;
-
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -16,8 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlayBlackjackRequest {
-    @NotNull
-    private BlackjackState choice;
+   
 
     @NotNull
     @Min(value = 1)

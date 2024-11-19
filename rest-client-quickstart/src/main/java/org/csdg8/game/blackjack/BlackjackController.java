@@ -24,7 +24,7 @@ public class BlackjackController {
     BlackjackService blackjackService ;
 
     public Response play(@Valid @NotNull PlayBlackjackRequest request) {
-        Long id = this.blackjackService.play(request.getChoice(), request.getBetAmount());
+        Long id = this.blackjackService.play(request.getBetAmount());
         return Response.created(URI.create("/game/blackjack/" + id)).build();
     }
 
