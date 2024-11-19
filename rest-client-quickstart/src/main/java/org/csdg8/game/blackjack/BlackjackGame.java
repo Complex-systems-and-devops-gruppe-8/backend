@@ -1,7 +1,9 @@
 package org.csdg8.game.blackjack;
+import java.time.LocalDateTime;
 
 import org.csdg8.game.blackjack.model.BlackjackGameResult;
 import org.csdg8.game.blackjack.model.BlackjackState;
+import org.csdg8.game.blackjack.model.CardHand;
 import org.csdg8.game.blackjack.model.Deck;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
@@ -21,13 +23,19 @@ public class BlackjackGame extends PanacheEntity {
     private BlackjackState choice;
     private BlackjackState result;
     private Deck deck;
+    private CardHand playerHand;
+    private CardHand dealerHand;
     private Long betAmount;
     private BlackjackGameResult gameResult;
+    private LocalDateTime createdAt;
 
     public BlackjackGame(BlackjackState choice, Long betAmount) {
         this.choice = choice;
         this.betAmount = betAmount;
         this.deck = new Deck();
+        this.playerHand = new CardHand();
+        this.dealerHand = new CardHand();
+        this.createdAt = LocalDateTime.now();
         this.deck.shuffle();
     }
 

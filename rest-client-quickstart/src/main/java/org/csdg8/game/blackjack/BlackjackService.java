@@ -52,4 +52,8 @@ public class BlackjackService {
     public Optional<BlackjackGame> findById(Long id) {
         return Optional.ofNullable(BlackjackGame.findById(id));
     }
+
+    public void updateGame(BlackjackGame game) {
+        BlackjackGame.saveGame(game);
+    }
 }

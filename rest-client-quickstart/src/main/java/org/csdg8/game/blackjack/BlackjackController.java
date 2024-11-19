@@ -41,4 +41,24 @@ public class BlackjackController {
         GetBlackjackGameResponse gameResponse = new GetBlackjackGameResponse();
         return ReflectingConverter.newInstance().toEntity(gameResponse);
     }
+
+    public Response performAction(Long gameId, String action) {
+        BlackjackGame game = this.blackjackService.findById(gameId)
+            .orElseThrow(() -> new GameNotFoundException("No blackjack game found with id %d".formatted(gameId)));
+    
+        switch (action.toLowerCase()) {
+            case "hit":
+                game.hit();
+                break;
+            case "stand":
+                game.stand();
+                break;
+            // Add other cases
+        }
+    
+        this.blackjackService.updateGame(game);
+        return Response.ok().build();
+    }
+
+     
 }
