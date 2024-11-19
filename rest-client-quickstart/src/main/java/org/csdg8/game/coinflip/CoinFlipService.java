@@ -62,7 +62,7 @@ public class CoinFlipService {
         if (game.getGameResult() == CoinFlipGameResult.USER_WIN) {
             this.userService.addBalance(userId, betAmount);
         } else {
-            this.userService.subtractBalance(userId, betAmount);
+            this.userService.removeBalance(userId, betAmount);
         }
         
         return gameId;

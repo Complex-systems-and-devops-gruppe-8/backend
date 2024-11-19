@@ -132,7 +132,7 @@ public class UserService {
     }
 
     @Transactional
-    public void subtractBalance(Long userId, Integer value) {
+    public void removeBalance(Long userId, Integer value) {
         assert userId != null;
         assert value != null;
         assert value > 0;
