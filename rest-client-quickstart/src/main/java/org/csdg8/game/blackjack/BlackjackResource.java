@@ -1,5 +1,6 @@
 package org.csdg8.game.blackjack;
 
+import org.csdg8.game.blackjack.dto.BlackjackActionRequest;
 import org.csdg8.game.blackjack.dto.PlayBlackjackRequest;
 import org.csdg8.model.exception.GameNotFoundException;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -14,6 +15,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 
@@ -26,8 +28,8 @@ public class BlackjackResource {
     //TODO limit user interaction with other user's games.
     @POST
     @RolesAllowed("user")
-    public Response play(PlayBlackjackRequest request) {
-        return this.blackjackController.play(request);
+    public Response startGame(PlayBlackjackRequest request) {
+        return this.blackjackController.startGame(request);
     }
 
     @GET
@@ -36,11 +38,11 @@ public class BlackjackResource {
     public Entity result(Long gameId) throws Siren4JException {
         return this.blackjackController.result(gameId);
     }
-    @GET
+    @POST
     @Path("/{gameId}")
     @RolesAllowed("user")
-    public Entity performAction(PlayBlackjackRequest request)  {
-        return this.blackjackController.performAction(gameId, action)
+    public Response performAction(@PathParam("gameId") Long gameId,BlackjackActionRequest request)  {
+        return this.blackjackController.performAction(gameId, request);
     }   
 
     @GET

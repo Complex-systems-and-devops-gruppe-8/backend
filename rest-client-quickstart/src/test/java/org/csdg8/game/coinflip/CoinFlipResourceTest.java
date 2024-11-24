@@ -1,18 +1,16 @@
 package org.csdg8.game.coinflip;
 
-import static io.restassured.RestAssured.given;
+import java.net.URL;
+import java.util.Set;
+
+import org.apache.http.HttpStatus;
+import org.csdg8.user.User;
 import static org.csdg8.util.SirenAssertion.actionFieldShouldHaveOption;
 import static org.csdg8.util.SirenAssertion.actionShouldHaveField;
 import static org.csdg8.util.SirenAssertion.actionShouldHaveHref;
 import static org.csdg8.util.SirenAssertion.actionShouldHaveMethod;
 import static org.csdg8.util.SirenAssertion.actionShouldHaveType;
 import static org.hamcrest.Matchers.equalTo;
-
-import java.net.URL;
-import java.util.Set;
-
-import org.apache.http.HttpStatus;
-import org.csdg8.user.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +21,7 @@ import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
+import static io.restassured.RestAssured.given;
 import io.restassured.response.Response;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -33,11 +32,11 @@ import jakarta.ws.rs.core.MediaType;
 public class CoinFlipResourceTest {
 
     @TestHTTPResource
-    @TestHTTPEndpoint(BlackjackResource.class)
+    @TestHTTPEndpoint(CoinFlipResource.class)
     URL coinFlipUrl;
 
     @Inject
-    BlackjackResource coinFlipResource;
+    CoinFlipResource coinFlipResource;
 
 
     @BeforeEach
