@@ -20,6 +20,9 @@ public class AuthService {
 
     // Access Token (short-lived)
     public String createAccessToken(String username, String password) {
+        assert username != null;
+        assert password != null;
+
         Optional<User> user = this.userService.validateUser(username, password);
         if (user.isEmpty()) {
             throw new InvalidCredentialsException("Invalid credentials, user not found when creating access token");
@@ -31,6 +34,9 @@ public class AuthService {
 
     // Refresh Token (long-lived)
     public String createRefreshToken(String username, String password) {
+        assert username != null;
+        assert password != null;
+
         Optional<User> user = this.userService.validateUser(username, password);
         if (user.isEmpty()) {
             throw new InvalidCredentialsException("Invalid credentials, user not found when creating refresh token");
@@ -44,6 +50,9 @@ public class AuthService {
     }
 
     public String refreshAccessToken(String refreshToken, String prevAccessToken) {
+        assert refreshToken != null;
+        assert prevAccessToken != null;
+
         Optional<String> username = this.tokenService.getUsername(prevAccessToken);
         if (username.isEmpty()) {
             throw new InvalidCredentialsException("Invalid credentials, username not found when refreshing access token");

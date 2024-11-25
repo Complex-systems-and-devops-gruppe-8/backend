@@ -1,7 +1,7 @@
 package org.csdg8.game.coinflip;
 
 import org.csdg8.game.coinflip.dto.PlayCoinFlipRequest;
-import org.csdg8.model.exception.GameNotFoundException;
+import org.csdg8.model.exception.UserNotLinkedToGameException;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
@@ -23,7 +23,7 @@ public class CoinFlipResource {
 
     @Inject
     CoinFlipController coinFlipController;
-    //TODO limit user interaction with other user's games.
+
     @POST
     @RolesAllowed("user")
     public Response play(PlayCoinFlipRequest request) {
@@ -44,7 +44,7 @@ public class CoinFlipResource {
     }
 
     @ServerExceptionMapper
-    public RestResponse<String> mapException(GameNotFoundException x) {
-        return RestResponse.status(Response.Status.NOT_FOUND, "Coin-flip game not found");
+    public RestResponse<String> mapException(UserNotLinkedToGameException x) {
+        return RestResponse.status(Response.Status.BAD_REQUEST, "This user is not linked to this game");
     }
 }
