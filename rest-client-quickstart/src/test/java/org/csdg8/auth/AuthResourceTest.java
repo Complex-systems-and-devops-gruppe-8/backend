@@ -37,6 +37,7 @@ import io.restassured.path.json.mapper.factory.Jackson2ObjectMapperFactory;
 import io.restassured.response.Response;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
 
 @QuarkusTest
@@ -211,7 +212,7 @@ public class AuthResourceTest {
     private void itShouldHaveActionToCreateToken(Response response) {
         String actionName = "create-token";
         actionShouldHaveMethod(response, actionName, Method.POST);
-        actionShouldHaveType(response, actionName);
+        actionShouldHaveType(response, actionName, MediaType.APPLICATION_JSON);
         actionShouldHaveHref(response, actionName, "/auth/token");
         actionShouldHaveField(response, actionName, "username", "TEXT", true);
         actionShouldHaveField(response, actionName, "password", "TEXT", true);
@@ -220,7 +221,7 @@ public class AuthResourceTest {
     private void itShouldHaveActionToRefreshAccessToken(Response response) {
         String actionName = "refresh-access-token";
         actionShouldHaveMethod(response, actionName, Method.POST);
-        actionShouldHaveType(response, actionName);
+        actionShouldHaveType(response, actionName, MediaType.APPLICATION_JSON);
         actionShouldHaveHref(response, actionName, "/auth/token/refresh");
         actionShouldHaveField(response, actionName, "accessToken", "TEXT", true);
         actionShouldHaveField(response, actionName, "refreshToken", "TEXT", true);

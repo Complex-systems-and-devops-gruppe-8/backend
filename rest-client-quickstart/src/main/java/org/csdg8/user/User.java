@@ -1,5 +1,6 @@
 package org.csdg8.user;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -9,19 +10,29 @@ import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "app-user")
 @UserDefinition
 public class User extends PanacheEntity {
     @Username
-    public String username;
+    private String username;
     @Password
-    public String password;
+    private String password;
     @Roles
-    public Set<String> role;
+    private Set<String> role;
+
+    @ElementCollection
+    private Set<Long> linkedGames = new HashSet<Long>();
+
+    private Integer balance;
 
     /**
      * Adds a new user to the database
@@ -39,7 +50,19 @@ public class User extends PanacheEntity {
         user.username = username;
         user.password = BcryptUtil.bcryptHash(password);
         user.role = role;
+        user.balance = 0;
+
+        assert user.username != null;
+        assert user.password != null;
+        assert user.role != null;
+        assert !user.role.isEmpty();
+        assert user.balance != null;
+        assert user.balance >= 0;
+
         user.persist();
+
+        assert user.id != null;
+        
         return user.id;
     }
 

@@ -1,5 +1,7 @@
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -24,6 +26,7 @@ public class Run {
 
     private static final String PRIVATE_KEY_ENV_VAR = "SMALLRYE_JWT_SIGN_KEY";
     private static final String PUBLIC_KEY_ENV_VAR = "MP_JWT_VERIFY_PUBLICKEY";
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
 
     public static void main(String[] args) {
         if (args.length != 1) {
@@ -63,7 +66,7 @@ public class Run {
     }
 
     private static void runQuarkus(KeyPair keyPair, RunMode mode) throws IOException, InterruptedException {
-        final String RELATIVE_PROJECT_DIR = "../../rest-client-quickstart";
+        final String RELATIVE_PROJECT_DIR = ".." + File.separator + ".." + File.separator + "rest-client-quickstart";
         String privateKeyPem = "-----BEGIN PRIVATE KEY-----\n" +
                 new String(Base64.getMimeEncoder(64, "\n".getBytes()).encode(keyPair.getPrivate().getEncoded()), StandardCharsets.UTF_8) +
                 "\n-----END PRIVATE KEY-----";
@@ -72,8 +75,13 @@ public class Run {
                 new String(Base64.getMimeEncoder(64, "\n".getBytes()).encode(keyPair.getPublic().getEncoded()), StandardCharsets.UTF_8) +
                 "\n-----END PUBLIC KEY-----";
 
-        ProcessBuilder pb = new ProcessBuilder("./mvnw", "quarkus:" + mode.value);
-        pb.directory(Paths.get(System.getProperty("user.dir")).resolve(RELATIVE_PROJECT_DIR).normalize().toFile());
+        ProcessBuilder pb = createMavenCommand(mode);
+
+        Path projectPath = Paths.get(System.getProperty("user.dir"))
+                .resolve(RELATIVE_PROJECT_DIR)
+                .normalize();
+
+        pb.directory(projectPath.toFile());
 
         Map<String, String> env = pb.environment();
         env.put(PRIVATE_KEY_ENV_VAR, privateKeyPem);
@@ -90,5 +98,35 @@ public class Run {
         return Arrays.stream(RunMode.values())
                 .map(mode -> mode.value)
                 .collect(Collectors.joining("|"));
+    }
+
+    private static ProcessBuilder createMavenCommand(RunMode mode) {
+        ProcessBuilder pb;
+        if (IS_WINDOWS) {
+            boolean usePowerShell = isPowerShellAvailable();
+            if (usePowerShell) {
+                pb = new ProcessBuilder(
+                    "powershell",
+                    "-Command",
+                    ".\\mvnw.cmd quarkus:" + mode.value
+                );
+            } else {
+                pb = new ProcessBuilder("cmd", "/c", "mvnw.cmd", "quarkus:" + mode.value);
+            }
+        } else {
+            pb = new ProcessBuilder("./mvnw", "quarkus:" + mode.value);
+        }
+        return pb;
+    }
+
+    private static boolean isPowerShellAvailable() {
+        try {
+            ProcessBuilder pb = new ProcessBuilder("powershell", "-Command", "echo test");
+            Process p = pb.start();
+            int exitCode = p.waitFor();
+            return exitCode == 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

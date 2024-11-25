@@ -1,5 +1,6 @@
 package org.csdg8.infrastructure.exception;
 
+import com.google.code.siren4j.Siren4J;
 import com.google.code.siren4j.converter.ReflectingConverter;
 import com.google.code.siren4j.resource.ErrorMessageResource;
 
@@ -23,6 +24,8 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
                 "The requested resource was not found.");
 
         return Response.status(statusCode)
-                .entity(ReflectingConverter.newInstance().toEntity(emr).toString()).build();
+                .entity(ReflectingConverter.newInstance().toEntity(emr).toString())
+                .type(Siren4J.JSON_MEDIATYPE)
+                .build();
     }
 }
