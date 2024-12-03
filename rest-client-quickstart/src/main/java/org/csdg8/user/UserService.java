@@ -16,6 +16,9 @@ import jakarta.transaction.Transactional;
 public class UserService {
 
     public Optional<User> validateUser(String username, String password) {
+        assert username != null;
+        assert password != null;
+
         Optional<User> user = User.findByUsername(username);
 
         if (user.isEmpty()) {
@@ -30,6 +33,8 @@ public class UserService {
     }
 
     public Optional<Set<String>> getUserRole(String username) {
+        assert username != null;
+
         Optional<User> user = User.findByUsername(username);
 
         if (user.isEmpty()) {
@@ -42,6 +47,8 @@ public class UserService {
     }
 
     public Optional<User> findByUsername(String username) {
+        assert username != null;
+
         Optional<User> user = User.findByUsername(username);
 
         if (user.isEmpty()) {
@@ -53,6 +60,10 @@ public class UserService {
 
     @Transactional
     public Long addUser(String username, String password, Set<String> roles) {
+        assert username != null;
+        assert password != null;
+        assert roles != null;
+
         if (!isValidUsername(username) || !isValidPassword(password)) {
             throw new InvalidCredentialsException("Failed to add user %s as the credentials were not valid");
         }
@@ -64,19 +75,25 @@ public class UserService {
     }
 
     private boolean isValidUsername(String username) {
+        assert username != null;
+
         String validChars = "a-zA-Z0-9_";
         int minLength = 3;
         int maxLength = 30;
 
         String regex = "^[%s]{%d,%d}$".formatted(validChars, minLength, maxLength);
-        return username != null && username.matches(regex);
+        return username.matches(regex);
     }
 
     private boolean isValidPassword(String password) {
+        assert password != null;
+
         return password != null && password.length() >= 8 && password.length() < 50;
     }
 
     public User getUser(Long id) {
+        assert id != null;
+
         Optional<User> optUser = Optional.ofNullable(User.findById(id));
 
         return optUser.orElseThrow(
@@ -89,6 +106,9 @@ public class UserService {
 
     @Transactional
     public void addGameToUser(Long userId, Long gameId) {
+        assert userId != null;
+        assert gameId != null;
+
         User user = getUser(userId);
 
         user.getLinkedGames().add(gameId);
@@ -97,6 +117,8 @@ public class UserService {
 
     @Transactional
     public void addBalance(Long userId, Integer value) {
+        assert userId != null;
+        assert value != null;
         assert value > 0;
 
         User user = getUser(userId);
@@ -110,7 +132,9 @@ public class UserService {
     }
 
     @Transactional
-    public void subtractBalance(Long userId, Integer value) {
+    public void removeBalance(Long userId, Integer value) {
+        assert userId != null;
+        assert value != null;
         assert value > 0;
         
         User user = getUser(userId);
@@ -121,5 +145,13 @@ public class UserService {
         assert currentBalance > newBalance;
         user.setBalance(newBalance);
         user.persist();
+    }
+
+    @Transactional
+    public Set<Long> getUserGames(Long userId) {
+        assert userId != null;
+
+        User user = getUser(userId);
+        return user.getLinkedGames();
     }
 }

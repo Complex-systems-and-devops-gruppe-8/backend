@@ -143,7 +143,7 @@ public class UserServiceTest {
 
         Integer currentBalance = user.getBalance();
         Integer balanceToSubtract = 10;
-        userService.subtractBalance(user.id, balanceToSubtract);
+        userService.removeBalance(user.id, balanceToSubtract);
 
         Integer expectedBalance = currentBalance - balanceToSubtract;
         Integer actualBalance = userService.findByUsername("user").get().getBalance();

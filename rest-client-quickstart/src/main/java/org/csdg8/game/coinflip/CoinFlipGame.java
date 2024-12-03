@@ -23,6 +23,9 @@ public class CoinFlipGame extends PanacheEntity {
     private CoinFlipGameResult gameResult;
 
     public CoinFlipGame(CoinFlipState choice, Long betAmount) {
+        assert choice != null;
+        assert betAmount != null;
+
         this.choice = choice;
         this.betAmount = betAmount;
     }
