@@ -30,7 +30,7 @@ public class BlackjackService {
     public BlackjackGame hit(BlackjackGame game) {
         BlackjackGameLogic gameLogic = new BlackjackGameLogic();
         game = gameLogic.hit(game);
-       
+        BlackjackGame.saveGame(game);
         //check if this is needed
         //Long gameId = BlackjackGame.saveGame(game);
 
@@ -40,20 +40,13 @@ public class BlackjackService {
     public BlackjackGame stand(BlackjackGame game) {
         BlackjackGameLogic gameLogic = new BlackjackGameLogic();
         game = gameLogic.stand(game );
+        BlackjackGame.saveGame(game);
        //check if this is needed
        // BlackjackGame.saveGame(game);
        return game;
     }
 
-    /* 
-    protected Long playForUser(Long userId, Long betAmount) {
-        BlackjackGameLogic gameLogic = new BlackjackGameLogic();
-        BlackjackGame game = gameLogic.play(betAmount);
-
-        Long gameId = persistGameAndUpdateUser(userId, game);
-
-        return gameId;
-    }*/
+   
 
     private Long persistGameAndUpdateUser(Long userId, BlackjackGame game) {
 
@@ -75,7 +68,7 @@ public class BlackjackService {
         return Optional.ofNullable(BlackjackGame.findById(id));
     }
 
-    public void updateGame(BlackjackGame game) {
+    public void updateGame(BlackjackGame game, long gameId) {
         BlackjackGame.saveGame(game);
     }
 }

@@ -1,6 +1,7 @@
 package org.csdg8.game.blackjack.dto;
 
  
+import org.csdg8.game.blackjack.model.BlackjackGameResult;
 import org.csdg8.game.blackjack.model.CardHand;
 
 import com.google.code.siren4j.annotations.Siren4JEntity;
@@ -20,4 +21,6 @@ public class BlackjackStateResponse {
     private CardHand playerHand;
     private Long betAmount;
     private long id;
+    private BlackjackGameResult gameResult;
+
 }

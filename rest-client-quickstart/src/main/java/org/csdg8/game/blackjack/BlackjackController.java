@@ -28,7 +28,7 @@ public class BlackjackController {
     public Response startGame(@Valid @NotNull PlayBlackjackRequest request) {
         BlackjackGame game = this.blackjackService.createGame(request.getBetAmount());
         //here i need to addd a DTO that has the response body of the created game:=)
-        BlackjackStateResponse Blackjack = new BlackjackStateResponse(game.getDealerHand(), game.getPlayerHand(), game.getBetAmount(), game.id);
+        BlackjackStateResponse Blackjack = new BlackjackStateResponse(game.getDealerHand(), game.getPlayerHand(), game.getBetAmount(), game.id, game.getGameResult());
         return Response.created(URI.create("/game/blackjack/" + game.id)).entity(Blackjack).build();
     }
 
@@ -50,10 +50,7 @@ public class BlackjackController {
         // Fetch the game by its ID
         BlackjackGame game = this.blackjackService.findById(gameId)
             .orElseThrow(() -> new GameNotFoundException("No blackjack game found with id %d".formatted(gameId)));
-        System.out.println("playerhand: " );
-        game.getPlayerHand().printHand();
-        System.out.println("dealerhand: " );
-        game.getDealerHand().printHand();
+        
       
         // Perform the requested action (HIT or STAND)
         switch (request.getChoice()) {
@@ -73,7 +70,8 @@ public class BlackjackController {
             game.getDealerHand(),
             game.getPlayerHand(),
             game.getBetAmount(),
-            gameId // Ensure `game.id` is correctly referenced as `getId()`
+            gameId, // Ensure `game.id` is correctly referenced as `getId()`
+            game.getGameResult()
         );
     
         // Return a Response with the created status and the updated game state

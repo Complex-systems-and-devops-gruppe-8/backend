@@ -38,26 +38,27 @@ public class BlackjackGame extends PanacheEntity {
     private BlackjackGameResult gameResult;
     private LocalDateTime createdAt;
 
-    public BlackjackGame(  Long betAmount) {
+    public BlackjackGame(  Long betAmount, BlackjackGameResult gameResult) {
         this.betAmount = betAmount;
         this.deck = new Deck();
         this.playerHand = new CardHand();
         this.dealerHand = new CardHand();
         this.createdAt = LocalDateTime.now();
+        this.gameResult = gameResult;
         this.deck.shuffle();
+    }
+    public void setGameResult(BlackjackGameResult gameResult) {
+        this.gameResult = gameResult;
     }
 
     @Transactional
     public static Long saveGame(BlackjackGame game) {
         
-        assert game.choice != null;
-        assert game.result != null;
-        assert game.betAmount != null;
-        assert game.gameResult != null;
-   
-        
-        game.persist();
-
+        if (game.id == null) {
+            game.persist(); // New entity
+        } else {
+            getEntityManager().merge(game); // Update existing entity
+        }
         return game.id;
     }
     @Transactional
