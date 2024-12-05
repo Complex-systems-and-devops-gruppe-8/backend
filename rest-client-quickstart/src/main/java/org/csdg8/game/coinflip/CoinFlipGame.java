@@ -38,7 +38,7 @@ public class CoinFlipGame extends PanacheEntity {
         assert game.gameResult != null;
         
         game.persist();
-
+         
         return game.id;
     }
 }
