@@ -32,12 +32,7 @@ public class BlackjackResource {
         return this.blackjackController.startGame(request);
     }
 
-    @GET
-    @Path("/{gameId}")
-    @RolesAllowed("user")
-    public Entity result(Long gameId) throws Siren4JException {
-        return this.blackjackController.result(gameId);
-    }
+    
     @POST
     @Path("/{gameId}")
     @RolesAllowed("user")

@@ -44,6 +44,8 @@ public class BlackjackGameLogic {
             game.setGameResult( BlackjackGameResult.USER_WIN);
         } else if (game.getDealerHand().calculateHandValue() == game.getPlayerHand().calculateHandValue()) {
             game.setGameResult( BlackjackGameResult.DRAW);
+        } else if (game.getDealerHand().calculateHandValue() > game.getPlayerHand().calculateHandValue() && game.getDealerHand().calculateHandValue() <= 21) {
+            game.setGameResult( BlackjackGameResult.DEALER_WIN);
         }
         return game;
     }

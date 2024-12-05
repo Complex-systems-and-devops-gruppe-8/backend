@@ -5,7 +5,6 @@ import java.net.URI;
 import org.csdg8.game.blackjack.dto.BlackjackActionRequest;
 import org.csdg8.game.blackjack.dto.BlackjackStateResponse;
 import org.csdg8.game.blackjack.dto.GetBlackjackGameResponse;
-import org.csdg8.game.blackjack.dto.GetBlackjackGameResultResponse;
 import org.csdg8.game.blackjack.dto.PlayBlackjackRequest;
 import org.csdg8.model.exception.GameNotFoundException;
 
@@ -32,15 +31,7 @@ public class BlackjackController {
         return Response.created(URI.create("/game/blackjack/" + game.id)).entity(Blackjack).build();
     }
 
-    public Entity result(Long id) throws Siren4JException {
-        BlackjackGame game = this.blackjackService.findById(id)
-                .orElseThrow(() -> new GameNotFoundException("No blackjack game found with id %d".formatted(id)));
-
-        GetBlackjackGameResultResponse gameResultResponse = new GetBlackjackGameResultResponse(game.id, game.getChoice(), game.getResult(),
-                game.getBetAmount(), game.getGameResult());
-        return ReflectingConverter.newInstance().toEntity(gameResultResponse);
-    }
-
+    
     public Entity game() throws Siren4JException {
         GetBlackjackGameResponse gameResponse = new GetBlackjackGameResponse();
         return ReflectingConverter.newInstance().toEntity(gameResponse);
