@@ -70,4 +70,5 @@ jobs:
             --set-env-vars="QUARKUS_DATASOURCE_DB_KIND=postgresql" \
             --set-env-vars="QUARKUS_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" \
             --set-env-vars="QUARKUS_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" \
-            --set-env-vars="QUARKUS_DATASOURCE_JDBC_URL=${{ secrets.JDBC_URL }}"
+            --set-env-vars="QUARKUS_DATASOURCE_JDBC_URL=${{ secrets.JDBC_URL }}" \
+            --set-env-vars="QUARKUS_HTTP_CORS_ORIGINS=${{ secrets.FRONTEND_URL }}"
