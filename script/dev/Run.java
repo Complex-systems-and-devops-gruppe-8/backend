@@ -115,6 +115,13 @@ public class Run {
             }
         } else {
             pb = new ProcessBuilder("./mvnw", "quarkus:" + mode.value);
+
+            // Ensure execute permission on Linux
+            try {
+                new ProcessBuilder("chmod", "+x", "./mvnw").start().waitFor();
+            } catch (Exception e) {
+                System.err.println("Warning: Could not set execute permission on mvnw: " + e.getMessage());
+            }
         }
         return pb;
     }
